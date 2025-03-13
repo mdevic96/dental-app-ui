@@ -6,7 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { LanguageSelectorComponent } from "./features/language-selector/language-selector.component";
 
 @Component({
   selector: 'app-root',
@@ -16,43 +17,19 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     MatIconModule,
     RouterModule,
     CommonModule,
-    RouterModule,
-    TranslateModule
-  ],
+    TranslateModule,
+    LanguageSelectorComponent
+],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
   user: any;
-  dropdownOpen = false;
-  currentFlag = localStorage.getItem('flag') || 'sr';
-  languages = [
-    { code: 'en', name: 'English', flag: '/flags/gb.png' },
-    { code: 'sr', name: 'Srpski', flag: '/flags/rs.png' },
-    { code: 'ru', name: 'Русский', flag: '/flags/ru.png' },
-    { code: 'de', name: 'Deutsch', flag: '/flags/de.png' }
-  ];
 
   constructor(
     public authService: AuthService, 
-    private router: Router,
-    private translate: TranslateService) {
+    private router: Router) {
     this.user = this.authService.getUser();
-
-    this.translate.setDefaultLang('sr');
-    this.translate.use(localStorage.getItem('lang') || 'sr');
-  }
-
-  toggleDropdown() {
-    this.dropdownOpen = !this.dropdownOpen;
-  }
-
-  changeLanguage(lang: string, flag: string) {
-    this.translate.use(lang);
-    localStorage.setItem('lang', lang);
-    localStorage.setItem('flag', flag);
-    this.currentFlag = flag;
-    this.dropdownOpen = false;
   }
 
   logout() {

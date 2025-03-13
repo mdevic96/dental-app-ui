@@ -3,17 +3,7 @@
     <a [routerLink]="'/home'"><img style='width: 170px;' src="/logo.png" alt="Dental App" /></a>
   </div>
   <div class="nav-right">
-    <div>
-      <button (click)="toggleDropdown()" class="language-btn">
-        <img [src]="currentFlag" alt="Flag" class="flag-img">
-      </button>
-      <div class="dropdown-menu" *ngIf="dropdownOpen">
-        <button *ngFor="let lang of languages" (click)="changeLanguage(lang.code, lang.flag)">
-          <img [src]="lang.flag" alt="{{ lang.name }}" class="flag-img"> {{ lang.name }}
-        </button>
-      </div>
-
-    </div>
+    <app-language-selector></app-language-selector>
     <a class="auth-btn" *ngIf="!authService.isAuthenticated()" [routerLink]="'/auth/login'">{{ 'NAV.LOGIN' | translate
       }}</a>
     <a class="auth-btn" *ngIf="authService.isAuthenticated()" (click)="logout()">{{'NAV.LOGOUT' | translate}}</a>
