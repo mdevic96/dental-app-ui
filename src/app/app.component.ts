@@ -3,6 +3,7 @@ import { AuthService } from './features/auth/auth.service';
 import { Router } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -11,12 +12,13 @@ import { CommonModule } from '@angular/common';
   imports: [
     MatToolbarModule,
     MatButtonModule,
+    MatIconModule,
     RouterModule,
     CommonModule,
     RouterModule
   ],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
   user: any;

@@ -1,19 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-interface LoginResponse {
-  accessToken: string;
-  tokenType: string;
-  user: {
-    id: number;
-    email: string;
-    firstName: string;
-    lastName: string;
-    phoneNumber?: string;
-    roles: string[];
-  };
-}
+import { LoginResponse } from '../../core/login-response.model';
 
 @Injectable({
   providedIn: 'root'

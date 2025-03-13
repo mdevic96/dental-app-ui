@@ -1,14 +1,16 @@
-<mat-toolbar color="primary">
-  <span>Dental App</span>
-  <span class="spacer"></span>
-  <button mat-button [routerLink]="'/home'">Home</button>
-  <button mat-button [routerLink]="'/dentists'">Find a Dentist</button>
-  <button mat-button [routerLink]="'/appointments'">Appointments</button>
-
-  <button mat-button *ngIf="!authService.isAuthenticated()" [routerLink]="'/auth/login'">Login</button>
-  <button mat-button *ngIf="authService.isAuthenticated()" (click)="logout()">Logout</button>
+<mat-toolbar class="navbar">
+  <div class="nav-left">
+    <a [routerLink]="'/home'"><img style='width: 170px;' src="/logo.png" alt="Dental App" /></a>
+  </div>
+  <div class="nav-right">
+    <div class="language-switch">
+      <span>SR</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </div>
+    <a class="dentist-btn" *ngIf="!authService.isAuthenticated()" [routerLink]="'/auth/login'">Login</a>
+    <a class="dentist-btn" *ngIf="authService.isAuthenticated()" (click)="logout()">Logout</a>
+  </div>
 </mat-toolbar>
 <span *ngIf="user">Welcome, {{ user.firstName }}!</span>
 
 <router-outlet></router-outlet>
-

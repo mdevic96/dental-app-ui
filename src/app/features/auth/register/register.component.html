@@ -1,41 +1,44 @@
-<mat-card>
-    <mat-card-title>Register</mat-card-title>
+<mat-card class="register-container">
+  <mat-card class="register-card">
+    <mat-card-title class="register-title">Register</mat-card-title>
     <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
-      <mat-form-field appearance="outline">
-        <mat-label>First Name</mat-label>
-        <input matInput type="text" formControlName="firstName" required>
-      </mat-form-field>
+      <div class="form-fields">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>First Name</mat-label>
+          <input matInput type="text" formControlName="firstName" required>
+        </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Last Name</mat-label>
-        <input matInput type="text" formControlName="lastName" required>
-      </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Last Name</mat-label>
+          <input matInput type="text" formControlName="lastName" required>
+        </mat-form-field>
+      </div>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="full-width">
         <mat-label>Full Name</mat-label>
         <input matInput type="text" formControlName="fullName" required>
       </mat-form-field>
-  
-      <mat-form-field appearance="outline">
+
+      <mat-form-field appearance="outline" class="full-width">
         <mat-label>Email</mat-label>
         <input matInput type="email" formControlName="email" required>
       </mat-form-field>
-  
-      <mat-form-field appearance="outline">
+
+      <mat-form-field appearance="outline" class="full-width">
         <mat-label>Password</mat-label>
         <input matInput type="password" formControlName="password" required>
       </mat-form-field>
-  
-      <mat-form-field appearance="outline">
+
+      <mat-form-field appearance="outline" class="full-width">
         <mat-label>Confirm Password</mat-label>
         <input matInput type="password" formControlName="confirmPassword" required>
       </mat-form-field>
-  
-      <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid">
+
+      <button mat-raised-button color="primary" type="submit" class="register-btn" [disabled]="registerForm.invalid">
         Register
       </button>
-  
-      <p>Already have an account? <a [routerLink]="'/auth/login'">Login</a></p>
+
+      <p class="login-link">Already have an account? <a [routerLink]="'/auth/login'">Login</a></p>
     </form>
   </mat-card>
-  
+</mat-card>
