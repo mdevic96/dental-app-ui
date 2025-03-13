@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Observable, of, switchMap } from 'rxjs';
 import { City } from '../../core/city.model';
 import { DentalOffice } from '../../core/dental-office.model';
 import { TranslateModule } from '@ngx-translate/core';
@@ -22,7 +22,7 @@ export class SearchBarComponent implements OnInit {
   private apiUrl = 'http://localhost:8080/api';
 
   cities: City[] = [];
-  selectedCityId: string | null = null;
+  selectedCityId: number | null = null;
   searchQuery = new FormControl('');
   searchResults: DentalOffice[] = [];
   isLoading = false;
@@ -32,10 +32,9 @@ export class SearchBarComponent implements OnInit {
   ngOnInit(): void {
     this.fetchCities();
 
-    // Debounced search to avoid too many API calls
     this.searchQuery.valueChanges
       .pipe(
-        debounceTime(300),
+        debounceTime(500),
         distinctUntilChanged(),
         switchMap(query => this.searchDentalOffices(query!))
       )
@@ -52,25 +51,43 @@ export class SearchBarComponent implements OnInit {
     );
   }
 
-  searchDentalOffices(query: string) {
+  searchDentalOffices(query: string): Observable<DentalOffice[]> {
     if (!query.trim()) {
-      return [];
+      this.searchResults = [];
+      return of([]);
     }
 
     this.isLoading = true;
+
     const params: any = { query };
     if (this.selectedCityId) params.cityId = this.selectedCityId;
 
     return this.http.get<{ content: DentalOffice[] }>(this.apiUrl + '/dental-offices/search', { params })
       .pipe(
-        switchMap(response => [response.content])
+        switchMap(response => {
+          this.isLoading = false;
+          this.searchResults = response.content;
+          return of(response.content);
+        })
       );
   }
 
   onCityChange(event: Event) {
-    const cityId = event.target as HTMLSelectElement;
-    this.selectedCityId = cityId.value;
-    this.searchDentalOffices(this.searchQuery.value!);
+    const target = event.target as HTMLSelectElement;
+    const newCityId = target.value ? Number(target.value) : null;
+
+    if (this.selectedCityId !== newCityId) {
+      this.selectedCityId = newCityId;
+
+      if (this.searchQuery.value?.trim()) {
+        this.isLoading = true;
+
+        this.searchDentalOffices(this.searchQuery.value!).subscribe({
+          next: () => this.isLoading = false,
+          error: () => this.isLoading = false
+        });
+      }
+    }
   }
 
 }
