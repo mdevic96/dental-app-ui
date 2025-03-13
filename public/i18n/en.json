@@ -18,5 +18,10 @@
         "PASSWORD": "Password",
         "CONFIRM_PASSWORD": "Confirm password",
         "ACC_PRESENT": "Already have an account?"
+    },
+    "SEARCH": {
+        "ALL_CITIES": "All Cities",
+        "NO_RESULTS": "No results found.",
+        "SEARCH_DENTAL_OFFICES": "Search dental offices..."
     }
 }

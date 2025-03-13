@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { LanguageSelectorComponent } from "./features/language-selector/language-selector.component";
+import { SearchBarComponent } from "./features/search-bar/search-bar.component";
 
 @Component({
   selector: 'app-root',
@@ -18,18 +19,23 @@ import { LanguageSelectorComponent } from "./features/language-selector/language
     RouterModule,
     CommonModule,
     TranslateModule,
-    LanguageSelectorComponent
+    LanguageSelectorComponent,
+    SearchBarComponent
 ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
   user: any;
+  isHomePage: boolean = false;
 
   constructor(
     public authService: AuthService, 
     private router: Router) {
     this.user = this.authService.getUser();
+    this.router.events.subscribe(() => {
+      this.isHomePage = this.router.url === '/home' || this.router.url === '/';
+    });
   }
 
   logout() {

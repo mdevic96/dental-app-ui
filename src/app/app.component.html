@@ -9,6 +9,6 @@
     <a class="auth-btn" *ngIf="authService.isAuthenticated()" (click)="logout()">{{'NAV.LOGOUT' | translate}}</a>
   </div>
 </mat-toolbar>
-<span *ngIf="user">Welcome, {{ user.firstName }}!</span>
+<app-search-bar *ngIf="isHomePage"></app-search-bar>
 
 <router-outlet></router-outlet>

@@ -18,5 +18,10 @@
         "PASSWORD": "Пароль",
         "CONFIRM_PASSWORD": "Подтвердите пароль",
         "ACC_PRESENT": "Уже есть аккаунт?"
+    },
+    "SEARCH": {
+        "ALL_CITIES": "Все города",
+        "NO_RESULTS": "Результаты не найдены.",
+        "SEARCH_DENTAL_OFFICES": "Поиск стоматологических кабинетов..."
     }
 }

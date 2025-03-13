@@ -18,5 +18,10 @@
         "PASSWORD": "Lozinka",
         "CONFIRM_PASSWORD": "Potvrdi lozinku",
         "ACC_PRESENT": "Već imate nalog?"
+    },
+    "SEARCH": {
+        "ALL_CITIES": "Svi gradovi",
+        "NO_RESULTS": "Nema rezultata.",
+        "SEARCH_DENTAL_OFFICES": "Pretražite stomatološke ordinacije..."
     }
 }

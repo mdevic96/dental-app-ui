@@ -1,0 +1,25 @@
+<div class="search-container">
+    <div class="search-input-group">
+        <img src="/search32.png" />
+
+        <input type="text" placeholder="{{'SEARCH.SEARCH_DENTAL_OFFICES' | translate }}" [formControl]="searchQuery" />
+        <select class="city-dropdown" (change)="onCityChange($event)">
+            <option value="">{{"SEARCH.ALL_CITIES" | translate }}</option>
+            <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
+        </select>
+    </div>
+
+    <div class="search-results" *ngIf="searchResults.length > 0">
+        <div *ngFor="let office of searchResults" class="search-result-item">
+            <h3>{{ office.name }}</h3>
+            <p>{{ office.address }}, {{ office.city.name }}</p>
+            <p *ngIf="office.rating">⭐ {{ office.rating }}</p>
+        </div>
+    </div>
+
+    <p *ngIf="searchResults.length === 0 && searchQuery.value && !isLoading">
+        {{"SEARCH.NO_RESULTS" | translate }}
+    </p>
+
+    <img src="/loading.gif" *ngIf="isLoading" />
+</div>

@@ -18,5 +18,10 @@
         "PASSWORD": "Passwort",
         "CONFIRM_PASSWORD": "Passwort bestätigen",
         "ACC_PRESENT": "Bereits ein Konto?"
+    },
+    "SEARCH": {
+        "ALL_CITIES": "Alle Städte",
+        "NO_RESULTS": "Keine Ergebnisse gefunden.",
+        "SEARCH_DENTAL_OFFICES": "Zahnarztpraxen suchen..."
     }
 }

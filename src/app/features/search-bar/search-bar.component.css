@@ -1,0 +1,49 @@
+.search-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+.search-input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+}
+
+.search-input-group input {
+  flex: 1;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 15px;
+}
+
+.search-input-group input:focus {
+  border: none;
+}
+
+
+.city-dropdown {
+  padding: 5px;
+  border: none;
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+}
+
+.search-results {
+  margin-top: 20px;
+  padding: 10px;
+  background: #fff;
+  border-radius: 5px;
+}
+
+.search-result-item {
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+}
