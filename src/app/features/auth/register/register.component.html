@@ -1,44 +1,44 @@
 <mat-card class="register-container">
   <mat-card class="register-card">
-    <mat-card-title class="register-title">Register</mat-card-title>
+    <mat-card-title class="register-title">{{"NAV.REGISTER" | translate }}</mat-card-title>
     <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
       <div class="form-fields">
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>First Name</mat-label>
+          <mat-label>{{"REGISTER.FIRST_NAME" | translate }}</mat-label>
           <input matInput type="text" formControlName="firstName" required>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Last Name</mat-label>
+          <mat-label>{{"REGISTER.LAST_NAME" | translate }}</mat-label>
           <input matInput type="text" formControlName="lastName" required>
         </mat-form-field>
       </div>
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Full Name</mat-label>
+        <mat-label>{{"REGISTER.FULL_NAME" | translate }}</mat-label>
         <input matInput type="text" formControlName="fullName" required>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Email</mat-label>
+        <mat-label>{{"REGISTER.EMAIL" | translate }}</mat-label>
         <input matInput type="email" formControlName="email" required>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Password</mat-label>
+        <mat-label>{{"REGISTER.PASSWORD" | translate }}</mat-label>
         <input matInput type="password" formControlName="password" required>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Confirm Password</mat-label>
+        <mat-label>{{"REGISTER.CONFIRM_PASSWORD" | translate }}</mat-label>
         <input matInput type="password" formControlName="confirmPassword" required>
       </mat-form-field>
 
       <button mat-raised-button color="primary" type="submit" class="register-btn" [disabled]="registerForm.invalid">
-        Register
+        {{"NAV.REGISTER" | translate }}
       </button>
 
-      <p class="login-link">Already have an account? <a [routerLink]="'/auth/login'">Login</a></p>
+      <p class="login-link">{{"REGISTER.ACC_PRESENT" | translate }} <a [routerLink]="'/auth/login'">{{"LOGIN.LOGIN" | translate }}</a></p>
     </form>
   </mat-card>
 </mat-card>

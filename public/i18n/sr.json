@@ -1,0 +1,22 @@
+{
+    "NAV": {
+        "LOGIN": "Prijava",
+        "REGISTER": "Registracija",
+        "LOGOUT": "Odjava"
+    },
+    "LOGIN": {
+        "LOGIN": "Prijava",
+        "EMAIL": "E-pošta",
+        "PASSWORD": "Lozinka",
+        "ACC_NOT_PRESENT": "Nemate nalog?"
+    },
+    "REGISTER": {
+        "FIRST_NAME": "Ime",
+        "LAST_NAME": "Prezime",
+        "FULL_NAME": "Puno ime",
+        "EMAIL": "E-pošta",
+        "PASSWORD": "Lozinka",
+        "CONFIRM_PASSWORD": "Potvrdi lozinku",
+        "ACC_PRESENT": "Već imate nalog?"
+    }
+}

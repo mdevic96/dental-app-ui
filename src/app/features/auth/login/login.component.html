@@ -1,22 +1,22 @@
 <div class="login-container">
   <mat-card class="login-card">
-    <mat-card-title class="login-title">Login</mat-card-title>
+    <mat-card-title class="login-title">{{ "LOGIN.LOGIN" | translate }}</mat-card-title>
     <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Email</mat-label>
+        <mat-label>{{"LOGIN.EMAIL" | translate }}</mat-label>
         <input matInput type="email" formControlName="email" required>
       </mat-form-field>
   
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Password</mat-label>
+        <mat-label>{{"LOGIN.PASSWORD" | translate }}</mat-label>
         <input matInput type="password" formControlName="password" required>
       </mat-form-field>
   
       <button mat-raised-button color="primary" type="submit" class="login-btn" [disabled]="loginForm.invalid">
-        Login
+        {{ "LOGIN.LOGIN" | translate }}
       </button>
   
-      <p class="register-link">Don't have an account? <a [routerLink]="'/auth/register'">Register</a></p>
+      <p class="register-link">{{ "LOGIN.ACC_NOT_PRESENT" | translate }} <a [routerLink]="'/auth/register'">{{ "NAV.REGISTER" | translate }}</a></p>
     </form>
   </mat-card>
 </div>

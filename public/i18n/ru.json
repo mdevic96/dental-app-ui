@@ -1,0 +1,22 @@
+{
+    "NAV": {
+        "LOGIN": "Вход",
+        "REGISTER": "Регистрация",
+        "LOGOUT": "Выйти"
+    },
+    "LOGIN": {
+        "LOGIN": "Вход",
+        "EMAIL": "Электронная почта",
+        "PASSWORD": "Пароль",
+        "ACC_NOT_PRESENT": "Нет аккаунта?"
+    },
+    "REGISTER": {
+        "FIRST_NAME": "Имя",
+        "LAST_NAME": "Фамилия",
+        "FULL_NAME": "Полное имя",
+        "EMAIL": "Электронная почта",
+        "PASSWORD": "Пароль",
+        "CONFIRM_PASSWORD": "Подтвердите пароль",
+        "ACC_PRESENT": "Уже есть аккаунт?"
+    }
+}

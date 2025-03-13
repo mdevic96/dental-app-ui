@@ -1,0 +1,22 @@
+{
+    "NAV": {
+        "LOGIN": "Anmelden",
+        "REGISTER": "Registrieren",
+        "LOGOUT": "Ausloggen"
+    },
+    "LOGIN": {
+        "LOGIN": "Anmelden",
+        "EMAIL": "E-Mail",
+        "PASSWORD": "Passwort",
+        "ACC_NOT_PRESENT": "Kein Konto?"
+    },
+    "REGISTER": {
+        "FIRST_NAME": "Vorname",
+        "LAST_NAME": "Nachname",
+        "FULL_NAME": "Vollständiger Name",
+        "EMAIL": "E-Mail",
+        "PASSWORD": "Passwort",
+        "CONFIRM_PASSWORD": "Passwort bestätigen",
+        "ACC_PRESENT": "Bereits ein Konto?"
+    }
+}

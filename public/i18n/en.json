@@ -1,0 +1,22 @@
+{
+    "NAV": {
+        "LOGIN": "Login",
+        "REGISTER": "Register",
+        "LOGOUT": "Logout"
+    },
+    "LOGIN": {
+        "LOGIN": "Login",
+        "EMAIL": "Email",
+        "PASSWORD": "Password",
+        "ACC_NOT_PRESENT": "Don't have an account?"
+    },
+    "REGISTER": {
+        "FIRST_NAME": "First name",
+        "LAST_NAME": "Last name",
+        "FULL_NAME": "Full name",
+        "EMAIL": "Email",
+        "PASSWORD": "Password",
+        "CONFIRM_PASSWORD": "Confirm password",
+        "ACC_PRESENT": "Already have an account?"
+    }
+}
