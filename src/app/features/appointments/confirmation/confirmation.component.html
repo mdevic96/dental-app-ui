@@ -1,0 +1,21 @@
+<div class="dialog-container">
+    <h2 class="dialog-title">
+      {{"BOOKING_CONFIRMATION.CONFIRMED" | translate}} <span class="check-icon">✅</span>
+    </h2>
+  
+    <mat-divider></mat-divider>
+  
+    <div class="dialog-content">
+      <p><strong>{{"BOOKING_CONFIRMATION.DENTIST" | translate}}</strong> <span>{{ data?.appointment?.dentist?.user?.firstName }} {{ data?.appointment?.dentist?.user?.lastName }}</span></p>
+      <p><strong>{{"BOOKING_CONFIRMATION.SERVICE" | translate}}</strong> <span>{{ data?.appointment?.service?.name }}</span></p>
+      <p><strong>{{"BOOKING_CONFIRMATION.DATE_TIME" | translate}}</strong> <span>{{ formatDateTime(data?.appointment?.timeSlot?.startTime) }}</span></p>
+      <p><strong>{{"BOOKING_CONFIRMATION.STATUS" | translate}}</strong> <span class="status-text">{{ data?.appointment?.status }}</span></p>
+    </div>
+  
+    <mat-divider></mat-divider>
+  
+    <div class="dialog-actions">
+      <button mat-button class="ok-button" (click)="closeDialog()">{{"BOOKING_CONFIRMATION.OK" | translate}}</button>
+    </div>
+  </div>
+  

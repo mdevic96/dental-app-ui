@@ -31,5 +31,13 @@
         "SELECT_SERVICE": "Wählen Sie eine Dienstleistung:",
         "SELECT_TIMESLOT": "Wählen Sie einen Termin:",
         "CONFIRM_APPOINTMENT": "Termin bestätigen"
+    },
+    "BOOKING_CONFIRMATION": {
+        "CONFIRMED": "Termin bestätigt",
+        "DENTIST": "Zahnarzt:",
+        "SERVICE": "Dienstleistung:",
+        "DATE_TIME": "Datum & Uhrzeit:",
+        "STATUS": "Status:",
+        "OK": "Zurück zur Startseite"
     }
 }

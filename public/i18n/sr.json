@@ -31,5 +31,13 @@
         "SELECT_SERVICE": "Izaberite uslugu:",
         "SELECT_TIMESLOT": "Izaberite termin:",
         "CONFIRM_APPOINTMENT": "Potvrdi zakazivanje"
+    },
+    "BOOKING_CONFIRMATION": {
+        "CONFIRMED": "Termin uspešno zakazan",
+        "DENTIST": "Zubar:",
+        "SERVICE": "Usluga:",
+        "DATE_TIME": "Datum i vreme:",
+        "STATUS": "Status:",
+        "OK": "Nazad na početnu"
     }
 }

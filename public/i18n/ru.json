@@ -31,6 +31,14 @@
             "SELECT_SERVICE": "Выберите услугу:",
             "SELECT_TIMESLOT": "Выберите время записи:",
             "CONFIRM_APPOINTMENT": "Подтвердить запись"
+    },
+    "BOOKING_CONFIRMATION": {
+        "CONFIRMED": "Запись подтверждена",
+        "DENTIST": "Стоматолог:",
+        "SERVICE": "Услуга:",
+        "DATE_TIME": "Дата и время:",
+        "STATUS": "Статус:",
+        "OK": "Вернуться на главную"
     }
     
 }

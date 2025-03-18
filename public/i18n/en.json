@@ -31,5 +31,13 @@
         "SELECT_SERVICE:": "Select Service:",
         "SELECT_TIMESLOT": "Select Time Slot:",
         "CONFIRM_APPOINTMENT": "Confirm Appointment"
+    },
+    "BOOKING_CONFIRMATION": {
+        "CONFIRMED": "Appointment Confirmed",
+        "DENTIST": "Dentist:",
+        "SERVICE": "Service:",
+        "DATE_TIME": "Date & Time:",
+        "STATUS:": "Status:",
+        "OK": "Back to Home"
     }
 }

@@ -1,0 +1,56 @@
+.dialog-container {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .dialog-title {
+    font-size: 22px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .check-icon {
+    font-size: 24px;
+  }
+  
+  .dialog-content {
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: left;
+  }
+  
+  .dialog-content p {
+    margin: 8px 0;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .status-text {
+    font-weight: bold;
+    color: #007bff;
+  }
+  
+  .dialog-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .ok-button {
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  
+  .ok-button:hover {
+    background-color: #0056b3;
+  }
+  
