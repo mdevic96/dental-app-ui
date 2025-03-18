@@ -24,5 +24,12 @@
         "NO_RESULTS": "Nema rezultata.",
         "SEARCH_DENTAL_OFFICES": "Pretražite stomatološke ordinacije...",
         "BOOK_NOW": "Zakaži"
+    },
+    "BOOKING": {
+        "BOOK_APPOINTMENT": "Zakaži termin u",
+        "SELECT_DENTIST": "Izaberite zubara:",
+        "SELECT_SERVICE": "Izaberite uslugu:",
+        "SELECT_TIMESLOT": "Izaberite termin:",
+        "CONFIRM_APPOINTMENT": "Potvrdi zakazivanje"
     }
 }

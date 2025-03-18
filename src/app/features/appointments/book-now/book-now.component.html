@@ -1,0 +1,29 @@
+<div class="booking-container">
+    <h2>{{"BOOKING.BOOK_APPOINTMENT" | translate }} {{ dentalOfficeName }}</h2>
+
+    <!-- Dentist Selection -->
+    <label>{{"BOOKING.SELECT_DENTIST" | translate }}</label>
+    <select [(ngModel)]="selectedDentistId" (change)="loadAvailableServices(); loadAvailableTimeSlots();">
+        <option *ngFor="let dentist of availableDentists" [value]="dentist.id">
+            {{ dentist.user.firstName }} {{ dentist.user.lastName }} - {{ dentist.specialization }}
+        </option>
+    </select>
+
+    <!-- Service Selection -->
+    <label>{{"BOOKING.SELECT_SERVICE" | translate }}</label>
+    <select [(ngModel)]="selectedServiceId">
+        <option *ngFor="let service of availableServices" [value]="service.id">
+            {{ service.name }}
+        </option>
+    </select>
+
+    <!-- Time Slot Selection -->
+    <label>{{"BOOKING.SELECT_TIMESLOT" | translate }}</label>
+    <select [(ngModel)]="selectedTimeSlotId">
+        <option *ngFor="let slot of availableTimeSlots" [value]="slot.id">
+            {{ slot.startTime }} - {{ slot.endTime }}
+        </option>
+    </select>
+
+    <button (click)="confirmBooking()">{{"BOOKING.CONFIRM_APPOINTMENT" | translate }}</button>
+</div>

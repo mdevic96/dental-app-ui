@@ -24,5 +24,12 @@
         "NO_RESULTS": "No results found.",
         "SEARCH_DENTAL_OFFICES": "Search dental offices...",
         "BOOK_NOW": "Book"
+    },
+    "BOOKING": {
+        "BOOK_APPOINTMENT": "Book an Appointment at",
+        "SELECT_DENTIST": "Select Dentist:",
+        "SELECT_SERVICE:": "Select Service:",
+        "SELECT_TIMESLOT": "Select Time Slot:",
+        "CONFIRM_APPOINTMENT": "Confirm Appointment"
     }
 }

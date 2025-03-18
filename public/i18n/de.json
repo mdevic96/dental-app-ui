@@ -24,5 +24,12 @@
         "NO_RESULTS": "Keine Ergebnisse gefunden.",
         "SEARCH_DENTAL_OFFICES": "Zahnarztpraxen suchen...",
         "BOOK_NOW": "Buchen"
+    },
+    "BOOKING": {
+        "BOOK_APPOINTMENT": "Termin buchen bei",
+        "SELECT_DENTIST": "Wählen Sie einen Zahnarzt:",
+        "SELECT_SERVICE": "Wählen Sie eine Dienstleistung:",
+        "SELECT_TIMESLOT": "Wählen Sie einen Termin:",
+        "CONFIRM_APPOINTMENT": "Termin bestätigen"
     }
 }
