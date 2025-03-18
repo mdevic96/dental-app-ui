@@ -23,6 +23,8 @@ export class LanguageSelectorComponent {
     constructor(private translate: TranslateService) {
       this.translate.setDefaultLang('sr');
       this.translate.use(localStorage.getItem('lang') || 'sr');
+      this.currentFlag = '/flags/rs.png';
+      localStorage.setItem('flag', this.currentFlag);
     }
 
     toggleDropdown() {
