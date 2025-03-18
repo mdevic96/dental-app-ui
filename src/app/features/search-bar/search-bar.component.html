@@ -1,25 +1,41 @@
 <div class="search-container">
+    <!-- Search Bar -->
     <div class="search-input-group">
-        <img src="/search32.png" />
+        <img src="/search32.png" class="search-icon"/>
 
         <input type="text" placeholder="{{'SEARCH.SEARCH_DENTAL_OFFICES' | translate }}" [formControl]="searchQuery" />
+        
         <select class="city-dropdown" (change)="onCityChange($event)">
             <option value="">{{"SEARCH.ALL_CITIES" | translate }}</option>
             <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
         </select>
     </div>
 
+    <!-- Search Results -->
     <div class="search-results" *ngIf="searchResults.length > 0">
         <div *ngFor="let office of searchResults" class="search-result-item">
-            <h3>{{ office.name }}</h3>
-            <p>{{ office.address }}, {{ office.city.name }}</p>
-            <p *ngIf="office.rating">⭐ {{ office.rating }}</p>
+            <div class="result-content">
+                <div>
+                    <h3 class="office-name">{{ office.name }}</h3>
+                    <p class="office-address">{{ office.address }}, {{ office.city.name }}</p>
+                </div>
+
+                <div class="rating-container" *ngIf="office.rating">
+                    ⭐ <span class="rating">{{ office.rating }}</span>
+                </div>
+            </div>
+
+            <button *ngIf="authService.isAuthenticated()" class="book-now-btn" (click)="bookNow(office.id)">
+                {{"SEARCH.BOOK_NOW" | translate}}
+            </button>
         </div>
     </div>
 
+    <!-- No Results -->
     <p *ngIf="!isLoading && searchResults.length === 0 && searchQuery.value">
         {{"SEARCH.NO_RESULTS" | translate }}
     </p>
 
-    <img src="/loading.gif" *ngIf="isLoading" />
+    <!-- Loading Indicator -->
+    <img src="/loading.gif" class="loading-gif" *ngIf="isLoading" />
 </div>

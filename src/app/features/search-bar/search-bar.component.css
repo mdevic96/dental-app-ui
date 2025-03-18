@@ -1,3 +1,4 @@
+/* 🎯 Search Bar Styling */
 .search-container {
   width: 100%;
   max-width: 600px;
@@ -8,9 +9,16 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid #ccc;
   border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
 }
 
 .search-input-group input {
@@ -18,32 +26,89 @@
   border: none;
   outline: none;
   box-shadow: none;
-  padding: 8px;
+  padding: 10px;
   font-size: 16px;
   border-radius: 15px;
 }
 
 .search-input-group input:focus {
-  border: none;
+  background: #f8f8f8;
 }
 
-
 .city-dropdown {
-  padding: 5px;
+  padding: 8px;
   border: none;
   border-radius: 10px;
   background: white;
   cursor: pointer;
 }
 
+/* 🎯 Search Results */
 .search-results {
   margin-top: 20px;
   padding: 10px;
   background: #fff;
-  border-radius: 5px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .search-result-item {
   border-bottom: 1px solid #eee;
-  padding: 10px 0;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 🏥 Dental Office Details */
+.result-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.office-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+.office-address {
+  font-size: 14px;
+  color: #666;
+  margin: 5px 0;
+}
+
+.rating-container {
+  font-size: 16px;
+  font-weight: bold;
+  color: #f4b400;
+  display: flex;
+  align-items: center;
+}
+
+/* 📅 Book Now Button */
+.book-now-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  align-self: flex-start;
+}
+
+.book-now-btn:hover {
+  background-color: #0056b3;
+}
+
+/* ⏳ Loading Indicator */
+.loading-gif {
+  display: block;
+  margin: 10px auto;
+  width: 40px;
+  height: 40px;
 }

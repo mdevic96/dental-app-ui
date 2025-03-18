@@ -6,6 +6,8 @@ import { debounceTime, distinctUntilChanged, Observable, of, switchMap } from 'r
 import { City } from '../../core/city.model';
 import { DentalOffice } from '../../core/dental-office.model';
 import { TranslateModule } from '@ngx-translate/core';
+import { AuthService } from '../auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-search-bar',
@@ -27,7 +29,12 @@ export class SearchBarComponent implements OnInit {
   searchResults: DentalOffice[] = [];
   isLoading = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, public authService: AuthService,
+    private router: Router) { }
+
+  bookNow(dentalOfficeId: number) {
+    this.router.navigate(['/appointments/book-now'], { queryParams: { officeId: dentalOfficeId } });
+  }
 
   ngOnInit(): void {
     this.fetchCities();

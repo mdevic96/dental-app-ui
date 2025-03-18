@@ -22,6 +22,7 @@
     "SEARCH": {
         "ALL_CITIES": "Alle Städte",
         "NO_RESULTS": "Keine Ergebnisse gefunden.",
-        "SEARCH_DENTAL_OFFICES": "Zahnarztpraxen suchen..."
+        "SEARCH_DENTAL_OFFICES": "Zahnarztpraxen suchen...",
+        "BOOK_NOW": "Buchen"
     }
 }

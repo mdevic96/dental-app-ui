@@ -22,6 +22,7 @@
     "SEARCH": {
         "ALL_CITIES": "Svi gradovi",
         "NO_RESULTS": "Nema rezultata.",
-        "SEARCH_DENTAL_OFFICES": "Pretražite stomatološke ordinacije..."
+        "SEARCH_DENTAL_OFFICES": "Pretražite stomatološke ordinacije...",
+        "BOOK_NOW": "Zakaži"
     }
 }
