@@ -3,7 +3,7 @@
 
     <!-- Dentist Selection -->
     <label>{{"BOOKING.SELECT_DENTIST" | translate }}</label>
-    <select [(ngModel)]="selectedDentistId" (change)="loadAvailableServices(); loadAvailableTimeSlots();">
+    <select [(ngModel)]="selectedDentistId" (change)="loadAvailableServices(); loadAvailableTimes();">
         <option *ngFor="let dentist of availableDentists" [value]="dentist.id">
             {{ dentist.user.firstName }} {{ dentist.user.lastName }} - {{ dentist.specialization }}
         </option>
@@ -17,11 +17,15 @@
         </option>
     </select>
 
-    <!-- Time Slot Selection -->
+    <!-- Date Selection -->
+    <label>{{"BOOKING.SELECT_DATE" | translate }}</label>
+    <input type="date" [(ngModel)]="selectedDate" (change)="loadAvailableTimes()" />
+
+    <!-- Available Time Selection -->
     <label>{{"BOOKING.SELECT_TIMESLOT" | translate }}</label>
-    <select [(ngModel)]="selectedTimeSlotId">
-        <option *ngFor="let slot of availableTimeSlots" [value]="slot.id">
-            {{ slot.startTime }} - {{ slot.endTime }}
+    <select [(ngModel)]="selectedStartTime">
+        <option *ngFor="let time of availableTimes" [value]="time">
+            {{ time }}
         </option>
     </select>
 

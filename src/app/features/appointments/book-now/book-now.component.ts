@@ -27,12 +27,14 @@ export class BookNowComponent implements OnInit {
   selectedOfficeId!: number;
   selectedServiceId!: number;
   selectedDentistId!: number;
-  selectedTimeSlotId!: number;
+  selectedDate!: string;
+  selectedStartTime!: string;
+  
   dentalOfficeName: string = "";
 
+  availableTimes: string[] = [];
   availableDentists: DentistDto[] = [];
   availableServices: any[] = [];
-  availableTimeSlots: any[] = [];
 
   constructor(private route: ActivatedRoute, private dialog: MatDialog, private http: HttpClient, private router: Router) { }
 
@@ -89,25 +91,23 @@ export class BookNowComponent implements OnInit {
       );
   }
 
-  loadAvailableTimeSlots() {
-    if (!this.selectedDentistId) return;
+  loadAvailableTimes() {
+    if (!this.selectedDentistId || !this.selectedDate) return;
 
-    this.http.get<TimeSlotDto[]>(this.apiUrl + `/time-slots/dentist/${this.selectedDentistId}/available`).subscribe(
-      (slots) => {
-        this.availableTimeSlots = slots.map(slot => ({
-          id: slot.id,
-          startTime: new Date(slot.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          endTime: new Date(slot.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }));
-      },
-      (error) => {
-        console.error('Error fetching time slots:', error);
-      }
-    );
+    this.http.get<string[]>(`${this.apiUrl}/work-schedule/dentist/${this.selectedDentistId}/${this.selectedDate}`)
+      .subscribe(
+        (times) => {
+          this.availableTimes = times;
+        },
+        (error) => {
+          console.error('Error fetching available times:', error);
+        }
+      );
   }
 
+
   confirmBooking() {
-    if (!this.selectedServiceId || !this.selectedTimeSlotId || !this.selectedDentistId) {
+    if (!this.selectedServiceId || !this.selectedDate || !this.selectedDentistId) {
       alert('Please select a service, time slot or dentist');
       return;
     }
@@ -115,8 +115,9 @@ export class BookNowComponent implements OnInit {
     const appointmentData = {
       dentistId: this.selectedDentistId,
       serviceId: this.selectedServiceId,
-      timeSlotId: this.selectedTimeSlotId,
-    };
+      appointmentDate: this.selectedDate,
+      startTime: this.selectedStartTime,
+  };
 
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('token')}`,

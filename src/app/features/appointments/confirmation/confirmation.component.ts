@@ -23,8 +23,15 @@ export class ConfirmationComponent {
     this.dialogRef.close();
   }
 
-  formatDateTime(dateTimeString: string): string {
-    if (!dateTimeString) return '';
-    return formatDate(dateTimeString, 'MMMM d, yyyy - h:mm a', 'en-US');
+  formatDateTime(date: string, time: string): string {
+    if (!date || !time) return '';
+  
+    const formattedDate = formatDate(date, 'MMMM d, yyyy', 'en-US');
+    const formattedTime = formatDate(`1970-01-01T${time}`, 'h:mm a', 'en-US');
+  
+    return `${formattedDate} - ${formattedTime}`;
   }
+  
+  
+  
 }
