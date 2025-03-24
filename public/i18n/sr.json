@@ -29,6 +29,7 @@
         "BOOK_APPOINTMENT": "Zakaži termin u",
         "SELECT_DENTIST": "Izaberite zubara:",
         "SELECT_SERVICE": "Izaberite uslugu:",
+        "SELECT_DATE": "Izaberite datum:",
         "SELECT_TIMESLOT": "Izaberite termin:",
         "CONFIRM_APPOINTMENT": "Potvrdi zakazivanje"
     },

@@ -29,6 +29,7 @@
         "BOOK_APPOINTMENT": "Termin buchen bei",
         "SELECT_DENTIST": "Wählen Sie einen Zahnarzt:",
         "SELECT_SERVICE": "Wählen Sie eine Dienstleistung:",
+        "SELECT_DATE": "Datum auswählen:",
         "SELECT_TIMESLOT": "Wählen Sie einen Termin:",
         "CONFIRM_APPOINTMENT": "Termin bestätigen"
     },

@@ -29,6 +29,7 @@
         "BOOK_APPOINTMENT": "Book an Appointment at",
         "SELECT_DENTIST": "Select Dentist:",
         "SELECT_SERVICE:": "Select Service:",
+        "SELECT_DATE": "Select Date:",
         "SELECT_TIMESLOT": "Select Time Slot:",
         "CONFIRM_APPOINTMENT": "Confirm Appointment"
     },

@@ -29,6 +29,7 @@
             "BOOK_APPOINTMENT": "Записаться на приём в",
             "SELECT_DENTIST": "Выберите стоматолога:",
             "SELECT_SERVICE": "Выберите услугу:",
+            "SELECT_DATE": "Выберите дату:",
             "SELECT_TIMESLOT": "Выберите время записи:",
             "CONFIRM_APPOINTMENT": "Подтвердить запись"
     },
