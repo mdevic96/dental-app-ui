@@ -42,7 +42,7 @@
             </div>
           </div>
   
-          <div *ngIf="isLoggedIn">
+          <div *ngIf="isLoggedIn && !userHasReviewed">
             <h3>{{"INFO.ADD_REVIEW" | translate }}</h3>
             <div class="star-rating">
                 <i *ngFor="let star of [1,2,3,4,5]" 

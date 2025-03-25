@@ -26,12 +26,17 @@ export class InfoComponent implements OnInit {
   newReview = { rating: 5, comment: '' };
   isLoggedIn = false;
 
+  userHasReviewed = false;
+  currentUserId: number | null = null;
+
   private apiUrl = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.isLoggedIn = this.authService.isAuthenticated();
+    this.currentUserId = this.authService.getUser().id;
+
     if (this.office?.id) {
       this.loadReviews();
     }
@@ -39,7 +44,15 @@ export class InfoComponent implements OnInit {
 
   loadReviews() {
     this.http.get<any[]>(`${this.apiUrl}/reviews/dental-office/${this.office.id}`)
-      .subscribe(reviews => this.reviews = reviews);
+      .subscribe(reviews => {
+        const currentUserId = this.currentUserId;
+
+        const userReview = reviews.find(r => r.patient?.id === currentUserId);
+        const otherReviews = reviews.filter(r => r.patient?.id !== currentUserId);
+
+        this.reviews = userReview ? [userReview, ...otherReviews] : [...otherReviews];
+        this.userHasReviewed = !!userReview;
+      });
   }
   
   submitReview() {
@@ -57,6 +70,11 @@ export class InfoComponent implements OnInit {
     this.http.post(`${this.apiUrl}/reviews`, payload, { headers }).subscribe(() => {
       this.newReview = { rating: 5, comment: '' };
       this.loadReviews();
+
+      // Update displayed rating (recalculate average)
+      const total = this.reviews.reduce((acc, r) => acc + r.rating, 0) + payload.rating;
+      const count = this.reviews.length + 1;
+      this.office.rating = Math.round((total / count) * 10) / 10;
     });
   }
 
