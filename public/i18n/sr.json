@@ -23,7 +23,8 @@
         "ALL_CITIES": "Svi gradovi",
         "NO_RESULTS": "Nema rezultata.",
         "SEARCH_DENTAL_OFFICES": "Pretražite stomatološke ordinacije...",
-        "BOOK_NOW": "Zakaži"
+        "BOOK_NOW": "Zakaži",
+        "INFO": "Info"
     },
     "BOOKING": {
         "BOOK_APPOINTMENT": "Zakaži termin u",
@@ -40,5 +41,14 @@
         "DATE_TIME": "Datum i vreme:",
         "STATUS": "Status:",
         "OK": "Nazad na početnu"
+    },
+    "INFO": {
+        "WORKING_HOURS": "Radno vreme:",
+        "DENTISTS": "Zubari:",
+        "SERVICES": "Usluge:",
+        "REVIEWS": "Recenzije:",
+        "ADD_REVIEW": "Dodaj recenziju:",
+        "COMMENT": "Komentar:",
+        "SEND_REVIEW": "Pošalji recenziju"
     }
 }

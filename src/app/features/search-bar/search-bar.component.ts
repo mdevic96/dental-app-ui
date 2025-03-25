@@ -8,14 +8,19 @@ import { DentalOffice } from '../../core/dental-office.model';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
+import { InfoComponent } from "../appointments/info/info.component";
+import { DentistDto } from '../../core/dentist.model';
+import { DentistServiceDto } from '../../core/dentist-service.model';
+import { ServiceDto } from '../../core/service.model';
 
 @Component({
   selector: 'app-search-bar',
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    TranslateModule
-  ],
+    TranslateModule,
+    InfoComponent
+],
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.css'
 })
@@ -28,6 +33,12 @@ export class SearchBarComponent implements OnInit {
   searchQuery = new FormControl('');
   searchResults: DentalOffice[] = [];
   isLoading = false;
+
+  // info dialog
+  showInfoDialog = false;
+  selectedOffice: DentalOffice | null = null;
+  selectedOfficeDentists: DentistDto[] = [];
+  selectedOfficeServices: ServiceDto[] = [];
 
   constructor(private http: HttpClient, public authService: AuthService,
     private router: Router) { }
@@ -97,4 +108,20 @@ export class SearchBarComponent implements OnInit {
     }
   }
 
+  openInfoDialog(office: DentalOffice) {
+    this.selectedOffice = office;
+    this.showInfoDialog = true;
+  
+    this.http.get<DentistDto[]>(`${this.apiUrl}/dentists/dental-office/${office.id}`).subscribe(dentists => {
+      this.selectedOfficeDentists = dentists;
+    });
+  
+    this.http.get<DentistServiceDto[]>(`${this.apiUrl}/services/dental-office/${office.id}`).subscribe(services => {
+      this.selectedOfficeServices = services.map(s => s.service);
+    });
+  }
+
+  closeInfoDialog() {
+    this.showInfoDialog = false;
+  }
 }

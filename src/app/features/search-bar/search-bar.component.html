@@ -25,17 +25,29 @@
                 </div>
             </div>
 
-            <button *ngIf="authService.isAuthenticated()" class="book-now-btn" (click)="bookNow(office.id)">
-                {{"SEARCH.BOOK_NOW" | translate}}
-            </button>
+            <div class="button-group" *ngIf="authService.isAuthenticated()">
+                <button class="book-now-btn" (click)="bookNow(office.id)">
+                  {{"SEARCH.BOOK_NOW" | translate}}
+                </button>
+              
+                <button class="info-btn" (click)="openInfoDialog(office)">
+                    <i class="fa fa-info-circle"></i> {{"SEARCH.INFO" | translate }}
+                </button>
+              </div>
+              
+              <app-info 
+                *ngIf="showInfoDialog && selectedOffice?.id === office.id" 
+                [office]="selectedOffice"
+                [dentists]="selectedOfficeDentists"
+                [services]="selectedOfficeServices"
+                (close)="closeInfoDialog()">
+              </app-info>
         </div>
     </div>
 
-    <!-- No Results -->
     <p *ngIf="!isLoading && searchResults.length === 0 && searchQuery.value">
         {{"SEARCH.NO_RESULTS" | translate }}
     </p>
 
-    <!-- Loading Indicator -->
     <img src="/loading.gif" class="loading-gif" *ngIf="isLoading" />
 </div>

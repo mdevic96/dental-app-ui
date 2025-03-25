@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DentistServiceDto } from '../../../core/dentist-service.model';
-import { TimeSlotDto } from '../../../core/timeslot.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DentalOffice } from '../../../core/dental-office.model';
@@ -25,11 +24,12 @@ export class BookNowComponent implements OnInit {
   private apiUrl = 'http://localhost:8080/api';
 
   selectedOfficeId!: number;
-  selectedServiceId!: number;
-  selectedDentistId!: number;
-  selectedDate!: string;
-  selectedStartTime!: string;
-  
+  selectedServiceId!: number | null;
+  selectedDentistId!: number | null;
+  selectedDate!: string | null;
+  selectedStartTime!: string | null;
+  canConfirm: boolean = false;
+
   dentalOfficeName: string = "";
 
   availableTimes: string[] = [];
@@ -107,8 +107,7 @@ export class BookNowComponent implements OnInit {
 
 
   confirmBooking() {
-    if (!this.selectedServiceId || !this.selectedDate || !this.selectedDentistId) {
-      alert('Please select a service, time slot or dentist');
+    if (!this.canConfirm) {
       return;
     }
 
@@ -134,6 +133,46 @@ export class BookNowComponent implements OnInit {
           alert('Failed to book appointment.');
         }
       );
+  }
+
+  onDentistChange() {
+    this.selectedServiceId = null;
+    this.selectedDate = null;
+    this.selectedStartTime = null;
+    this.availableServices = [];
+    this.availableTimes = [];
+  
+    if (this.selectedDentistId) {
+      this.loadAvailableServices();
+    }
+
+    this.validateForm();
+  }
+
+  onServiceChange() {
+    this.selectedDate = null;
+    this.selectedStartTime = null;
+    this.availableTimes = [];
+
+    this.validateForm();
+  }
+  
+  onDateChange() {
+    this.selectedStartTime = null;
+    this.availableTimes = [];
+  
+    if (this.selectedDate) {
+      this.loadAvailableTimes();
+      this.validateForm();
+    }
+  }
+
+  validateForm() {
+    this.canConfirm =
+      !!this.selectedDentistId &&
+      !!this.selectedServiceId &&
+      !!this.selectedDate &&
+      !!this.selectedStartTime;
   }
 
   openConfirmationDialog(appointment: any) {

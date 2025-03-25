@@ -23,7 +23,8 @@
         "ALL_CITIES": "Alle Städte",
         "NO_RESULTS": "Keine Ergebnisse gefunden.",
         "SEARCH_DENTAL_OFFICES": "Zahnarztpraxen suchen...",
-        "BOOK_NOW": "Buchen"
+        "BOOK_NOW": "Buchen",
+        "INFO": "Info"
     },
     "BOOKING": {
         "BOOK_APPOINTMENT": "Termin buchen bei",
@@ -40,5 +41,14 @@
         "DATE_TIME": "Datum & Uhrzeit:",
         "STATUS": "Status:",
         "OK": "Zurück zur Startseite"
+    },
+    "INFO": {
+        "WORKING_HOURS": "Öffnungszeiten:",
+        "DENTISTS": "Zahnärzte:",
+        "SERVICES": "Leistungen:",
+        "REVIEWS": "Bewertungen:",
+        "ADD_REVIEW": "Bewertung hinzufügen:",
+        "COMMENT": "Kommentar:",
+        "SEND_REVIEW": "Bewertung senden"
     }
 }

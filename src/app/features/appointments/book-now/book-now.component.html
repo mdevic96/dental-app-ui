@@ -1,33 +1,41 @@
-<div class="booking-container">
-    <h2>{{"BOOKING.BOOK_APPOINTMENT" | translate }} {{ dentalOfficeName }}</h2>
+<div class="booking-card">
+    <h2 class="form-title">{{"BOOKING.BOOK_APPOINTMENT" | translate}} {{ dentalOfficeName }}</h2>
 
-    <!-- Dentist Selection -->
-    <label>{{"BOOKING.SELECT_DENTIST" | translate }}</label>
-    <select [(ngModel)]="selectedDentistId" (change)="loadAvailableServices(); loadAvailableTimes();">
-        <option *ngFor="let dentist of availableDentists" [value]="dentist.id">
-            {{ dentist.user.firstName }} {{ dentist.user.lastName }} - {{ dentist.specialization }}
-        </option>
-    </select>
+    <div class="form-group">
+        <label>{{"BOOKING.SELECT_DENTIST" | translate }}</label>
+        <select [(ngModel)]="selectedDentistId" (change)="onDentistChange(); validateForm()">
+            <option *ngFor="let dentist of availableDentists" [value]="dentist.id">
+                {{ dentist.user.firstName }} {{ dentist.user.lastName }} - {{ dentist.specialization }}
+            </option>
+        </select>
+    </div>
 
-    <!-- Service Selection -->
-    <label>{{"BOOKING.SELECT_SERVICE" | translate }}</label>
-    <select [(ngModel)]="selectedServiceId">
-        <option *ngFor="let service of availableServices" [value]="service.id">
-            {{ service.name }}
-        </option>
-    </select>
+    <div class="form-group">
+        <label>{{"BOOKING.SELECT_SERVICE" | translate }}</label>
+        <select [(ngModel)]="selectedServiceId" [disabled]="!selectedDentistId" (change)="onServiceChange(); validateForm()">
+            <option *ngFor="let service of availableServices" [value]="service.id">
+                {{ service.name }}
+            </option>
+        </select>
+    </div>
 
-    <!-- Date Selection -->
-    <label>{{"BOOKING.SELECT_DATE" | translate }}</label>
-    <input type="date" [(ngModel)]="selectedDate" (change)="loadAvailableTimes()" />
+    <div class="form-group">
+        <label>{{"BOOKING.SELECT_DATE" | translate }}</label>
+        <div class="date-picker-wrapper">
+            <input type="date" [(ngModel)]="selectedDate" [disabled]="!selectedServiceId" (change)="onDateChange(); validateForm()" />
+        </div>
+    </div>
 
-    <!-- Available Time Selection -->
-    <label>{{"BOOKING.SELECT_TIMESLOT" | translate }}</label>
-    <select [(ngModel)]="selectedStartTime">
-        <option *ngFor="let time of availableTimes" [value]="time">
-            {{ time }}
-        </option>
-    </select>
+    <div class="form-group">
+        <label>{{"BOOKING.SELECT_TIMESLOT" | translate }}</label>
+        <select [(ngModel)]="selectedStartTime" [disabled]="!selectedDate" (change)="validateForm()">
+            <option *ngFor="let time of availableTimes" [value]="time">{{ time }}</option>
+        </select>
+    </div>
 
-    <button (click)="confirmBooking()">{{"BOOKING.CONFIRM_APPOINTMENT" | translate }}</button>
+    <div class="confirm-button-wrapper">
+        <button (click)="confirmBooking()" [disabled]="!canConfirm">
+          {{ "BOOKING.CONFIRM_APPOINTMENT" | translate }}
+        </button>
+    </div>
 </div>

@@ -1,0 +1,62 @@
+<div class="info-dialog-overlay">
+    <div class="info-dialog-card">
+      <div class="info-content-wrapper">
+        
+        <!-- Left Side: Office Info -->
+        <div class="info-left">
+          <div class="info-header">
+            <h2>{{ office?.name }}</h2>
+            <span class="close-icon" (click)="closeDialog()">✖</span>
+          </div>
+  
+          <p class="info-address">📍 {{ office?.address }}, {{ office?.city?.name }}</p>
+          <p class="info-rating">⭐ {{ office?.rating }} / 5</p>
+          <p class="info-hours"><strong>⏰ {{"INFO.WORKING_HOURS" | translate }}</strong> {{ office?.workingHours }}</p>
+  
+          <div *ngIf="dentists.length > 0" class="info-section">
+            <h3><i class="fa-solid fa-user-doctor"></i> {{"INFO.DENTISTS" | translate }}</h3>
+            <ul>
+              <li *ngFor="let dentist of dentists">
+                {{ dentist.user.firstName }} {{ dentist.user.lastName }}
+              </li>
+            </ul>
+          </div>
+  
+          <div *ngIf="services.length > 0" class="info-section">
+            <h3><i class="fa-solid fa-stethoscope"></i> {{"INFO.SERVICES" | translate }}</h3>
+            <ul>
+              <li *ngFor="let service of services">
+                {{ service.name }}
+              </li>
+            </ul>
+          </div>
+        </div>
+  
+        <!-- Right Side: Reviews -->
+        <div class="info-right">
+          <div *ngIf="reviews.length > 0">
+            <h3>{{"INFO.REVIEWS" | translate }}</h3>
+            <div *ngFor="let review of reviews" class="review">
+              <p><strong>{{ review.patient.firstName }} {{ review.patient.lastName }}</strong> - ⭐ {{ review.rating }}</p>
+              <p>{{ review.comment }}</p>
+            </div>
+          </div>
+  
+          <div *ngIf="isLoggedIn">
+            <h3>{{"INFO.ADD_REVIEW" | translate }}</h3>
+            <div class="star-rating">
+                <i *ngFor="let star of [1,2,3,4,5]" 
+                  class="fa-solid fa-star" 
+                  [class.filled]="star <= newReview.rating"
+                  (click)="newReview.rating = star"
+                ></i>
+              </div>
+            <label>{{"INFO.COMMENT" | translate }}</label>
+            <textarea [(ngModel)]="newReview.comment"></textarea>
+            <button (click)="submitReview()">{{"INFO.SEND_REVIEW" | translate }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

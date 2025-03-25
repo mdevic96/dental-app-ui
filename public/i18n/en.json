@@ -23,7 +23,8 @@
         "ALL_CITIES": "All Cities",
         "NO_RESULTS": "No results found.",
         "SEARCH_DENTAL_OFFICES": "Search dental offices...",
-        "BOOK_NOW": "Book"
+        "BOOK_NOW": "Book",
+        "INFO": "Info"
     },
     "BOOKING": {
         "BOOK_APPOINTMENT": "Book an Appointment at",
@@ -40,5 +41,14 @@
         "DATE_TIME": "Date & Time:",
         "STATUS:": "Status:",
         "OK": "Back to Home"
+    },
+    "INFO": {
+        "WORKING_HOURS": "Working hours:",
+        "DENTISTS": "Dentists:",
+        "SERVICES": "Services:",
+        "REVIEWS": "Reviews:",
+        "ADD_REVIEW": "Add a review:",
+        "COMMENT": "Comment:",
+        "SEND_REVIEW": "Send review"
     }
 }
