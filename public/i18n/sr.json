@@ -43,12 +43,21 @@
         "OK": "Nazad na početnu"
     },
     "INFO": {
-        "WORKING_HOURS": "Radno vreme:",
+        "WORKING_HOURS": "Radno vreme",
         "DENTISTS": "Zubari:",
         "SERVICES": "Usluge:",
         "REVIEWS": "Recenzije:",
         "ADD_REVIEW": "Dodaj recenziju:",
         "COMMENT": "Komentar:",
         "SEND_REVIEW": "Pošalji recenziju"
+    },
+    "DENTISTS": {
+        "WELCOME": "Dobrodošli",
+        "SCHEDULES_APPOINTMENTS": "Ukupno zakazanih termina",
+        "COMPLETED_APPOINTMENTS": "Završeni termini",
+        "AVG_RATING": "Prosečna ocena",
+        "VIEW_APPOINTMENTS": "Pregled termina",
+        "SERVICE_MGMT": "Upravljanje uslugama",
+        "PROFILE": "Profil"
     }
 }

@@ -42,7 +42,19 @@ export class LoginComponent {
           next: (response) => {
             localStorage.setItem('token', response.accessToken);
             localStorage.setItem('user', JSON.stringify(response.user));
-            this.router.navigate(['/home']);
+    
+            const userRoles = response.user?.roles?.map((role: any) => role.name) || [];
+    
+            if (userRoles[0] === 'ROLE_DENTIST') {
+              console.log('Redirecting to dentist dashboard...');
+              this.router.navigate(['/dentist']);
+            } else if (userRoles[0] === 'ROLE_PATIENT' || userRoles[0] === 'ROLE_ADMIN') {
+              console.log('Redirecting to home...');
+              this.router.navigate(['/home']);
+            } else {
+              console.warn('Unknown role detected. Redirecting to home.');
+              this.router.navigate(['/home']);
+            }
           },
           error: (err) => {
             console.error('Login failed', err);
@@ -50,5 +62,6 @@ export class LoginComponent {
         });
       }
     }
+    
 
 }

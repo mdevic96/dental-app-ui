@@ -43,12 +43,21 @@
         "OK": "Back to Home"
     },
     "INFO": {
-        "WORKING_HOURS": "Working hours:",
+        "WORKING_HOURS": "Working hours",
         "DENTISTS": "Dentists:",
         "SERVICES": "Services:",
         "REVIEWS": "Reviews:",
         "ADD_REVIEW": "Add a review:",
         "COMMENT": "Comment:",
         "SEND_REVIEW": "Send review"
+    },
+    "DENTISTS": {
+        "WELCOME": "Welcome",
+        "SCHEDULES_APPOINTMENTS": "Total Appointments",
+        "COMPLETED_APPOINTMENTS": "Completed Appointments",
+        "AVG_RATING": "Average Rating",
+        "VIEW_APPOINTMENTS": "View Appointments",
+        "SERVICE_MGMT": "Service Management",
+        "PROFILE": "Profile"
     }
 }

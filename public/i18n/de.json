@@ -43,12 +43,21 @@
         "OK": "Zurück zur Startseite"
     },
     "INFO": {
-        "WORKING_HOURS": "Öffnungszeiten:",
+        "WORKING_HOURS": "Öffnungszeiten",
         "DENTISTS": "Zahnärzte:",
         "SERVICES": "Leistungen:",
         "REVIEWS": "Bewertungen:",
         "ADD_REVIEW": "Bewertung hinzufügen:",
         "COMMENT": "Kommentar:",
         "SEND_REVIEW": "Bewertung senden"
+    },
+    "DENTISTS": {
+        "WELCOME": "Willkommen",
+        "SCHEDULES_APPOINTMENTS": "Gesamtzahl der Termine",
+        "COMPLETED_APPOINTMENTS": "Abgeschlossene Termine",
+        "AVG_RATING": "Durchschnittliche Bewertung“",
+        "VIEW_APPOINTMENTS": "Termine anzeigen",
+        "SERVICE_MGMT": "Dienstverwaltung",
+        "PROFILE": "Profil"
     }
 }

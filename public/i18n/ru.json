@@ -43,13 +43,22 @@
         "OK": "Вернуться на главную"
     },
     "INFO": {
-        "WORKING_HOURS": "Часы работы:",
+        "WORKING_HOURS": "Часы работы",
         "DENTISTS": "Стоматологи:",
         "SERVICES": "Услуги:",
         "REVIEWS": "Отзывы:",
         "ADD_REVIEW": "Добавить отзыв:",
         "COMMENT": "Комментарий:",
         "SEND_REVIEW": "Отправить отзыв"
+    },
+    "DENTISTS": {
+        "WELCOME": "Добро пожаловать",
+        "SCHEDULES_APPOINTMENTS": "Всего встреч",
+        "COMPLETED_APPOINTMENTS": "Завершенные встречи",
+        "AVG_RATING": "Средний рейтинг",
+        "VIEW_APPOINTMENTS": "Просмотреть встречи",
+        "SERVICE_MGMT": "Управление услугами",
+        "PROFILE": "Профиль"
     }
     
 }

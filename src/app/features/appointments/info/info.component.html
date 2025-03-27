@@ -11,7 +11,7 @@
   
           <p class="info-address">📍 {{ office?.address }}, {{ office?.city?.name }}</p>
           <p class="info-rating">⭐ {{ office?.rating }} / 5</p>
-          <p class="info-hours"><strong>⏰ {{"INFO.WORKING_HOURS" | translate }}</strong> {{ office?.workingHours }}</p>
+          <p class="info-hours"><strong>⏰ {{"INFO.WORKING_HOURS" | translate }}:</strong> {{ office?.workingHours }}</p>
   
           <div *ngIf="dentists.length > 0" class="info-section">
             <h3><i class="fa-solid fa-user-doctor"></i> {{"INFO.DENTISTS" | translate }}</h3>

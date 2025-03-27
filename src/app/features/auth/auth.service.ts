@@ -32,4 +32,14 @@ export class AuthService {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
   }
+
+  getUserRoles() {
+    const user = this.getUser();
+    return user.roles[0];
+  }
+
+  hasRole(role: string): boolean {
+    const roles = this.getUserRoles();
+    return roles.name === role;
+  }
 }

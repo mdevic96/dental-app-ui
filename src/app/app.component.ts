@@ -38,6 +38,20 @@ export class AppComponent {
     });
   }
 
+  getLogoRedirect(): string {
+    if (!this.authService.isAuthenticated()) {
+      return '/home';
+    }
+
+    const userRoles = this.authService.getUserRoles();
+    
+    if (userRoles.name === 'ROLE_DENTIST') {
+      return '/dentist';
+    } else {
+      return '/home';
+    }
+  }
+
   logout() {
     this.authService.logout();
     this.user = null;

@@ -1,0 +1,26 @@
+<div class="dashboard">
+    <h2>{{"DENTISTS.WELCOME" | translate }}, {{ dentistName }}!</h2>
+  
+    <div class="stats-container">
+      <div class="stat-card">
+        <h3>{{ totalAppointments }}</h3>
+        <p>{{"DENTISTS.SCHEDULES_APPOINTMENTS" | translate }}</p>
+      </div>
+      <div class="stat-card">
+        <h3>{{ completedAppointments }}</h3>
+        <p>{{"DENTISTS.COMPLETED_APPOINTMENTS" | translate }}</p>
+      </div>
+      <div class="stat-card">
+        <h3>{{ avgRating }}</h3>
+        <p>{{"DENTISTS.AVG_RATING" | translate }}</p>
+      </div>
+    </div>
+  
+    <div class="quick-links">
+      <button (click)="navigateTo('appointments')">📅 {{"DENTISTS.VIEW_APPOINTMENTS" | translate }}</button>
+      <button (click)="navigateTo('services')">🦷 {{"DENTISTS.SERVICE_MGMT" | translate }}</button>
+      <button (click)="navigateTo('schedule')">⏰ {{"INFO.WORKING_HOURS" | translate }}</button>
+      <button (click)="navigateTo('profile')">👤 {{"DENTISTS.PROFILE" | translate }}</button>
+    </div>
+  </div>
+  
