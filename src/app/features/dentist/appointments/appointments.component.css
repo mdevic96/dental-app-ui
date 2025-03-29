@@ -1,0 +1,140 @@
+.appointments-container {
+    padding: 2rem;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.page-title {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.tabs button {
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    background: #f0f0f0;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.tabs button.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.appointment-card {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    transition: transform 0.2s ease;
+}
+
+.appointment-card:hover {
+    transform: translateY(-2px);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.card-details p {
+    margin: 0.2rem 0;
+    font-size: 0.95rem;
+}
+
+.card-actions {
+    margin-top: 0.8rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+button.complete-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+button.cancel-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+button[disabled] {
+    background-color: #ccc !important;
+    cursor: not-allowed;
+}
+
+.empty-message {
+    font-style: italic;
+    color: #777;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.appointment-status {
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.status-scheduled {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.status-completed {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.status-cancelled {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    margin: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+button.complete-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+button.cancel-btn {
+    background-color: #f44336;
+    color: white;
+}
+
+button[disabled] {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    box-shadow: none;
+}
