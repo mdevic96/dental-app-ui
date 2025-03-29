@@ -59,5 +59,17 @@
         "VIEW_APPOINTMENTS": "Termine anzeigen",
         "SERVICE_MGMT": "Dienstverwaltung",
         "PROFILE": "Profil"
+    },
+    "DENTIST_APPOINTMENTS": {
+        "MY_APPOINTMENTS": "Meine Termine",
+        "SCHEDULED_APPOINTMENTS": "Geplant",
+        "COMPLETED_CANCELLED_APPOINTMENTS": "Abgeschlossene / Abgesagte",
+        "SORT": "Sortiert",
+        "DATE": "Datum",
+        "TIME": "Uhrzeit",
+        "END_APPOINTMENT": "Termin beenden",
+        "CANCEL_APPOINTMENT": "Termin absagen",
+        "NO_SCHEDULED_APPOINTMENTS": "Sie haben keine geplanten Termine.",
+        "NO_COMPLETED_CANCELLED_APPOINTMENTS": "Sie haben keine abgeschlossenen oder abgesagten Termine."
     }
 }

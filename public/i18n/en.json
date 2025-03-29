@@ -59,5 +59,17 @@
         "VIEW_APPOINTMENTS": "View Appointments",
         "SERVICE_MGMT": "Service Management",
         "PROFILE": "Profile"
+    },
+    "DENTIST_APPOINTMENTS": {
+        "MY_APPOINTMENTS": "My Appointments",
+        "SCHEDULED_APPOINTMENTS": "Scheduled",
+        "COMPLETED_CANCELLED_APPOINTMENTS": "Completed / Cancelled",
+        "SORT": "Sort",
+        "DATE": "Date",
+        "TIME": "Time",
+        "END_APPOINTMENT": "End Appointment",
+        "CANCEL_APPOINTMENT": "Cancel Appointment",
+        "NO_SCHEDULED_APPOINTMENTS": "No scheduled appointments.",
+        "NO_COMPLETED_CANCELLED_APPOINTMENTS": "No completed or cancelled appointments."
     }
 }

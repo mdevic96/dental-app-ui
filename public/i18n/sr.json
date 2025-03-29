@@ -59,5 +59,17 @@
         "VIEW_APPOINTMENTS": "Pregled termina",
         "SERVICE_MGMT": "Upravljanje uslugama",
         "PROFILE": "Profil"
+    },
+    "DENTIST_APPOINTMENTS": {
+        "MY_APPOINTMENTS": "Moji termini",
+        "SCHEDULED_APPOINTMENTS": "Zakazani",
+        "COMPLETED_CANCELLED_APPOINTMENTS": "Završeni / Otkazani",
+        "SORT": "Sortiraj",
+        "DATE": "Datum",
+        "TIME": "Vreme",
+        "END_APPOINTMENT": "Završi termin",
+        "CANCEL_APPOINTMENT": "Otkaži termin",
+        "NO_SCHEDULED_APPOINTMENTS": "Nemate zakazanih termina.",
+        "NO_COMPLETED_CANCELLED_APPOINTMENTS": "Nemate završenih ili otkazanih termina."
     }
 }

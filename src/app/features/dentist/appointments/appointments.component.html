@@ -1,54 +1,70 @@
 <div class="appointments-container">
-    <h2 class="page-title">Moji termini</h2>
+    <h2 class="page-title">{{"DENTIST_APPOINTMENTS.MY_APPOINTMENTS" | translate }}</h2>
+
+    <!-- Tabs + Sort Row -->
+    <div class="tabs-row">
+        <div class="tabs">
+            <button [class.active]="selectedTab === 'upcoming'" (click)="selectedTab = 'upcoming'">{{"DENTIST_APPOINTMENTS.SCHEDULED_APPOINTMENTS" | translate }}</button>
+            <button [class.active]="selectedTab === 'past'" (click)="selectedTab = 'past'">{{"DENTIST_APPOINTMENTS.COMPLETED_CANCELLED_APPOINTMENTS" | translate }}</button>
+        </div>
+
+        <div class="sort-container" *ngIf="selectedTab === 'past'">
+            <label for="sortSelect">{{"DENTIST_APPOINTMENTS.SORT" | translate }}</label>
+            <i class="fa-solid" [ngClass]="{
+            'fa-sort-up': sortOrder === 'asc',
+            'fa-sort-down': sortOrder === 'desc'
+          }" (click)="sortPastAppointments()" style="cursor: pointer;">
+            </i>
+        </div>
+        </div>
   
-    <!-- Tabs -->
-    <div class="tabs">
-      <button [class.active]="selectedTab === 'upcoming'" (click)="selectedTab = 'upcoming'">Zakazani</button>
-      <button [class.active]="selectedTab === 'past'" (click)="selectedTab = 'past'">Završeni / Otkazani</button>
-    </div>
-  
+
     <!-- Upcoming Appointments -->
     <div *ngIf="selectedTab === 'upcoming'">
-      <div *ngIf="upcomingAppointments.length > 0; else noUpcoming">
-        <div class="appointment-card" *ngFor="let appointment of upcomingAppointments">
-          <div class="card-header">
-            <div class="patient-name">👤 {{ appointment.patient.firstName }} {{ appointment.patient.lastName }}</div>
-            <div class="appointment-status status-{{ appointment.status.toLowerCase() }}">{{ appointment.status }}</div>
-          </div>
-          <div class="card-details">
-            <p><strong>Usluga:</strong> {{ appointment.service.name }}</p>
-            <p><strong>Datum:</strong> {{ appointment.appointmentDate }}</p>
-            <p><strong>Vreme:</strong> {{ appointment.startTime }} - {{ appointment.endTime }}</p>
-          </div>
-          <div class="card-actions" *ngIf="appointment.status === 'SCHEDULED'">
-            <button (click)="updateStatus(appointment.id, 'COMPLETED')" class="complete-btn">Završi</button>
-            <button (click)="updateStatus(appointment.id, 'CANCELLED')" class="cancel-btn">Otkaži</button>
-          </div>
+        <div *ngIf="upcomingAppointments.length > 0; else noUpcoming">
+            <div class="appointment-card" *ngFor="let appointment of upcomingAppointments">
+                <div class="card-header">
+                    <div class="patient-name">👤 {{ appointment.patient.firstName }} {{ appointment.patient.lastName }}
+                    </div>
+                    <div class="appointment-status status-{{ appointment.status.toLowerCase() }}">{{ appointment.status
+                        }}</div>
+                </div>
+                <div class="card-details">
+                    <p><strong>{{"INFO.SERVICES" | translate }}</strong> {{ appointment.service.name }}</p>
+                    <p><strong>{{"DENTIST_APPOINTMENTS.DATE" | translate }}:</strong> {{ appointment.appointmentDate }}</p>
+                    <p><strong>{{"DENTIST_APPOINTMENTS.TIME" | translate }}:</strong> {{ appointment.startTime }} - {{ appointment.endTime }}</p>
+                </div>
+                <div class="card-actions" *ngIf="appointment.status === 'SCHEDULED'">
+                    <button (click)="updateStatus(appointment.id, 'COMPLETED')" class="complete-btn">{{"DENTIST_APPOINTMENTS.END_APPOINTMENT" | translate }}</button>
+                    <button (click)="updateStatus(appointment.id, 'CANCELLED')" class="cancel-btn">{{"DENTIST_APPOINTMENTS.CANCEL_APPOINTMENT" | translate }}</button>
+                </div>
+            </div>
         </div>
-      </div>
-      <ng-template #noUpcoming>
-        <p class="empty-message">Nema zakazanih termina.</p>
-      </ng-template>
+        <ng-template #noUpcoming>
+            <p class="empty-message">{{"DENTIST_APPOINTMENTS.NO_SCHEDULED_APPOINTMENTS" | translate }}</p>
+        </ng-template>
     </div>
-  
+
     <!-- Past Appointments -->
     <div *ngIf="selectedTab === 'past'">
-      <div *ngIf="pastAppointments.length > 0; else noPast">
-        <div class="appointment-card" *ngFor="let appointment of pastAppointments">
-          <div class="card-header">
-            <div class="patient-name">👤 {{ appointment.patient.firstName }} {{ appointment.patient.lastName }}</div>
-            <div class="appointment-status status-{{ appointment.status.toLowerCase() }}">{{ appointment.status }}</div>
-          </div>
-          <div class="card-details">
-            <p><strong>Usluga:</strong> {{ appointment.service.name }}</p>
-            <p><strong>Datum:</strong> {{ appointment.appointmentDate }}</p>
-            <p><strong>Vreme:</strong> {{ appointment.startTime }} - {{ appointment.endTime }}</p>
-          </div>
+        <div *ngIf="pastAppointments.length > 0; else noPast">
+            <div class="appointment-card" *ngFor="let appointment of pastAppointments">
+                <div class="card-header">
+                    <div class="patient-name">👤 {{ appointment.patient.firstName }} {{ appointment.patient.lastName }}
+                    </div>
+                    <div class="appointment-status status-{{ appointment.status.toLowerCase() }}">{{ appointment.status
+                        }}
+                    </div>
+                </div>
+                <div class="card-details">
+                    <p><strong>{{"INFO.SERVICES" | translate }}</strong> {{ appointment.service.name }}</p>
+                    <p><strong>{{"DENTIST_APPOINTMENTS.DATE" | translate }}:</strong> {{ appointment.appointmentDate }}</p>
+                    <p><strong>{{"DENTIST_APPOINTMENTS.TIME" | translate }}:</strong> {{ appointment.startTime }} - {{ appointment.endTime }}</p>
+                </div>
+            </div>
         </div>
-      </div>
-      <ng-template #noPast>
-        <p class="empty-message">Nema završenih ili otkazanih termina.</p>
-      </ng-template>
+        <ng-template #noPast>
+            <p class="empty-message">{{"DENTIST_APPOINTMENTS.NO_COMPLETED_CANCELLED_APPOINTMENTS" | translate }}</p>
+        </ng-template>
     </div>
-  </div>
-  
+</div>

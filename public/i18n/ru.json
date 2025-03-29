@@ -59,6 +59,18 @@
         "VIEW_APPOINTMENTS": "Просмотреть встречи",
         "SERVICE_MGMT": "Управление услугами",
         "PROFILE": "Профиль"
+    },
+    "DENTIST_APPOINTMENTS": {
+        "MY_APPOINTMENTS": "Мои встречи",
+        "SCHEDULED_APPOINTMENTS": "Запланированные",
+        "COMPLETED_CANCELLED_APPOINTMENTS": "Завершенные / Отмененные",
+        "SORT": "Сортировать",
+        "DATE": "Дата",
+        "TIME": "Время",
+        "END_APPOINTMENT": "Завершить встречу",
+        "CANCEL_APPOINTMENT": "Отменить встречу",
+        "NO_SCHEDULED_APPOINTMENTS": "У вас нет запланированных встреч.",
+        "NO_COMPLETED_CANCELLED_APPOINTMENTS": "У вас нет завершенных или отмененных встреч."
     }
     
 }
