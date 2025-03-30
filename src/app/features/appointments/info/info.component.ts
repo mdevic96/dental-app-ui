@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../auth/auth.service';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { DentistServiceDto } from '../../../core/dentist-service.model';
 
 @Component({
   selector: 'app-info',
@@ -39,8 +40,22 @@ export class InfoComponent implements OnInit {
 
     if (this.office?.id) {
       this.loadReviews();
+      this.loadServices();
     }
   }
+
+  loadServices() {
+    this.http.get<DentistServiceDto[]>(`${this.apiUrl}/services/dental-office/${this.office.id}`)
+      .subscribe((data) => {
+        this.services = data.map(service => ({
+          name: service.service.name,
+          price: service.price
+        }));
+      }, error => {
+        console.error('Error fetching services with prices', error);
+      });
+  }
+  
 
   loadReviews() {
     this.http.get<any[]>(`${this.apiUrl}/reviews/dental-office/${this.office.id}`)

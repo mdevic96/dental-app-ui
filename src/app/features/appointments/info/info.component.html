@@ -27,10 +27,16 @@
             <ul>
               <li *ngFor="let service of services">
                 {{ service.name }}
+                <span *ngIf="service.price !== null; else noPrice">
+                  <strong>{{ service.price | currency:'RSD':'symbol' }}</strong>
+                </span>
+                <ng-template #noPrice>
+                  <span class="no-price">Cena na upit</span>
+                </ng-template>
               </li>
             </ul>
           </div>
-        </div>
+          </div>
   
         <!-- Right Side: Reviews -->
         <div class="info-right">
