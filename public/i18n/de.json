@@ -21,6 +21,7 @@
     },
     "SEARCH": {
         "ALL_CITIES": "Alle Städte",
+        "ALL_MUNICIPALITIES": "Alle Gemeinden",
         "NO_RESULTS": "Keine Ergebnisse gefunden.",
         "SEARCH_DENTAL_OFFICES": "Zahnarztpraxen suchen...",
         "BOOK_NOW": "Buchen",

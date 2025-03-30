@@ -21,6 +21,7 @@
     },
     "SEARCH": {
         "ALL_CITIES": "Svi gradovi",
+        "ALL_MUNICIPALITIES": "Sve opštine",
         "NO_RESULTS": "Nema rezultata.",
         "SEARCH_DENTAL_OFFICES": "Pretražite stomatološke ordinacije...",
         "BOOK_NOW": "Zakaži",

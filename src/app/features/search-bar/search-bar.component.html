@@ -1,14 +1,41 @@
 <div class="search-container">
     <!-- Search Bar -->
     <div class="search-input-group">
-        <img src="/search32.png" class="search-icon"/>
-
+        <img src="/search32.png" class="search-icon" />
+    
         <input type="text" placeholder="{{'SEARCH.SEARCH_DENTAL_OFFICES' | translate }}" [formControl]="searchQuery" />
-        
-        <select class="city-dropdown" (change)="onCityChange($event)">
-            <option value="">{{"SEARCH.ALL_CITIES" | translate }}</option>
-            <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
-        </select>
+    
+        <div class="accordion-container">
+            <button class="accordion-toggle" (click)="toggleAccordion()">
+                <i class="fa-solid fa-location-dot"></i> {{ selectedMunicipalityName || selectedCityName || 'SEARCH.ALL_CITIES' | translate }}
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            
+            <div class="accordion-content" *ngIf="showAccordion">
+              <!-- All Cities -->
+              <div class="accordion-item" (click)="selectCity(null)">
+                {{"SEARCH.ALL_CITIES" | translate }}
+              </div>
+      
+              <!-- Cities and Municipalities -->
+              <div *ngFor="let city of cities" class="accordion-item">
+                <div class="city-header" (click)="toggleMunicipality(city)">
+                    {{ city.name }}
+                  <i class="fa-solid" [ngClass]="city.id === selectedCityId ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+                </div>
+      
+                <!-- Municipality Section -->
+                <div class="municipality-list" *ngIf="city.id === selectedCityId && municipalities.length > 0">
+                  <div (click)="selectMunicipality(null)">
+                    {{"SEARCH.ALL_MUNICIPALITIES" | translate }}
+                  </div>
+                  <div *ngFor="let municipality of municipalities" (click)="selectMunicipality(municipality)">
+                    <i class="fa-solid fa-map-pin"></i> {{ municipality.name }}
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
     </div>
 
     <!-- Search Results -->
@@ -20,28 +47,27 @@
                     <p class="office-address">{{ office.address }}, {{ office.city.name }}</p>
                 </div>
 
-                <div class="rating-container" *ngIf="office.rating">
+                <div class="rating-container" >
                     ⭐ <span class="rating">{{ office.rating }}</span>
                 </div>
             </div>
 
             <div class="button-group" *ngIf="authService.isAuthenticated()">
                 <button class="book-now-btn" (click)="bookNow(office.id)">
-                  {{"SEARCH.BOOK_NOW" | translate}}
+                    {{"SEARCH.BOOK_NOW" | translate}}
                 </button>
-              
                 <button class="info-btn" (click)="openInfoDialog(office)">
                     <i class="fa fa-info-circle"></i> {{"SEARCH.INFO" | translate }}
                 </button>
-              </div>
-              
-              <app-info 
+            </div>
+
+            <app-info 
                 *ngIf="showInfoDialog && selectedOffice?.id === office.id" 
                 [office]="selectedOffice"
                 [dentists]="selectedOfficeDentists"
                 [services]="selectedOfficeServices"
                 (close)="closeInfoDialog()">
-              </app-info>
+            </app-info>
         </div>
     </div>
 

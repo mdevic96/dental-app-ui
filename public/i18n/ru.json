@@ -21,6 +21,7 @@
     },
     "SEARCH": {
         "ALL_CITIES": "Все города",
+        "ALL_MUNICIPALITIES": "Все муниципалитеты",
         "NO_RESULTS": "Результаты не найдены.",
         "SEARCH_DENTAL_OFFICES": "Поиск стоматологических кабинетов...",
         "BOOK_NOW": "Записаться",

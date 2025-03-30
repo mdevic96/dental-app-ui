@@ -21,6 +21,7 @@
     },
     "SEARCH": {
         "ALL_CITIES": "All Cities",
+        "ALL_MUNICIPALITIES": "All Municipalities",
         "NO_RESULTS": "No results found.",
         "SEARCH_DENTAL_OFFICES": "Search dental offices...",
         "BOOK_NOW": "Book",

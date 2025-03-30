@@ -34,12 +34,76 @@
   background: #f8f8f8;
 }
 
-.city-dropdown {
-  padding: 8px;
-  border: none;
+.accordion-container {
+  position: relative;
+  margin-left: 20px;
+}
+
+.accordion-toggle {
+  background-color: white;
+  border: 1px solid #ccc;
   border-radius: 10px;
-  background: white;
+  padding: 8px 16px;
   cursor: pointer;
+  font-size: 14px;
+  width: 180px;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+}
+
+.accordion-toggle i {
+  color: #555;
+}
+
+.accordion-content {
+  background-color: white;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  max-height: 250px;
+  overflow-y: auto;
+  width: 250px;
+  position: absolute;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.accordion-item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s ease;
+}
+
+.accordion-item:hover {
+  background-color: #f0f0f0;
+}
+
+.city-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.municipality-list {
+  padding-left: 20px;
+  border-left: 2px solid #ccc;
+  margin-top: 5px;
+}
+
+.municipality-list div {
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.municipality-list div i {
+  margin-right: 8px;
+}
+
+.municipality-list div:hover {
+  background-color: #e9e9e9;
 }
 
 .search-results {
