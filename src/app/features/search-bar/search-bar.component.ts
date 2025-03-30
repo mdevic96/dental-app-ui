@@ -78,37 +78,46 @@ export class SearchBarComponent implements OnInit {
     );
   }
 
-  searchDentalOffices(query: string): Observable<DentalOffice[]> {
-    if (!query.trim()) {
-      this.searchResults = [];
-      return of([]);
-    }
-
+  searchDentalOffices(query: string = ''): Observable<DentalOffice[]> {
     this.isLoading = true;
-
-    const params: any = { query };
-    if (this.selectedCityId) params.cityId = this.selectedCityId;
-    if (this.selectedMunicipalityId) params.municipalityId = this.selectedMunicipalityId;
-
+  
+    const params: any = {};
+    if (query.trim()) {
+      params.query = query;
+    }
+    if (this.selectedCityId) {
+      params.cityId = this.selectedCityId;
+    }
+    if (this.selectedMunicipalityId) {
+      params.municipalityId = this.selectedMunicipalityId;
+    }
+  
     return this.http.get<{ content: DentalOffice[] }>(this.apiUrl + '/dental-offices/search', { params })
       .pipe(
-        map(response => this.searchResults = response.content),
+        map(response => {
+          if (response.content.length === 0) {
+            this.searchResults = [];
+          } else {
+            this.searchResults = response.content;
+          }
+          return this.searchResults;
+        }),
+  
         tap(() => this.isLoading = false),
         catchError(() => {
           this.isLoading = false;
+          this.searchResults = [];
           return of([]);
         })
       );
   }
 
   triggerSearch() {
-    if (this.searchQuery.value?.trim()) {
-      this.isLoading = true;
-      this.searchDentalOffices(this.searchQuery.value!).subscribe({
-        next: () => this.isLoading = false,
-        error: () => this.isLoading = false
-      });
-    }
+    this.isLoading = true;
+    this.searchDentalOffices(this.searchQuery.value!).subscribe({
+      next: () => this.isLoading = false,
+      error: () => {this.isLoading = false; this.searchResults = []}
+    });
   }
 
   toggleAccordion() {
