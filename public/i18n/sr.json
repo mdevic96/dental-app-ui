@@ -42,9 +42,14 @@
         "STATUS": "Status:",
         "OK": "Nazad na početnu"
     },
+    "STATUS": {
+        "SCHEDULED": "Zakazano",
+        "COMPLETED": "Završeno",
+        "CANCELLED": "Otkazano"
+    },
     "INFO": {
         "WORKING_HOURS": "Radno vreme",
-        "DENTISTS": "Zubari:",
+        "DENTISTS": "Stomatolozi:",
         "SERVICES": "Usluge:",
         "REVIEWS": "Recenzije:",
         "ADD_REVIEW": "Dodaj recenziju:",

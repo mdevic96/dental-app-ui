@@ -42,6 +42,11 @@
         "STATUS": "Status:",
         "OK": "Zurück zur Startseite"
     },
+    "STATUS": {
+        "SCHEDULED": "Geplant",
+        "COMPLETED": "Abgeschlossen",
+        "CANCELLED": "Abgesagt"
+    },
     "INFO": {
         "WORKING_HOURS": "Öffnungszeiten",
         "DENTISTS": "Zahnärzte:",

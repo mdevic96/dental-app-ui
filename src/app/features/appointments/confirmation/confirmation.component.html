@@ -9,7 +9,7 @@
       <p><strong>{{"BOOKING_CONFIRMATION.DENTIST" | translate}}</strong> <span>{{ data?.appointment?.dentist?.user?.firstName }} {{ data?.appointment?.dentist?.user?.lastName }}</span></p>
       <p><strong>{{"BOOKING_CONFIRMATION.SERVICE" | translate}}</strong> <span>{{ data?.appointment?.service?.name }}</span></p>
       <p><strong>{{"BOOKING_CONFIRMATION.DATE_TIME" | translate}}</strong><span>{{ formatDateTime(data?.appointment?.appointmentDate, data?.appointment?.startTime) }}</span></p>
-      <p><strong>{{"BOOKING_CONFIRMATION.STATUS" | translate}}</strong> <span class="status-text">{{ data?.appointment?.status }}</span></p>
+      <p><strong>{{"BOOKING_CONFIRMATION.STATUS" | translate}}</strong> <span class="status-text">{{ "STATUS." + data?.appointment?.status | translate }}</span></p>
     </div>
   
     <mat-divider></mat-divider>

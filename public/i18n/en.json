@@ -42,6 +42,11 @@
         "STATUS:": "Status:",
         "OK": "Back to Home"
     },
+    "STATUS": {
+        "SCHEDULED": "Scheduled",
+        "COMPLETED": "Completed",
+        "CANCELLED": "Cancelled"
+    },
     "INFO": {
         "WORKING_HOURS": "Working hours",
         "DENTISTS": "Dentists:",

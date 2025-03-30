@@ -42,6 +42,11 @@
         "STATUS": "Статус:",
         "OK": "Вернуться на главную"
     },
+    "STATUS": {
+        "SCHEDULED": "Запланировано",
+        "COMPLETED": "Завершено",
+        "CANCELLED": "Отменено"
+    },
     "INFO": {
         "WORKING_HOURS": "Часы работы",
         "DENTISTS": "Стоматологи:",

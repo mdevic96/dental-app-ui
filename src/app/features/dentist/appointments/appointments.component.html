@@ -26,7 +26,7 @@
                 <div class="card-header">
                     <div class="patient-name">👤 {{ appointment.patient.firstName }} {{ appointment.patient.lastName }}
                     </div>
-                    <div class="appointment-status status-{{ appointment.status.toLowerCase() }}">{{ appointment.status
+                    <div class="appointment-status status-{{ appointment.status.toLowerCase() }}">{{ "STATUS." + appointment.status | translate
                         }}</div>
                 </div>
                 <div class="card-details">
@@ -52,7 +52,7 @@
                 <div class="card-header">
                     <div class="patient-name">👤 {{ appointment.patient.firstName }} {{ appointment.patient.lastName }}
                     </div>
-                    <div class="appointment-status status-{{ appointment.status.toLowerCase() }}">{{ appointment.status
+                    <div class="appointment-status status-{{ appointment.status.toLowerCase() }}">{{ "STATUS." + appointment.status | translate
                         }}
                     </div>
                 </div>
