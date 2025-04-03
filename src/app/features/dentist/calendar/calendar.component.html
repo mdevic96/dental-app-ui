@@ -1,0 +1,45 @@
+<div class="calendar-page">
+  <h2 class="calendar-title">🗓️ Nedeljni raspored termina</h2>
+
+  <div class="calendar-container">
+    <full-calendar [options]='calendarOptions()'>
+      <ng-template #eventContent let-arg>
+        <b>{{ arg.timeText }}</b>
+        <i>{{ arg.event.title }}</i>
+      </ng-template>
+    </full-calendar>
+  </div>
+  <div *ngIf="showCreateModal" class="modal-overlay">
+    <div class="modal-content">
+      <h3>📅 Novi termin</h3>
+      <p><strong>Početak:</strong> {{ selectedStart }}</p>
+      <p><strong>Kraj:</strong> {{ selectedEnd }}</p>
+  
+      <form [formGroup]="appointmentForm" (ngSubmit)="createAppointment()">
+        <label>Pacijent</label>
+        <select formControlName="patientId">
+          <option *ngFor="let patient of availablePatients" [value]="patient.id">
+            {{ patient.firstName }} {{ patient.lastName }}
+          </option>
+        </select>
+      
+        <label>Usluga</label>
+        <select formControlName="serviceId">
+          <option *ngFor="let service of availableServices" [value]="service.service.id">
+            {{ service.service.name }} ({{ service.price | currency:'RSD':'symbol-narrow' }})
+          </option>
+        </select>
+      
+        <label>Beleška</label>
+        <textarea formControlName="notes" placeholder="Npr. Važno za belešku..."></textarea>
+      
+        <div class="modal-actions">
+          <button type="submit" [disabled]="appointmentForm.invalid">✅ Sačuvaj</button>
+          <button type="button" (click)="showCreateModal = false">❌ Otkaži</button>
+        </div>
+      </form>
+      
+    </div>
+  </div>
+  
+</div>

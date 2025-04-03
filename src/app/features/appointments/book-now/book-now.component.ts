@@ -9,6 +9,7 @@ import { DentistDto } from '../../../core/dentist.model';
 import { ConfirmationComponent } from '../confirmation/confirmation.component';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-book-now',
@@ -36,7 +37,12 @@ export class BookNowComponent implements OnInit {
   availableDentists: DentistDto[] = [];
   availableServices: any[] = [];
 
-  constructor(private route: ActivatedRoute, private dialog: MatDialog, private http: HttpClient, private router: Router) { }
+  constructor(
+    private route: ActivatedRoute, 
+    private dialog: MatDialog, 
+    private http: HttpClient, 
+    private authService: AuthService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -111,11 +117,14 @@ export class BookNowComponent implements OnInit {
       return;
     }
 
+    const patientId = this.authService.getUser().id;
+
     const appointmentData = {
       dentistId: this.selectedDentistId,
       serviceId: this.selectedServiceId,
       appointmentDate: this.selectedDate,
       startTime: this.selectedStartTime,
+      patientId: patientId
   };
 
     const headers = new HttpHeaders({

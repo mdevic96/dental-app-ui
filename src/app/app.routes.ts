@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { DentistDashboardComponent } from './features/dentist/dashboard/dashboard.component';
 import { AppointmentsComponent } from './features/dentist/appointments/appointments.component';
 import { RoleGuard } from './core/guards/role.guard';
+import { CalendarComponent } from './features/dentist/calendar/calendar.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -40,6 +41,12 @@ export const routes: Routes = [
     component: AppointmentsComponent, 
     canActivate: [RoleGuard], 
     data: { roles: ['ROLE_DENTIST'] } 
+  },
+  { 
+    path: 'dentist/calendar', 
+    component: CalendarComponent, 
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_DENTIST'] }
   }
 
 ];
