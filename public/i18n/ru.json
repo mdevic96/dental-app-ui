@@ -77,6 +77,18 @@
         "CANCEL_APPOINTMENT": "Отменить встречу",
         "NO_SCHEDULED_APPOINTMENTS": "У вас нет запланированных встреч.",
         "NO_COMPLETED_CANCELLED_APPOINTMENTS": "У вас нет завершенных или отмененных встреч."
+    },
+    "CALENDAR": {
+        "WEEKLY_APPOINTMENTS": "Еженедельное расписание",
+        "NEW_APPOINTMENT": "Новый срок",
+        "START": "Начало",
+        "END": "Конец",
+        "PATIENT": "Пациент",
+        "SERVICE": "Услуга",
+        "NOTES": "Заметки",
+        "SAVE": "Сохранить",
+        "CANCEL": "Отмена",
+        "EDIT_APPOINTMENT": "Изменить запись"
     }
     
 }

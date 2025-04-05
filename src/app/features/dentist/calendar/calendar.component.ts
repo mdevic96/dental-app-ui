@@ -16,6 +16,7 @@ import srLocale from '@fullcalendar/core/locales/sr';
 import enLocale from '@fullcalendar/core/locales/en-gb';
 import ruLocale from '@fullcalendar/core/locales/ru';
 import deLocale from '@fullcalendar/core/locales/de';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-calendar',
@@ -23,7 +24,8 @@ import deLocale from '@fullcalendar/core/locales/de';
   imports: [
     CommonModule, 
     FullCalendarModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TranslateModule
   ],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
@@ -95,6 +97,19 @@ export class CalendarComponent implements OnInit {
         borderColor: this.getServiceColor(app.service.id),
         allDay: false
       }));
+
+      const seenServiceIds = new Set<number>();
+
+      this.legendItems = response.content
+        .filter(app => {
+          if (seenServiceIds.has(app.service.id)) return false;
+          seenServiceIds.add(app.service.id);
+          return true;
+        })
+        .map(app => ({
+          name: app.service.name,
+          color: this.getServiceColor(app.service.id)
+        }));
   
       // Re-assign events dynamically
       const options = this.calendarOptions();
@@ -125,12 +140,6 @@ export class CalendarComponent implements OnInit {
 
     this.http.get<DentistServiceDto[]>(`${this.apiUrl}/services/dental-office/${this.officeId}`, { headers }).subscribe(data => {
       this.availableServices = data;
-
-      // Create legend
-      this.legendItems = data.map(service => ({
-        name: service.service.name,
-        color: this.getServiceColor(service.service.id)
-      }));
     });
   }
   
@@ -252,9 +261,16 @@ export class CalendarComponent implements OnInit {
           allDay: false,
         };
 
-    
         this.appointments.push(event);
     
+        const existsInLegend = this.legendItems.some(item => item.name === newAppointment.service.name);
+        if (!existsInLegend) {
+          this.legendItems.push({
+            name: newAppointment.service.name,
+            color: serviceColor
+          });
+        }
+
         // Rebind to calendar
         const options = this.calendarOptions();
         options.events = [...this.appointments];
@@ -361,15 +377,11 @@ export class CalendarComponent implements OnInit {
   }
   
   getServiceColor(serviceId: number): string {
-    const softColors = [
-      '#7FC8A9', '#6EC4DB', '#FFD56B', '#FF968A', '#D9ACF5',
-      '#FFB085', '#A0CED9', '#B5EAEA', '#FDD7AA', '#F7C8E0',
-      '#A5C9CA', '#F9ED69', '#C9BBCF', '#90ADC6', '#E4BAD4',
-      '#FFDAC1', '#B5EAD7', '#E2F0CB', '#C7CEEA', '#FBE8A6',
-      '#B8F2E6', '#FFA69E', '#B9FBC0', '#C8E7ED', '#F6DFEB',
-      '#C2CAD0', '#FFF5BA', '#C6E2FF', '#B7E2F0', '#D8A7B1'
-    ];
-
-    return softColors[serviceId % softColors.length];
+    const hue = (serviceId * 137) % 360;
+    const saturation = 60 + (serviceId % 20);
+    const lightness = 65;
+  
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   }
+  
 }

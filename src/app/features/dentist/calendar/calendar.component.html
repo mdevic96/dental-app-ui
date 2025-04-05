@@ -1,6 +1,5 @@
 <div class="calendar-page">
-  <h2 class="calendar-title">🗓️ Nedeljni raspored termina</h2>
-
+  <h2 class="calendar-title">🗓️ {{"CALENDAR.WEEKLY_APPOINTMENTS" | translate }}</h2>
   <div class="calendar-legend">
     <ul>
       <li *ngFor="let item of legendItems">
@@ -15,57 +14,56 @@
   </div>
   <div *ngIf="showCreateModal" class="modal-overlay">
     <div class="modal-content">
-      <h3>📅 Novi termin</h3>
-      <p><strong>Početak:</strong> {{ selectedStart }}</p>
-      <p><strong>Kraj:</strong> {{ selectedEnd }}</p>
+      <h3>📅 {{"CALENDAR.NEW_APPOINTMENT" | translate }}</h3>
+      <p><strong>{{"CALENDAR.START" | translate }}:</strong> {{ selectedStart }}</p>
+      <p><strong>{{"CALENDAR.END" | translate }}:</strong> {{ selectedEnd }}</p>
   
       <form [formGroup]="appointmentForm" (ngSubmit)="createAppointment()">
-        <label>Pacijent</label>
+        <label>{{"CALENDAR.PATIENT" | translate }}</label>
         <select formControlName="patientId">
           <option *ngFor="let patient of availablePatients" [value]="patient.id">
             {{ patient.firstName }} {{ patient.lastName }}
           </option>
         </select>
       
-        <label>Usluga</label>
+        <label>{{"CALENDAR.SERVICE" | translate }}</label>
         <select formControlName="serviceId">
           <option *ngFor="let service of availableServices" [value]="service.service.id">
-            {{ service.service.name }} ({{ service.price | currency:'RSD':'symbol-narrow' }})
+            {{ service.service.name }}
           </option>
         </select>
       
-        <label>Beleška</label>
-        <textarea formControlName="notes" placeholder="Npr. Važno za belešku..."></textarea>
+        <label>{{"CALENDAR.NOTES" | translate }}</label>
+        <textarea formControlName="notes"></textarea>
       
         <div class="modal-actions">
-          <button type="submit" [disabled]="appointmentForm.invalid">✅ Sačuvaj</button>
-          <button type="button" (click)="onCancelClick()">❌ Otkaži</button>
+          <button type="submit" [disabled]="appointmentForm.invalid">✅ {{"CALENDAR.SAVE" | translate }}</button>
+          <button type="button" (click)="onCancelClick()">❌ {{"CALENDAR.CANCEL" | translate }}</button>
         </div>
       </form>
-      
     </div>
   </div>
   <div *ngIf="showEditModal" class="modal-overlay">
     <div class="modal-content">
-      <h3>✏️ Izmena termina</h3>
-      <p><strong>Pacijent:</strong> {{ selectedAppointment?.patient?.firstName }} {{ selectedAppointment?.patient?.lastName }}</p>
-      <p><strong>Usluga:</strong> {{ selectedAppointment?.service?.name }}</p>
-      <p><strong>Datum:</strong> {{ selectedAppointment?.appointmentDate }} od {{ selectedAppointment?.startTime }} do {{ selectedAppointment?.endTime }}</p>
-  
+      <h3>✏️ {{"CALENDAR.EDIT_APPOINTMENT" | translate }}</h3>
+      <p><strong>{{"CALENDAR.PATIENT" | translate }}:</strong> {{ selectedAppointment?.patient?.firstName }} {{ selectedAppointment?.patient?.lastName }}</p>
+      <p><strong>{{"CALENDAR.SERVICE" | translate }}:</strong> {{ selectedAppointment?.service?.name }}</p>
+      <p><strong>{{"DENTIST_APPOINTMENTS.DATE" | translate }}:</strong> {{ selectedAppointment?.appointmentDate }}</p>
+      <p><strong>{{"DENTIST_APPOINTMENTS.TIME" | translate }}:</strong> {{ selectedAppointment?.startTime }} - {{ selectedAppointment?.endTime }}</p>
       <form [formGroup]="editForm" (ngSubmit)="updateAppointment()">
-        <label>Status</label>
+        <label>{{"BOOKING_CONFIRMATION.STATUS" | translate }}</label>
         <select formControlName="status">
-          <option value="SCHEDULED">Zakazano</option>
-          <option value="COMPLETED">Završeno</option>
-          <option value="CANCELLED">Otkazano</option>
+          <option value="SCHEDULED">{{"STATUS.SCHEDULED" | translate }}</option>
+          <option value="COMPLETED">{{"STATUS.COMPLETED" | translate }}</option>
+          <option value="CANCELLED">{{"STATUS.CANCELLED" | translate }}</option>
         </select>
   
-        <label>Beleška</label>
+        <label>{{"CALENDAR.NOTES" | translate }}</label>
         <textarea formControlName="notes"></textarea>
   
         <div class="modal-actions">
-          <button type="submit">💾 Sačuvaj</button>
-          <button type="button" (click)="showEditModal = false">❌ Zatvori</button>
+          <button type="submit">💾 {{"CALENDAR.SAVE" | translate }}</button>
+          <button type="button" (click)="showEditModal = false">❌ {{"CALENDAR.CANCEL" | translate }}</button>
         </div>
       </form>
     </div>

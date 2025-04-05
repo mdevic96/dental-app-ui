@@ -77,5 +77,17 @@
         "CANCEL_APPOINTMENT": "Cancel Appointment",
         "NO_SCHEDULED_APPOINTMENTS": "No scheduled appointments.",
         "NO_COMPLETED_CANCELLED_APPOINTMENTS": "No completed or cancelled appointments."
+    },
+    "CALENDAR": {
+        "WEEKLY_APPOINTMENTS": "Weekly schedule",
+        "NEW_APPOINTMENT": "New term",
+        "START": "Start",
+        "END": "End",
+        "PATIENT": "Patient",
+        "SERVICE": "Service",
+        "NOTES": "Notes",
+        "SAVE": "Save",
+        "CANCEL": "Cancel",
+        "EDIT_APPOINTMENT": "Edit appointment"
     }
 }
