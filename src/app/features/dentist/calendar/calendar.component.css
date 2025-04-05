@@ -105,3 +105,47 @@
 .modal-actions button[type="button"]:hover {
   background-color: #ccc;
 }
+
+.fc-event-custom {
+  font-size: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Calendar legend */
+.calendar-legend {
+  margin-top: 20px;
+  background: #fff;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.calendar-legend h4 {
+  margin-bottom: 10px;
+  color: #444;
+}
+
+.calendar-legend ul {
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.calendar-legend li {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #333;
+}
+
+.legend-circle {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+}

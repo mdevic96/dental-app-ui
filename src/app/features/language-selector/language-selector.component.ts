@@ -20,11 +20,13 @@ export class LanguageSelectorComponent {
   ];
 
   currentFlag = localStorage.getItem('flag') || this.languages.find(lang => lang.code === 'sr')?.flag!;
+  currentLang = localStorage.getItem('lang') || this.languages.find(lang => lang.code === 'sr')?.code!;
   
   constructor(private translate: TranslateService) {
     this.translate.setDefaultLang('sr');
     this.translate.use(localStorage.getItem('lang') || 'sr');
     localStorage.setItem('flag', this.currentFlag);
+    localStorage.setItem('lang', this.currentLang);
   }
 
   toggleDropdown() {
@@ -37,6 +39,9 @@ export class LanguageSelectorComponent {
     localStorage.setItem('flag', flag);
     this.currentFlag = flag;
     this.dropdownOpen = false;
+
+    // Emit a custom event to notify calendar
+    window.dispatchEvent(new CustomEvent('languageChanged', { detail: lang }));
   }
 
 }

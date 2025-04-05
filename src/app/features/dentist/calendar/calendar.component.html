@@ -1,12 +1,16 @@
 <div class="calendar-page">
   <h2 class="calendar-title">🗓️ Nedeljni raspored termina</h2>
 
+  <div class="calendar-legend">
+    <ul>
+      <li *ngFor="let item of legendItems">
+        <span class="legend-circle" [style.backgroundColor]="item.color"></span>
+        {{ item.name }}
+      </li>
+    </ul>
+  </div>
   <div class="calendar-container">
     <full-calendar [options]='calendarOptions()'>
-      <ng-template #eventContent let-arg>
-        <b>{{ arg.timeText }}</b>
-        <i>{{ arg.event.title }}</i>
-      </ng-template>
     </full-calendar>
   </div>
   <div *ngIf="showCreateModal" class="modal-overlay">
@@ -35,11 +39,37 @@
       
         <div class="modal-actions">
           <button type="submit" [disabled]="appointmentForm.invalid">✅ Sačuvaj</button>
-          <button type="button" (click)="showCreateModal = false">❌ Otkaži</button>
+          <button type="button" (click)="onCancelClick()">❌ Otkaži</button>
         </div>
       </form>
       
     </div>
   </div>
+  <div *ngIf="showEditModal" class="modal-overlay">
+    <div class="modal-content">
+      <h3>✏️ Izmena termina</h3>
+      <p><strong>Pacijent:</strong> {{ selectedAppointment?.patient?.firstName }} {{ selectedAppointment?.patient?.lastName }}</p>
+      <p><strong>Usluga:</strong> {{ selectedAppointment?.service?.name }}</p>
+      <p><strong>Datum:</strong> {{ selectedAppointment?.appointmentDate }} od {{ selectedAppointment?.startTime }} do {{ selectedAppointment?.endTime }}</p>
+  
+      <form [formGroup]="editForm" (ngSubmit)="updateAppointment()">
+        <label>Status</label>
+        <select formControlName="status">
+          <option value="SCHEDULED">Zakazano</option>
+          <option value="COMPLETED">Završeno</option>
+          <option value="CANCELLED">Otkazano</option>
+        </select>
+  
+        <label>Beleška</label>
+        <textarea formControlName="notes"></textarea>
+  
+        <div class="modal-actions">
+          <button type="submit">💾 Sačuvaj</button>
+          <button type="button" (click)="showEditModal = false">❌ Zatvori</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
   
 </div>

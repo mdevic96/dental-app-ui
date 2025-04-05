@@ -7,6 +7,7 @@ export interface AppointmentDto {
       phoneNumber: string;
     };
     service: {
+      id: number,
       name: string;
       durationMinutes: number;
     };

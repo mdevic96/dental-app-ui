@@ -4,13 +4,18 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
-import { CalendarOptions, DateSelectArg } from '@fullcalendar/core/index.js';
+import { CalendarOptions, DateSelectArg, EventInput } from '@fullcalendar/core/index.js';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DentistServiceDto } from '../../../core/dentist-service.model';
 import { UserDto } from '../../../core/user.model';
 import { DentalOffice } from '../../../core/dental-office.model';
 import { AuthService } from '../../auth/auth.service';
+import { AppointmentDto } from '../../../core/appointment.model';
+import srLocale from '@fullcalendar/core/locales/sr';
+import enLocale from '@fullcalendar/core/locales/en-gb';
+import ruLocale from '@fullcalendar/core/locales/ru';
+import deLocale from '@fullcalendar/core/locales/de';
 
 @Component({
   selector: 'app-calendar',
@@ -34,7 +39,18 @@ export class CalendarComponent implements OnInit {
   availableServices: DentistServiceDto[] = [];
   availablePatients: UserDto[] = [];
 
+  selectedAppointment: AppointmentDto | null = null;
+  showEditModal = false;
+  editForm!: FormGroup;
+
+  appointments: EventInput[] = [];
+  currentView: string = "timeGridWeek";
+  calendarStart: string | null = null;
+  calendarEnd: string | null = null;
+
   officeId!: number;
+
+  legendItems: { name: string; color: string }[] = [];
 
   constructor(
     private fb: FormBuilder, 
@@ -45,6 +61,45 @@ export class CalendarComponent implements OnInit {
       patientId: ['', Validators.required],
       serviceId: ['', Validators.required],
       notes: ['']
+    });
+  }
+
+  fetchAppointments(start: string, end: string) {
+    const dentistId = this.authService.getUser().id;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      'Content-Type': 'application/json'
+    });
+  
+    const params = {
+      startDate: start,
+      endDate: end,
+      page: 0,
+      size: 100
+    };
+  
+    this.http.get<{ content: AppointmentDto[] }>(
+      `${this.apiUrl}/appointments/dentist/${dentistId}/date-range`,
+      { headers, params }
+    ).subscribe(response => {
+      this.appointments = response.content.map(app => ({
+        title: `${app.patient.firstName} ${app.patient.lastName} - ${app.service.name}`,
+        start: `${app.appointmentDate}T${app.startTime}`,
+        end: `${app.appointmentDate}T${app.endTime}`,
+        extendedProps: {
+          id: app.id,
+          notes: app.notes
+        },
+        color: this.getServiceColor(app.service.id),
+        backgroundColor: this.getServiceColor(app.service.id),
+        borderColor: this.getServiceColor(app.service.id),
+        allDay: false
+      }));
+  
+      // Re-assign events dynamically
+      const options = this.calendarOptions();
+      options.events = this.appointments;
+      this.calendarOptions.set(options);
     });
   }
 
@@ -70,6 +125,12 @@ export class CalendarComponent implements OnInit {
 
     this.http.get<DentistServiceDto[]>(`${this.apiUrl}/services/dental-office/${this.officeId}`, { headers }).subscribe(data => {
       this.availableServices = data;
+
+      // Create legend
+      this.legendItems = data.map(service => ({
+        name: service.service.name,
+        color: this.getServiceColor(service.service.id)
+      }));
     });
   }
   
@@ -86,6 +147,19 @@ export class CalendarComponent implements OnInit {
   
   ngOnInit(): void {
     this.fetchDentalOfficeId();
+
+    this.editForm = this.fb.group({
+      notes: [''],
+      status: ['', Validators.required]
+    });
+
+    // Listen for custom language change event
+    window.addEventListener('languageChanged', (event: any) => {
+      const lang = event.detail || 'sr';
+      const options = this.calendarOptions();
+      options.locale = lang;
+      this.calendarOptions.set({ ...options });
+    });
   }
 
   calendarOptions = signal<CalendarOptions>({
@@ -94,12 +168,29 @@ export class CalendarComponent implements OnInit {
       dayGridPlugin,
       timeGridPlugin
     ],
+    locales: [srLocale, enLocale, ruLocale, deLocale],
+    locale: localStorage.getItem('lang') || 'sr',
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay'
     },
     initialView: 'timeGridWeek',
+    viewDidMount: (arg) => {
+      this.currentView = arg.view.type;
+    },
+    eventContent: this.renderEventContent.bind(this),
+    eventDidMount: this.renderEventTooltip.bind(this),   
+    slotLabelFormat: {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    },
+    eventTimeFormat: {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    }, 
     slotMinTime: "08:00:00",
     slotMaxTime: "20:00:00",
     weekends: false,
@@ -108,7 +199,12 @@ export class CalendarComponent implements OnInit {
     selectMirror: true,
     dayMaxEvents: true,
     select: this.handleDateSelect.bind(this),
-    eventClick: this.handleEventClick.bind(this)
+    eventClick: this.handleEventClick.bind(this),
+    datesSet: (info) => {
+      this.calendarStart = info.startStr;
+      this.calendarEnd = info.endStr;
+      this.fetchAppointments(this.calendarStart, this.calendarEnd);
+    }
   });
 
   createAppointment() {
@@ -135,13 +231,57 @@ export class CalendarComponent implements OnInit {
       'Content-Type': 'application/json'
     });
   
-    this.http.post(`${this.apiUrl}/appointments`, payload, { headers }).subscribe({
-      next: () => {
+    this.http.post<AppointmentDto>(`${this.apiUrl}/appointments`, payload, { headers }).subscribe({
+      next: (newAppointment) => {
         this.showCreateModal = false;
         this.appointmentForm.reset();
+
+        const serviceColor = this.getServiceColor(newAppointment.service.id);
+
+        const event = {
+          title: `${newAppointment.patient.firstName} ${newAppointment.patient.lastName} - ${newAppointment.service.name}`,
+          start: `${newAppointment.appointmentDate}T${newAppointment.startTime}`,
+          end: `${newAppointment.appointmentDate}T${newAppointment.endTime}`,
+          extendedProps: {
+            id: newAppointment.id,
+            notes: newAppointment.notes
+          },
+          backgroundColor: serviceColor,
+          borderColor: serviceColor,
+          color: serviceColor,
+          allDay: false,
+        };
+
+    
+        this.appointments.push(event);
+    
+        // Rebind to calendar
+        const options = this.calendarOptions();
+        options.events = [...this.appointments];
+        this.calendarOptions.set(options);
       },
       error: (err) => {
         console.error(err);
+      }
+    });
+  }
+
+  updateAppointment() {
+    if (!this.selectedAppointment) return;
+  
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    });
+  
+    const { notes, status } = this.editForm.value;
+  
+    this.http.patch<AppointmentDto>(
+      `${this.apiUrl}/appointments/${this.selectedAppointment.id}`,
+      { notes, status }, { headers }
+    ).subscribe(() => {
+      this.showEditModal = false;
+      if (this.calendarStart && this.calendarEnd) {
+        this.fetchAppointments(this.calendarStart, this.calendarEnd);
       }
     });
   }
@@ -152,12 +292,84 @@ export class CalendarComponent implements OnInit {
   }
 
   handleEventClick(clickInfo: any) {
-    alert('event click! ' + clickInfo)
-  }
+    const serviceId = clickInfo.event.extendedProps['id'];
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    });
+
+    this.http.get<AppointmentDto>(`${this.apiUrl}/appointments/${serviceId}`, { headers }).subscribe(appointment => {
+      this.selectedAppointment = appointment;
+      this.showEditModal = true;
+
+      this.editForm.patchValue({
+        notes: appointment.notes,
+        status: appointment.status
+      });
+    });
+  }  
 
   handleDateSelect(selectInfo: DateSelectArg) {
     this.selectedStart = selectInfo.startStr;
     this.selectedEnd = selectInfo.endStr;
     this.showCreateModal = true;
+  }
+
+  onCancelClick() {
+    this.showCreateModal = false
+
+    this.appointmentForm.reset();
+    this.selectedStart = null;
+    this.selectedEnd = null;
+  }
+
+  renderEventContent(arg: any) {
+    const time = arg.timeText;
+    const title = arg.event.title;
+
+    const patient = title.split(' - ');
+
+    if (this.currentView === 'dayGridMonth') {
+      // Shorter format for Month view
+      const firstName = patient[0]?.split(' ')[0] || title;
+      return {
+        html: `<div class="fc-event-custom">
+                 <b>${time}</b> <i>${firstName}</i>
+               </div>`
+      };
+    }
+
+    // Full format for week/day view
+    return {
+      html: `<div class="fc-event-custom">
+               <b>${time}</b><br/>
+               <i>${title}</i>
+             </div>`
+    };
+  }
+
+  renderEventTooltip(arg: any) {
+    const el = arg.el;
+    const time = arg.timeText;
+    const title = arg.event.title;
+    const patient = title.split(' - ');
+    const firstName = patient[0];
+    const notes = arg.event.extendedProps['notes'];
+
+    const tooltipText = `${firstName}\n` + `${patient[1]}\n` + `${time}\n` + `${notes || ''}`;
+
+    el.setAttribute('title', tooltipText.trim());
+  }
+  
+  getServiceColor(serviceId: number): string {
+    const softColors = [
+      '#7FC8A9', '#6EC4DB', '#FFD56B', '#FF968A', '#D9ACF5',
+      '#FFB085', '#A0CED9', '#B5EAEA', '#FDD7AA', '#F7C8E0',
+      '#A5C9CA', '#F9ED69', '#C9BBCF', '#90ADC6', '#E4BAD4',
+      '#FFDAC1', '#B5EAD7', '#E2F0CB', '#C7CEEA', '#FBE8A6',
+      '#B8F2E6', '#FFA69E', '#B9FBC0', '#C8E7ED', '#F6DFEB',
+      '#C2CAD0', '#FFF5BA', '#C6E2FF', '#B7E2F0', '#D8A7B1'
+    ];
+
+    return softColors[serviceId % softColors.length];
   }
 }
