@@ -20,19 +20,23 @@
   
       <form [formGroup]="appointmentForm" (ngSubmit)="createAppointment()">
         <label>{{"CALENDAR.PATIENT" | translate }}</label>
-        <select formControlName="patientId">
-          <option *ngFor="let patient of availablePatients" [value]="patient.id">
+        <input type="text" [value]="getPatientNameById(appointmentForm.get('patientId')?.value)"
+          (input)="onPatientInput($event)" list="patient-list" />
+        <datalist id="patient-list">
+          <option *ngFor="let patient of filteredPatients" [value]="patient.id">
             {{ patient.firstName }} {{ patient.lastName }}
           </option>
-        </select>
-      
+        </datalist>
+        
         <label>{{"CALENDAR.SERVICE" | translate }}</label>
-        <select formControlName="serviceId">
-          <option *ngFor="let service of availableServices" [value]="service.service.id">
+        <input type="text" [value]="getServiceNameById(appointmentForm.get('serviceId')?.value)"
+          (input)="onServiceInput($event)" list="service-list" />
+        <datalist id="service-list">
+          <option *ngFor="let service of filteredServices" [value]="service.service.id">
             {{ service.service.name }}
           </option>
-        </select>
-      
+        </datalist>
+
         <label>{{"CALENDAR.NOTES" | translate }}</label>
         <textarea formControlName="notes"></textarea>
       

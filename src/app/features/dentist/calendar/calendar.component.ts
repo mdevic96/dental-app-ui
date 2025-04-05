@@ -54,6 +54,9 @@ export class CalendarComponent implements OnInit {
 
   legendItems: { name: string; color: string }[] = [];
 
+  filteredPatients: UserDto[] = [];
+  filteredServices: DentistServiceDto[] = [];
+
   constructor(
     private fb: FormBuilder, 
     private http: HttpClient,
@@ -140,6 +143,7 @@ export class CalendarComponent implements OnInit {
 
     this.http.get<DentistServiceDto[]>(`${this.apiUrl}/services/dental-office/${this.officeId}`, { headers }).subscribe(data => {
       this.availableServices = data;
+      this.filteredServices = data;
     });
   }
   
@@ -151,6 +155,7 @@ export class CalendarComponent implements OnInit {
 
     this.http.get<UserDto[]>(`${this.apiUrl}/patients/dental-office/${this.officeId}`, { headers }).subscribe(data => {
       this.availablePatients = data;
+      this.filteredPatients = data;
     });
   }
   
@@ -160,6 +165,15 @@ export class CalendarComponent implements OnInit {
     this.editForm = this.fb.group({
       notes: [''],
       status: ['', Validators.required]
+    });
+
+    // Add listeners for filtering
+    this.appointmentForm.get('patientId')?.valueChanges.subscribe(value => {
+      this.filterPatients(value);
+    });
+
+    this.appointmentForm.get('serviceId')?.valueChanges.subscribe(value => {
+      this.filterServices(value);
     });
 
     // Listen for custom language change event
@@ -302,11 +316,6 @@ export class CalendarComponent implements OnInit {
     });
   }
   
-
-  handleDateClick(arg: DateClickArg) {
-    alert('date click! ' + arg.dateStr)
-  }
-
   handleEventClick(clickInfo: any) {
     const serviceId = clickInfo.event.extendedProps['id'];
     const headers = new HttpHeaders({
@@ -383,5 +392,49 @@ export class CalendarComponent implements OnInit {
   
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   }
+
+  filterPatients(searchTerm: string) {
+    const lower = searchTerm?.toLowerCase?.() || '';
+    this.filteredPatients = this.availablePatients.filter(p =>
+      (`${p.firstName} ${p.lastName}`).toLowerCase().includes(lower)
+    );
+  }
+
+  filterServices(query: string) {
+    const seen = new Set<number>();
+    this.filteredServices = this.availableServices
+      .filter(s => {
+        const name = s.service.name.toLowerCase();
+        return name.includes(query.toLowerCase()) && !seen.has(s.service.id);
+      })
+      .filter(s => {
+        const isNew = !seen.has(s.service.id);
+        seen.add(s.service.id);
+        return isNew;
+      });
+  }  
+
+  getPatientNameById(id: any): string {
+    const match = this.availablePatients.find(p => p.id == id);
+    return match ? `${match.firstName} ${match.lastName}` : '';
+  }
   
+  getServiceNameById(id: any): string {
+    const match = this.availableServices.find(s => s.service.id == id);
+    return match ? match.service.name : '';
+  }
+
+  onPatientInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+    this.appointmentForm.get('patientId')?.setValue(value);
+    this.filterPatients(value);
+  }
+  
+  onServiceInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+    this.appointmentForm.get('serviceId')?.setValue(value);
+    this.filterServices(value);
+  }
 }
