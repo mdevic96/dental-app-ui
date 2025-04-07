@@ -203,7 +203,9 @@ export class CalendarComponent implements OnInit {
       this.currentView = arg.view.type;
     },
     eventContent: this.renderEventContent.bind(this),
-    eventDidMount: this.renderEventTooltip.bind(this),   
+    eventDidMount: this.renderEventTooltip.bind(this),  
+    slotDuration: '00:15:00',
+    slotLabelInterval: '00:15:00', 
     slotLabelFormat: {
       hour: '2-digit',
       minute: '2-digit',

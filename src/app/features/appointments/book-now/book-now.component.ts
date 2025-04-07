@@ -1,7 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DentistServiceDto } from '../../../core/dentist-service.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DentalOffice } from '../../../core/dental-office.model';
@@ -25,7 +24,6 @@ export class BookNowComponent implements OnInit {
   private apiUrl = 'http://localhost:8080/api';
 
   selectedOfficeId!: number;
-  selectedServiceId!: number | null;
   selectedDentistId!: number | null;
   selectedDate!: string | null;
   selectedStartTime!: string | null;
@@ -35,7 +33,6 @@ export class BookNowComponent implements OnInit {
 
   availableTimes: string[] = [];
   availableDentists: DentistDto[] = [];
-  availableServices: any[] = [];
 
   constructor(
     private route: ActivatedRoute, 
@@ -66,23 +63,6 @@ export class BookNowComponent implements OnInit {
       },
       (error) => {
         console.error('Error fetching dentists:', error);
-      }
-    );
-  }
-
-  loadAvailableServices() {
-    if (!this.selectedOfficeId) return;
-
-    this.http.get<DentistServiceDto[]>(this.apiUrl + `/services/dentist/${this.selectedOfficeId}`).subscribe(
-      (services) => {
-        this.availableServices = services.map(service => ({
-          id: service.service.id,
-          name: service.service.name,
-          price: service.price
-        }));
-      },
-      (error) => {
-        console.error('Error fetching services:', error);
       }
     );
   }
@@ -121,11 +101,11 @@ export class BookNowComponent implements OnInit {
 
     const appointmentData = {
       dentistId: this.selectedDentistId,
-      serviceId: this.selectedServiceId,
+      serviceId: null,
       appointmentDate: this.selectedDate,
       startTime: this.selectedStartTime,
       patientId: patientId
-  };
+    };
 
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -145,27 +125,13 @@ export class BookNowComponent implements OnInit {
   }
 
   onDentistChange() {
-    this.selectedServiceId = null;
-    this.selectedDate = null;
-    this.selectedStartTime = null;
-    this.availableServices = [];
-    this.availableTimes = [];
-  
-    if (this.selectedDentistId) {
-      this.loadAvailableServices();
-    }
-
-    this.validateForm();
-  }
-
-  onServiceChange() {
     this.selectedDate = null;
     this.selectedStartTime = null;
     this.availableTimes = [];
 
     this.validateForm();
   }
-  
+
   onDateChange() {
     this.selectedStartTime = null;
     this.availableTimes = [];
@@ -179,7 +145,6 @@ export class BookNowComponent implements OnInit {
   validateForm() {
     this.canConfirm =
       !!this.selectedDentistId &&
-      !!this.selectedServiceId &&
       !!this.selectedDate &&
       !!this.selectedStartTime;
   }

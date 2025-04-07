@@ -30,10 +30,11 @@
     "BOOKING": {
         "BOOK_APPOINTMENT": "Book an Appointment at",
         "SELECT_DENTIST": "Select Dentist:",
-        "SELECT_SERVICE:": "Select Service:",
+        "SELECT_SERVICE:": "Service:",
         "SELECT_DATE": "Select Date:",
         "SELECT_TIMESLOT": "Select Time Slot:",
-        "CONFIRM_APPOINTMENT": "Confirm Appointment"
+        "CONFIRM_APPOINTMENT": "Confirm Appointment",
+        "DENTIST_EXAMINATION": "Dental examination"
     },
     "BOOKING_CONFIRMATION": {
         "CONFIRMED": "Appointment Confirmed",

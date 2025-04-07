@@ -12,17 +12,14 @@
 
     <div class="form-group">
         <label>{{"BOOKING.SELECT_SERVICE" | translate }}</label>
-        <select [(ngModel)]="selectedServiceId" [disabled]="!selectedDentistId" (change)="onServiceChange(); validateForm()">
-            <option *ngFor="let service of availableServices" [value]="service.id">
-                {{ service.name }}
-            </option>
-        </select>
-    </div>
+        <div class="static-field">{{"BOOKING.DENTIST_EXAMINATION" | translate}}</div>
+      </div>
+      
 
     <div class="form-group">
         <label>{{"BOOKING.SELECT_DATE" | translate }}</label>
         <div class="date-picker-wrapper">
-            <input type="date" [(ngModel)]="selectedDate" [disabled]="!selectedServiceId" (change)="onDateChange(); validateForm()" />
+            <input type="date" [(ngModel)]="selectedDate" [disabled]="!selectedDentistId" (change)="onDateChange(); validateForm()" />
         </div>
     </div>
 

@@ -30,10 +30,11 @@
     "BOOKING": {
         "BOOK_APPOINTMENT": "Zakaži termin u",
         "SELECT_DENTIST": "Izaberite zubara:",
-        "SELECT_SERVICE": "Izaberite uslugu:",
+        "SELECT_SERVICE": "Usluga:",
         "SELECT_DATE": "Izaberite datum:",
         "SELECT_TIMESLOT": "Izaberite termin:",
-        "CONFIRM_APPOINTMENT": "Potvrdi zakazivanje"
+        "CONFIRM_APPOINTMENT": "Potvrdi zakazivanje",
+        "DENTIST_EXAMINATION": "Stomatološki pregled"
     },
     "BOOKING_CONFIRMATION": {
         "CONFIRMED": "Termin uspešno zakazan",
