@@ -1,0 +1,22 @@
+.error-dialog {
+    padding: 20px;
+    width: 85%;
+  }
+  .error-dialog h3 {
+    margin-bottom: 12px;
+    color: #c53030;
+  }
+  .error-dialog p {
+    margin-bottom: 20px;
+  }
+  .error-dialog button {
+    background-color: #c53030;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .error-dialog button:hover {
+    background-color: #a12727;
+  }

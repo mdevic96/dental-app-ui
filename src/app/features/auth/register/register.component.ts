@@ -8,6 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ErrorDialogComponent } from '../../../shared/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'app-register',
@@ -27,7 +29,11 @@ import { TranslateModule } from '@ngx-translate/core';
 export class RegisterComponent {
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(
+    private fb: FormBuilder, 
+    private authService: AuthService, 
+    private router: Router,
+    private dialog: MatDialog) {
     this.registerForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -53,6 +59,10 @@ export class RegisterComponent {
         },
         error: (err) => {
           console.error('Registration failed', err);
+          const errorMessage = err.error?.message;
+          this.dialog.open(ErrorDialogComponent, {
+            data: { message: errorMessage }
+          });
         }
       });
     }

@@ -26,13 +26,7 @@
             <h3><i class="fa-solid fa-stethoscope"></i> {{"INFO.SERVICES" | translate }}</h3>
             <ul>
               <li *ngFor="let service of services">
-                {{ service.name }}
-                <span *ngIf="service.price !== null; else noPrice">
-                  <strong>{{ service.price | currency:'RSD':'symbol' }}</strong>
-                </span>
-                <ng-template #noPrice>
-                  <span class="no-price">Cena na upit</span>
-                </ng-template>
+                {{ "SERVICE_ID." + service.id | translate}}
               </li>
             </ul>
           </div>

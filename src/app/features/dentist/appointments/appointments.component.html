@@ -30,7 +30,7 @@
                         }}</div>
                 </div>
                 <div class="card-details">
-                    <p><strong>{{"INFO.SERVICES" | translate }}</strong> {{ appointment.service.name }}</p>
+                    <p><strong>{{"INFO.SERVICES" | translate }}</strong> {{ "SERVICE_ID." + appointment.service.id | translate }}</p>
                     <p><strong>{{"DENTIST_APPOINTMENTS.DATE" | translate }}:</strong> {{ appointment.appointmentDate }}</p>
                     <p><strong>{{"DENTIST_APPOINTMENTS.TIME" | translate }}:</strong> {{ appointment.startTime }} - {{ appointment.endTime }}</p>
                 </div>
@@ -57,7 +57,7 @@
                     </div>
                 </div>
                 <div class="card-details">
-                    <p><strong>{{"INFO.SERVICES" | translate }}</strong> {{ appointment.service.name }}</p>
+                    <p><strong>{{"INFO.SERVICES" | translate }}</strong> {{ "SERVICES" + appointment.service.id }}</p>
                     <p><strong>{{"DENTIST_APPOINTMENTS.DATE" | translate }}:</strong> {{ appointment.appointmentDate }}</p>
                     <p><strong>{{"DENTIST_APPOINTMENTS.TIME" | translate }}:</strong> {{ appointment.startTime }} - {{ appointment.endTime }}</p>
                 </div>

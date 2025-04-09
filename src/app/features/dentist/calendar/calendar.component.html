@@ -4,7 +4,7 @@
     <ul>
       <li *ngFor="let item of legendItems">
         <span class="legend-circle" [style.backgroundColor]="item.color"></span>
-        {{ item.name }}
+        {{ "SERVICE_ID." + item.id | translate }}
       </li>
     </ul>
   </div>
@@ -33,7 +33,7 @@
           (input)="onServiceInput($event)" list="service-list" />
         <datalist id="service-list">
           <option *ngFor="let service of filteredServices" [value]="service.service.id">
-            {{ service.service.name }}
+            {{ "SERVICE_ID." + service.service.id | translate}}
           </option>
         </datalist>
 

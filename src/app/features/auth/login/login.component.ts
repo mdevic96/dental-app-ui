@@ -8,6 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { ErrorDialogComponent } from '../../../shared/error-dialog/error-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +30,8 @@ export class LoginComponent {
 
   constructor(private fb: FormBuilder, 
     private authService: AuthService, 
-    private router: Router) {
+    private router: Router,
+    private dialog: MatDialog) {
 
       this.loginForm = this.fb.group({
         email: ['', [Validators.required, Validators.email]],
@@ -58,6 +61,10 @@ export class LoginComponent {
           },
           error: (err) => {
             console.error('Login failed', err);
+            const errorMessage = err.error?.message;
+            this.dialog.open(ErrorDialogComponent, {
+              data: { message: errorMessage }
+            });
           }
         });
       }

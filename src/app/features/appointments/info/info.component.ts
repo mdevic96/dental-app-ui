@@ -48,6 +48,7 @@ export class InfoComponent implements OnInit {
     this.http.get<DentistServiceDto[]>(`${this.apiUrl}/services/dental-office/${this.office.id}`)
       .subscribe((data) => {
         this.services = data.map(service => ({
+          id: service.service.id,
           name: service.service.name,
           price: service.price
         }));

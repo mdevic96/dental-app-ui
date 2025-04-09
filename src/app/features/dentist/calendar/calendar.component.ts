@@ -17,6 +17,8 @@ import enLocale from '@fullcalendar/core/locales/en-gb';
 import ruLocale from '@fullcalendar/core/locales/ru';
 import deLocale from '@fullcalendar/core/locales/de';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ErrorDialogComponent } from '../../../shared/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'app-calendar',
@@ -52,7 +54,7 @@ export class CalendarComponent implements OnInit {
 
   officeId!: number;
 
-  legendItems: { name: string; color: string }[] = [];
+  legendItems: { id: number, name: string; color: string }[] = [];
 
   filteredPatients: UserDto[] = [];
   filteredServices: DentistServiceDto[] = [];
@@ -60,7 +62,8 @@ export class CalendarComponent implements OnInit {
   constructor(
     private fb: FormBuilder, 
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialog: MatDialog
   ) {
     this.appointmentForm = this.fb.group({
       patientId: ['', Validators.required],
@@ -110,6 +113,7 @@ export class CalendarComponent implements OnInit {
           return true;
         })
         .map(app => ({
+          id: app.service.id,
           name: app.service.name,
           color: this.getServiceColor(app.service.id)
         }));
@@ -282,6 +286,7 @@ export class CalendarComponent implements OnInit {
         const existsInLegend = this.legendItems.some(item => item.name === newAppointment.service.name);
         if (!existsInLegend) {
           this.legendItems.push({
+            id: newAppointment.service.id,
             name: newAppointment.service.name,
             color: serviceColor
           });
@@ -294,6 +299,10 @@ export class CalendarComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
+        const errorMessage = err.error?.message;
+        this.dialog.open(ErrorDialogComponent, {
+          data: { message: errorMessage }
+        });
       }
     });
   }
