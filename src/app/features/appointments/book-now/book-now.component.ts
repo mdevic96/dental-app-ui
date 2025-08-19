@@ -9,6 +9,7 @@ import { ConfirmationComponent } from '../confirmation/confirmation.component';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../auth/auth.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-book-now',
@@ -21,7 +22,6 @@ import { AuthService } from '../../auth/auth.service';
   styleUrl: './book-now.component.css'
 })
 export class BookNowComponent implements OnInit {
-  private apiUrl = 'http://localhost:8080/api';
 
   selectedOfficeId!: number;
   selectedDentistId!: number | null;
@@ -54,7 +54,7 @@ export class BookNowComponent implements OnInit {
   loadAvailableDentists() {
     if (!this.selectedOfficeId) return;
 
-    this.http.get<DentistDto[]>(this.apiUrl + `/dentists/dental-office/${this.selectedOfficeId}`).subscribe(
+    this.http.get<DentistDto[]>(environment.apiBase + `/dentists/dental-office/${this.selectedOfficeId}`).subscribe(
       (dentists) => {
         this.availableDentists = dentists;
         if (dentists.length === 1) {
@@ -70,7 +70,7 @@ export class BookNowComponent implements OnInit {
   getDentalOfficeName() {
     if (!this.selectedOfficeId) return;
 
-    this.http.get<DentalOffice>(this.apiUrl + `/dental-offices/${this.selectedOfficeId}`)
+    this.http.get<DentalOffice>(environment.apiBase + `/dental-offices/${this.selectedOfficeId}`)
       .subscribe(result => {
         this.dentalOfficeName = result.name;
       }
@@ -80,7 +80,7 @@ export class BookNowComponent implements OnInit {
   loadAvailableTimes() {
     if (!this.selectedDentistId || !this.selectedDate) return;
 
-    this.http.get<string[]>(`${this.apiUrl}/work-schedule/dentist/${this.selectedDentistId}/${this.selectedDate}`)
+    this.http.get<string[]>(`${environment.apiBase}/work-schedule/dentist/${this.selectedDentistId}/${this.selectedDate}`)
       .subscribe(
         (times) => {
           this.availableTimes = times;
@@ -112,7 +112,7 @@ export class BookNowComponent implements OnInit {
       'Content-Type': 'application/json'
     });
 
-    this.http.post(`${this.apiUrl}/appointments`, appointmentData, { headers })
+    this.http.post(`${environment.apiBase}/appointments`, appointmentData, { headers })
       .subscribe(
         response => {
           this.openConfirmationDialog(response);

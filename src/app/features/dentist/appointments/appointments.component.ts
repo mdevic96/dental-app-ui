@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { AppointmentDto } from '../../../core/appointment.model';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-appointments',
@@ -23,8 +24,6 @@ export class AppointmentsComponent implements OnInit {
   selectedTab: string = 'upcoming';
   sortOrder: 'asc' | 'desc' = 'desc';
 
-  private apiUrl = 'http://localhost:8080/api';
-
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   ngOnInit(): void {
@@ -37,10 +36,10 @@ export class AppointmentsComponent implements OnInit {
     });
 
     const dentistId = this.authService.getUser().id;
-    this.http.get<AppointmentDto[]>(`${this.apiUrl}/appointments/dentist/${dentistId}/upcoming`, { headers })
+    this.http.get<AppointmentDto[]>(`${environment.apiBase}/appointments/dentist/${dentistId}/upcoming`, { headers })
       .subscribe(appointments => this.upcomingAppointments = appointments.filter(a => a.status === 'SCHEDULED'));
 
-    this.http.get<AppointmentDto[]>(`${this.apiUrl}/appointments/dentist/${dentistId}`, { headers })
+    this.http.get<AppointmentDto[]>(`${environment.apiBase}/appointments/dentist/${dentistId}`, { headers })
       .subscribe(appointments => {
         const filtered = appointments.filter(a => a.status !== 'SCHEDULED');
         this.pastAppointments = this.sortAppointmentsByStatus(filtered);
@@ -65,7 +64,7 @@ export class AppointmentsComponent implements OnInit {
       Authorization: `Bearer ${localStorage.getItem('token')}`
     });
 
-    this.http.post(`${this.apiUrl}/appointments/${id}/${status}`, { }, { headers })
+    this.http.post(`${environment.apiBase}/appointments/${id}/${status}`, { }, { headers })
       .subscribe(() => {
         alert(`Appointment marked as ${status.toLowerCase()}!`);
         this.loadAppointments();

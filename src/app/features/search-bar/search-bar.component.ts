@@ -13,6 +13,7 @@ import { DentistDto } from '../../core/dentist.model';
 import { DentistServiceDto } from '../../core/dentist-service.model';
 import { ServiceDto } from '../../core/service.model';
 import { MunicipalityDto } from '../../core/municipality.model';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-search-bar',
@@ -26,8 +27,6 @@ import { MunicipalityDto } from '../../core/municipality.model';
   styleUrl: './search-bar.component.css'
 })
 export class SearchBarComponent implements OnInit {
-
-  private apiUrl = 'http://localhost:8080/api';
 
   cities: City[] = [];
   municipalities: MunicipalityDto[] = [];
@@ -72,7 +71,7 @@ export class SearchBarComponent implements OnInit {
   }
 
   fetchCities() {
-    this.http.get<City[]>(this.apiUrl + '/cities').subscribe(
+    this.http.get<City[]>(environment.apiBase + '/cities').subscribe(
       data => this.cities = data,
       error => console.error('Error fetching cities:', error)
     );
@@ -92,7 +91,7 @@ export class SearchBarComponent implements OnInit {
       params.municipalityId = this.selectedMunicipalityId;
     }
   
-    return this.http.get<{ content: DentalOffice[] }>(this.apiUrl + '/dental-offices/search', { params })
+    return this.http.get<{ content: DentalOffice[] }>(environment.apiBase + '/dental-offices/search', { params })
       .pipe(
         map(response => {
           if (response.content.length === 0) {
@@ -179,7 +178,7 @@ export class SearchBarComponent implements OnInit {
   }
 
   fetchMunicipalities() {
-    this.http.get<MunicipalityDto[]>(`${this.apiUrl}/municipalities/city/${this.selectedCityId}`)
+    this.http.get<MunicipalityDto[]>(`${environment.apiBase}/municipalities/city/${this.selectedCityId}`)
       .subscribe(
         data => this.municipalities = data,
         error => console.error('Error fetching municipalities:', error)
@@ -190,11 +189,11 @@ export class SearchBarComponent implements OnInit {
     this.selectedOffice = office;
     this.showInfoDialog = true;
   
-    this.http.get<DentistDto[]>(`${this.apiUrl}/dentists/dental-office/${office.id}`).subscribe(dentists => {
+    this.http.get<DentistDto[]>(`${environment.apiBase}/dentists/dental-office/${office.id}`).subscribe(dentists => {
       this.selectedOfficeDentists = dentists;
     });
   
-    this.http.get<DentistServiceDto[]>(`${this.apiUrl}/services/dental-office/${office.id}`).subscribe(services => {
+    this.http.get<DentistServiceDto[]>(`${environment.apiBase}/services/dental-office/${office.id}`).subscribe(services => {
       this.selectedOfficeServices = services.map(s => s.service);
     });
   }

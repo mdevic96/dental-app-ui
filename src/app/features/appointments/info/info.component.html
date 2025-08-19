@@ -24,11 +24,13 @@
   
           <div *ngIf="services.length > 0" class="info-section">
             <h3><i class="fa-solid fa-stethoscope"></i> {{"INFO.SERVICES" | translate }}</h3>
-            <ul>
-              <li *ngFor="let service of services">
-                {{ "SERVICE_ID." + service.id | translate}}
-              </li>
-            </ul>
+            <div class="services-scroll">
+              <ul>
+                <li *ngFor="let service of services">
+                  {{ "SERVICE_ID." + service.id | translate}}
+                </li>
+              </ul>
+            </div>
           </div>
           </div>
   

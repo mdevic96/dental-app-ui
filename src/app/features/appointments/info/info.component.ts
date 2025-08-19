@@ -5,6 +5,7 @@ import { AuthService } from '../../auth/auth.service';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { DentistServiceDto } from '../../../core/dentist-service.model';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-info',
@@ -30,8 +31,6 @@ export class InfoComponent implements OnInit {
   userHasReviewed = false;
   currentUserId: number | null = null;
 
-  private apiUrl = 'http://localhost:8080/api';
-
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   ngOnInit(): void {
@@ -45,7 +44,7 @@ export class InfoComponent implements OnInit {
   }
 
   loadServices() {
-    this.http.get<DentistServiceDto[]>(`${this.apiUrl}/services/dental-office/${this.office.id}`)
+    this.http.get<DentistServiceDto[]>(`${environment.apiBase}/services/dental-office/${this.office.id}`)
       .subscribe((data) => {
         this.services = data.map(service => ({
           id: service.service.id,
@@ -59,7 +58,7 @@ export class InfoComponent implements OnInit {
   
 
   loadReviews() {
-    this.http.get<any[]>(`${this.apiUrl}/reviews/dental-office/${this.office.id}`)
+    this.http.get<any[]>(`${environment.apiBase}/reviews/dental-office/${this.office.id}`)
       .subscribe(reviews => {
         const currentUserId = this.currentUserId;
 
@@ -83,7 +82,7 @@ export class InfoComponent implements OnInit {
       comment: this.newReview.comment
     };
 
-    this.http.post(`${this.apiUrl}/reviews`, payload, { headers }).subscribe(() => {
+    this.http.post(`${environment.apiBase}/reviews`, payload, { headers }).subscribe(() => {
       this.newReview = { rating: 5, comment: '' };
       this.loadReviews();
 

@@ -19,6 +19,7 @@ import deLocale from '@fullcalendar/core/locales/de';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../../../shared/error-dialog/error-dialog.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-calendar',
@@ -38,7 +39,6 @@ export class CalendarComponent implements OnInit {
   showCreateModal = false;
 
   appointmentForm!: FormGroup;
-  apiUrl = 'http://localhost:8080/api';
 
   availableServices: DentistServiceDto[] = [];
   availablePatients: UserDto[] = [];
@@ -87,7 +87,7 @@ export class CalendarComponent implements OnInit {
     };
   
     this.http.get<{ content: AppointmentDto[] }>(
-      `${this.apiUrl}/appointments/dentist/${dentistId}/date-range`,
+      `${environment.apiBase}/appointments/dentist/${dentistId}/date-range`,
       { headers, params }
     ).subscribe(response => {
       this.appointments = response.content.map(app => ({
@@ -131,7 +131,7 @@ export class CalendarComponent implements OnInit {
       'Content-Type': 'application/json'
     });
 
-    this.http.get<DentalOffice>(`${this.apiUrl}/dentists/me/office`, { headers })
+    this.http.get<DentalOffice>(`${environment.apiBase}/dentists/me/office`, { headers })
     .subscribe(office => {
       this.officeId = office.id;
       this.fetchPatients();
@@ -145,7 +145,7 @@ export class CalendarComponent implements OnInit {
       'Content-Type': 'application/json'
     });
 
-    this.http.get<DentistServiceDto[]>(`${this.apiUrl}/services/dental-office/${this.officeId}`, { headers }).subscribe(data => {
+    this.http.get<DentistServiceDto[]>(`${environment.apiBase}/services/dental-office/${this.officeId}`, { headers }).subscribe(data => {
       this.availableServices = data;
       this.filteredServices = data;
     });
@@ -157,7 +157,7 @@ export class CalendarComponent implements OnInit {
       'Content-Type': 'application/json'
     });
 
-    this.http.get<UserDto[]>(`${this.apiUrl}/patients/dental-office/${this.officeId}`, { headers }).subscribe(data => {
+    this.http.get<UserDto[]>(`${environment.apiBase}/patients/dental-office/${this.officeId}`, { headers }).subscribe(data => {
       this.availablePatients = data;
       this.filteredPatients = data;
     });
@@ -260,7 +260,7 @@ export class CalendarComponent implements OnInit {
       'Content-Type': 'application/json'
     });
   
-    this.http.post<AppointmentDto>(`${this.apiUrl}/appointments`, payload, { headers }).subscribe({
+    this.http.post<AppointmentDto>(`${environment.apiBase}/appointments`, payload, { headers }).subscribe({
       next: (newAppointment) => {
         this.showCreateModal = false;
         this.appointmentForm.reset();
@@ -317,7 +317,7 @@ export class CalendarComponent implements OnInit {
     const { notes, status } = this.editForm.value;
   
     this.http.patch<AppointmentDto>(
-      `${this.apiUrl}/appointments/${this.selectedAppointment.id}`,
+      `${environment.apiBase}/appointments/${this.selectedAppointment.id}`,
       { notes, status }, { headers }
     ).subscribe(() => {
       this.showEditModal = false;
@@ -333,7 +333,7 @@ export class CalendarComponent implements OnInit {
       Authorization: `Bearer ${localStorage.getItem('token')}`
     });
 
-    this.http.get<AppointmentDto>(`${this.apiUrl}/appointments/${serviceId}`, { headers }).subscribe(appointment => {
+    this.http.get<AppointmentDto>(`${environment.apiBase}/appointments/${serviceId}`, { headers }).subscribe(appointment => {
       this.selectedAppointment = appointment;
       this.showEditModal = true;
 
