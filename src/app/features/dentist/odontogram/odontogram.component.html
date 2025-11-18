@@ -1,0 +1,197 @@
+<div class="odontogram-page">
+  <h2 class="page-title">🦷 Odontogram - Dental Chart</h2>
+
+  <!-- Patient Search -->
+  <div class="patient-search-section">
+    <label>Select Patient:</label>
+    <div class="search-input-wrapper">
+      <input
+        type="text"
+        [(ngModel)]="patientSearchTerm"
+        (input)="onPatientSearchInput()"
+        (focus)="showPatientDropdown = true"
+        placeholder="Search patient by name or email..."
+        class="patient-search-input"
+      />
+
+      <div class="patient-dropdown" *ngIf="showPatientDropdown && filteredPatients.length > 0">
+        <div
+          *ngFor="let patient of filteredPatients"
+          class="patient-item"
+          (click)="selectPatient(patient)"
+        >
+          {{ patient.firstName }} {{ patient.lastName }} - {{ patient.email }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading">
+    <p>Loading odontogram...</p>
+  </div>
+
+  <!-- Main Content (only show when patient selected) -->
+  <div *ngIf="currentOdontogram && !isLoading" class="odontogram-content">
+
+    <!-- Odontogram Info -->
+    <div class="odontogram-info">
+      <p><strong>Patient:</strong> {{ currentOdontogram.patientName }}</p>
+      <p><strong>Dentist:</strong> {{ currentOdontogram.dentistName }}</p>
+      <p><strong>Created:</strong> {{ currentOdontogram.createdAt | date:'medium' }}</p>
+      <p><strong>Last Updated:</strong> {{ currentOdontogram.updatedAt | date:'medium' }}</p>
+    </div>
+
+    <!-- Color Legend -->
+    <div class="legend">
+      <h3>Status Legend:</h3>
+      <div class="legend-items">
+        <span class="legend-item"><span class="color-box" style="background: #ffffff; border: 1px solid #ccc;"></span> Healthy</span>
+        <span class="legend-item"><span class="color-box" style="background: #ff4444;"></span> Cavity</span>
+        <span class="legend-item"><span class="color-box" style="background: #4169e1;"></span> Filled</span>
+        <span class="legend-item"><span class="color-box" style="background: #cccccc;"></span> Missing</span>
+        <span class="legend-item"><span class="color-box" style="background: #ffd700;"></span> Crown</span>
+        <span class="legend-item"><span class="color-box" style="background: #9370db;"></span> Bridge</span>
+        <span class="legend-item"><span class="color-box" style="background: #808080;"></span> Implant</span>
+        <span class="legend-item"><span class="color-box" style="background: #90ee90;"></span> Root Canal</span>
+        <span class="legend-item"><span class="color-box" style="background: #ff8c00;"></span> Fractured</span>
+        <span class="legend-item"><span class="color-box" style="background: #ffff00;"></span> Mobile</span>
+        <span class="legend-item"><span class="color-box" style="background: #ff69b4;"></span> Impacted</span>
+      </div>
+    </div>
+
+    <div class="main-layout">
+      <!-- Tooth Chart -->
+      <div class="tooth-chart-section">
+        <h3>Dental Chart</h3>
+
+        <!-- Upper Jaw -->
+        <div class="jaw upper-jaw">
+          <div class="jaw-label">Upper Jaw</div>
+          <div class="teeth-row">
+            <div
+              *ngFor="let toothNum of upperTeeth"
+              class="tooth"
+              [class.selected]="selectedTooth?.toothNumber === toothNum"
+              [style.background-color]="getToothColor(toothNum)"
+              (click)="selectTooth(toothNum)"
+            >
+              <span class="tooth-number">{{ toothNum }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lower Jaw -->
+        <div class="jaw lower-jaw">
+          <div class="teeth-row">
+            <div
+              *ngFor="let toothNum of lowerTeeth"
+              class="tooth"
+              [class.selected]="selectedTooth?.toothNumber === toothNum"
+              [style.background-color]="getToothColor(toothNum)"
+              (click)="selectTooth(toothNum)"
+            >
+              <span class="tooth-number">{{ toothNum }}</span>
+            </div>
+          </div>
+          <div class="jaw-label">Lower Jaw</div>
+        </div>
+      </div>
+
+      <!-- Tooth Detail Panel -->
+      <div class="tooth-detail-panel" *ngIf="selectedTooth">
+        <h3>Tooth #{{ selectedTooth.toothNumber }}</h3>
+        <p class="tooth-name">{{ getToothName(selectedTooth.toothNumber) }}</p>
+
+        <div class="detail-form">
+          <label>Status:</label>
+          <select [(ngModel)]="selectedTooth.status">
+            <option *ngFor="let status of toothStatuses" [value]="status">
+              {{ getStatusLabel(status) }}
+            </option>
+          </select>
+
+          <label>Notes:</label>
+          <textarea [(ngModel)]="selectedTooth.notes" rows="4" placeholder="Add notes about this tooth..."></textarea>
+
+          <button class="btn-primary" (click)="updateToothStatus()">💾 Save Changes</button>
+        </div>
+
+        <!-- Treatment Plans -->
+        <div class="treatments-section">
+          <h4>Treatment Plans</h4>
+
+          <div *ngIf="selectedTooth.treatmentPlans.length === 0" class="no-treatments">
+            <p>No treatment plans for this tooth</p>
+          </div>
+
+          <div *ngFor="let treatment of selectedTooth.treatmentPlans" class="treatment-item">
+            <p><strong>{{ treatment.treatmentType }}</strong></p>
+            <p *ngIf="treatment.serviceName">Service: {{ treatment.serviceName }}</p>
+            <p *ngIf="treatment.plannedDate">Planned: {{ treatment.plannedDate | date:'mediumDate' }}</p>
+            <p *ngIf="treatment.estimatedCost">Cost: {{ treatment.estimatedCost | currency:'RSD' }}</p>
+            <p *ngIf="treatment.notes">Notes: {{ treatment.notes }}</p>
+            <p>Status: <span [class]="'status-' + treatment.status.toLowerCase()">{{ treatment.status }}</span></p>
+
+            <div class="treatment-actions" *ngIf="treatment.status === 'PLANNED'">
+              <button class="btn-small" (click)="updateTreatmentStatus(treatment, 'IN_PROGRESS')">▶️ Start</button>
+              <button class="btn-small" (click)="updateTreatmentStatus(treatment, 'COMPLETED')">✅ Complete</button>
+              <button class="btn-small btn-danger" (click)="updateTreatmentStatus(treatment, 'CANCELLED')">❌ Cancel</button>
+            </div>
+            <div class="treatment-actions" *ngIf="treatment.status === 'IN_PROGRESS'">
+              <button class="btn-small" (click)="updateTreatmentStatus(treatment, 'COMPLETED')">✅ Complete</button>
+            </div>
+          </div>
+
+          <button class="btn-secondary" (click)="openTreatmentDialog()">➕ Add Treatment Plan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- General Notes -->
+    <div class="general-notes-section">
+      <h3>General Notes</h3>
+      <textarea [(ngModel)]="generalNotes" rows="4" placeholder="General notes about patient's oral health..."></textarea>
+      <button class="btn-primary" (click)="saveGeneralNotes()">💾 Save Notes</button>
+    </div>
+  </div>
+
+  <!-- No Patient Selected -->
+  <div *ngIf="!currentOdontogram && !isLoading && selectedPatientId" class="no-data">
+    <p>No odontogram found. A new one will be created.</p>
+  </div>
+</div>
+
+<!-- Treatment Dialog Modal -->
+<div *ngIf="showTreatmentDialog" class="modal-overlay" (click)="closeTreatmentDialog()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h3>Add Treatment Plan for Tooth #{{ treatmentForm.toothNumber }}</h3>
+
+    <form (ngSubmit)="addTreatment()">
+      <label>Treatment Type: *</label>
+      <input type="text" [(ngModel)]="treatmentForm.treatmentType" name="treatmentType" required placeholder="e.g., Filling, Crown, Root Canal">
+
+      <label>Service (Optional):</label>
+      <select [(ngModel)]="treatmentForm.serviceId" name="serviceId">
+        <option [value]="undefined">-- Select Service --</option>
+        <option *ngFor="let service of availableServices" [value]="service.service.id">
+          {{ "SERVICE_ID." + service.service.id | translate }}
+        </option>
+      </select>
+
+      <label>Planned Date:</label>
+      <input type="date" [(ngModel)]="treatmentForm.plannedDate" name="plannedDate">
+
+      <label>Estimated Cost (RSD):</label>
+      <input type="number" [(ngModel)]="treatmentForm.estimatedCost" name="estimatedCost" placeholder="0.00">
+
+      <label>Notes:</label>
+      <textarea [(ngModel)]="treatmentForm.notes" name="notes" rows="3" placeholder="Additional treatment notes..."></textarea>
+
+      <div class="modal-actions">
+        <button type="submit" class="btn-primary">✅ Add Treatment</button>
+        <button type="button" class="btn-secondary" (click)="closeTreatmentDialog()">❌ Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
