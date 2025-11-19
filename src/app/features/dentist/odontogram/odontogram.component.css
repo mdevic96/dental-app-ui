@@ -209,6 +209,7 @@
   transition: all 0.3s;
   position: relative;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
 }
 
 .tooth:hover {
@@ -228,6 +229,80 @@
   font-size: 14px;
   color: #333;
   text-shadow: 0 0 2px rgba(255,255,255,0.8);
+  z-index: 2;
+  position: relative;
+  transition: opacity 0.3s;
+}
+
+.tooth-surfaces {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  display: grid;
+  grid-template-areas:
+    "mesial mesial mesial"
+    "buccal occlusal lingual"
+    "distal distal distal";
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2px;
+}
+
+.tooth:hover .tooth-surfaces {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.tooth:hover .tooth-number {
+  opacity: 0;
+}
+
+.surface {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: bold;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.surface:hover {
+  transform: scale(1.15);
+  z-index: 10;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 1);
+  border: 2px solid #3b82f6;
+}
+
+.surface-mesial {
+  grid-area: mesial;
+}
+
+.surface-distal {
+  grid-area: distal;
+}
+
+.surface-buccal {
+  grid-area: buccal;
+}
+
+.surface-lingual {
+  grid-area: lingual;
+}
+
+.surface-occlusal {
+  grid-area: occlusal;
+  background: rgba(59, 130, 246, 0.6);
+  border-radius: 50%;
+  margin: 2px;
 }
 
 /* Tooth Detail Panel */
@@ -516,6 +591,88 @@
   justify-content: flex-end;
 }
 
+/* Surface Modal Styles */
+.surface-modal {
+  max-width: 500px;
+}
+
+.surface-info {
+  color: #666;
+  font-size: 14px;
+  margin: 0 0 20px 0;
+  font-style: italic;
+}
+
+.surface-form {
+  margin-top: 20px;
+}
+
+.surface-form label {
+  display: block;
+  font-weight: 600;
+  margin: 15px 0 5px 0;
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+.surface-status-select {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.surface-status-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.surface-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.surface-form textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+/* Surface preview */
+.surface-preview {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 20px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.preview-box {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+  border-radius: 8px;
+  border: 2px solid #333;
+}
+
+.surface-preview span {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
 /* No Data State */
 .no-data {
   text-align: center;
@@ -564,6 +721,10 @@
 
   .tooth-number {
     font-size: 12px;
+  }
+
+  .surface {
+    font-size: 7px;
   }
 
   .teeth-row {

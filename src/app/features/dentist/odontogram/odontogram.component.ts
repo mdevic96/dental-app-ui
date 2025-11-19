@@ -3,11 +3,19 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { OdontogramService } from './odontogram.service';
-import { OdontogramDto, ToothRecordDto, ToothStatus, CreateTreatmentPlanRequest, TreatmentPlanDto } from '../../../core/odontogram.model';
+import {
+  OdontogramDto,
+  ToothRecordDto,
+  ToothStatus,
+  CreateTreatmentPlanRequest,
+  TreatmentPlanDto,
+  ToothSurfaceDto, SurfaceStatus, SurfaceType, UpdateToothSurfaceRequest
+} from '../../../core/odontogram.model';
 import { UserDto } from '../../../core/user.model';
 import { DentistServiceDto } from '../../../core/dentist-service.model';
 import { TranslateModule } from '@ngx-translate/core';
 import { environment } from '../../../../environments/environment';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-odontogram',
@@ -43,6 +51,12 @@ export class OdontogramComponent implements OnInit {
     treatmentType: '',
     notes: ''
   };
+
+  // Tooth surface management
+  selectedSurface: ToothSurfaceDto | null = null;
+  surfaceStatuses: SurfaceStatus[] = ['HEALTHY', 'CARIOUS', 'FILLED', 'FRACTURED', 'WEAR', 'EROSION', 'STAINED', 'CALCULUS'];
+  showSurfaceDialog = false;
+
   availableServices: DentistServiceDto[] = [];
 
   // General notes
@@ -53,7 +67,8 @@ export class OdontogramComponent implements OnInit {
 
   constructor(
     private odontogramService: OdontogramService,
-    private http: HttpClient
+    private http: HttpClient,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -265,41 +280,108 @@ export class OdontogramComponent implements OnInit {
     const quadrant = toothNumber[0];
     const position = toothNumber[1];
 
-    const quadrantNames: Record<string, string> = {
-      '1': 'Upper Right',
-      '2': 'Upper Left',
-      '3': 'Lower Left',
-      '4': 'Lower Right'
-    };
+    const quadrantKey = {
+      '1': 'UPPER_RIGHT',
+      '2': 'UPPER_LEFT',
+      '3': 'LOWER_LEFT',
+      '4': 'LOWER_RIGHT'
+    }[quadrant];
 
-    const positionNames: Record<string, string> = {
-      '1': 'Central Incisor',
-      '2': 'Lateral Incisor',
-      '3': 'Canine',
-      '4': 'First Premolar',
-      '5': 'Second Premolar',
-      '6': 'First Molar',
-      '7': 'Second Molar',
-      '8': 'Third Molar'
-    };
+    const positionKey = {
+      '1': 'CENTRAL_INCISOR',
+      '2': 'LATERAL_INCISOR',
+      '3': 'CANINE',
+      '4': 'FIRST_PREMOLAR',
+      '5': 'SECOND_PREMOLAR',
+      '6': 'FIRST_MOLAR',
+      '7': 'SECOND_MOLAR',
+      '8': 'THIRD_MOLAR'
+    }[position];
 
-    return `${quadrantNames[quadrant]} ${positionNames[position]}`;
+    const quadrantName = this.translate.instant(`ODONTOGRAM.TOOTH_NAMES.${quadrantKey}`);
+    const positionName = this.translate.instant(`ODONTOGRAM.TOOTH_NAMES.${positionKey}`);
+
+    return `${quadrantName} ${positionName}`;
   }
 
   getStatusLabel(status: ToothStatus): string {
-    const labels: Record<ToothStatus, string> = {
-      'HEALTHY': 'Healthy',
-      'CARIOUS': 'Cavity',
-      'FILLED': 'Filled',
-      'MISSING': 'Missing',
-      'CROWN': 'Crown',
-      'BRIDGE': 'Bridge',
-      'IMPLANT': 'Implant',
-      'ROOT_CANAL': 'Root Canal',
-      'FRACTURED': 'Fractured',
-      'MOBILE': 'Mobile',
-      'IMPACTED': 'Impacted'
+    return this.translate.instant(`ODONTOGRAM.TOOTH_STATUS.${status}`);
+  }
+
+  getSurfaceStatus(toothNumber: string, surfaceType: SurfaceType): SurfaceStatus {
+    const tooth = this.getToothRecord(toothNumber);
+    if (!tooth || !tooth.surfaces) return 'HEALTHY';
+
+    const surface = tooth.surfaces.find(s => s.surfaceType === surfaceType);
+    return surface ? surface.status : 'HEALTHY';
+  }
+
+  getSurfaceColor(toothNumber: string, surfaceType: SurfaceType): string {
+    const status = this.getSurfaceStatus(toothNumber, surfaceType);
+
+    const colorMap: Record<SurfaceStatus, string> = {
+      'HEALTHY': 'rgba(0, 0, 0, 0.6)',
+      'CARIOUS': 'rgba(255, 68, 68, 0.85)',
+      'FILLED': 'rgba(65, 105, 225, 0.85)',
+      'FRACTURED': 'rgba(255, 140, 0, 0.85)',
+      'WEAR': 'rgba(255, 215, 0, 0.85)',
+      'EROSION': 'rgba(255, 105, 180, 0.85)',
+      'STAINED': 'rgba(139, 69, 19, 0.85)',
+      'CALCULUS': 'rgba(128, 128, 0, 0.85)'
     };
-    return labels[status] || status;
+
+    return colorMap[status] || 'rgba(0, 0, 0, 0.6)';
+  }
+
+  onSurfaceClick(event: Event, toothNumber: string, surfaceType: SurfaceType): void {
+    event.stopPropagation(); // Prevent tooth selection
+
+    const tooth = this.getToothRecord(toothNumber);
+    if (!tooth) return;
+
+    // Select the tooth first
+    this.selectedTooth = { ...tooth };
+
+    // Find the surface
+    const surface = tooth.surfaces?.find(s => s.surfaceType === surfaceType);
+    if (surface) {
+      this.selectedSurface = { ...surface };
+      this.showSurfaceDialog = true;
+    }
+  }
+
+  closeSurfaceDialog(): void {
+    this.showSurfaceDialog = false;
+    this.selectedSurface = null;
+  }
+
+  updateSurfaceStatus(): void {
+    if (!this.selectedSurface || !this.currentOdontogram || !this.selectedTooth) return;
+
+    const request: UpdateToothSurfaceRequest = {
+      toothNumber: this.selectedTooth.toothNumber,
+      surfaceType: this.selectedSurface.surfaceType,
+      status: this.selectedSurface.status,
+      notes: this.selectedSurface.notes
+    };
+
+    this.odontogramService.updateToothSurface(this.currentOdontogram.id, request)
+      .subscribe({
+        next: (updated) => {
+          // Reload odontogram to get updated data
+          this.loadPatientOdontogram();
+          this.showSurfaceDialog = false;
+          alert('Surface updated successfully!');
+        },
+        error: () => alert('Error updating surface')
+      });
+  }
+
+  getSurfaceLabel(surfaceType: SurfaceType): string {
+    return this.translate.instant(`ODONTOGRAM.SURFACE_TYPES.${surfaceType}`);
+  }
+
+  getSurfaceStatusLabel(status: SurfaceStatus): string {
+    return this.translate.instant(`ODONTOGRAM.SURFACE_STATUS.${status}`);
   }
 }

@@ -17,6 +17,7 @@ export interface ToothRecordDto {
   status: ToothStatus;
   notes?: string;
   treatmentPlans: TreatmentPlanDto[];
+  surfaces: ToothSurfaceDto[];
   createdAt: string;
   updatedAt: string;
 }
@@ -34,6 +35,27 @@ export interface TreatmentPlanDto {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface ToothSurfaceDto {
+  id: number;
+  surfaceType: SurfaceType;
+  status: SurfaceStatus;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type SurfaceType = 'OCCLUSAL' | 'MESIAL' | 'DISTAL' | 'BUCCAL' | 'LINGUAL';
+
+export type SurfaceStatus =
+  | 'HEALTHY'
+  | 'CARIOUS'
+  | 'FILLED'
+  | 'FRACTURED'
+  | 'WEAR'
+  | 'EROSION'
+  | 'STAINED'
+  | 'CALCULUS';
 
 export type ToothStatus =
   | 'HEALTHY'
@@ -59,6 +81,13 @@ export interface CreateOdontogramRequest {
 export interface UpdateToothRequest {
   toothNumber: string;
   status: ToothStatus;
+  notes?: string;
+}
+
+export interface UpdateToothSurfaceRequest {
+  toothNumber: string;
+  surfaceType: SurfaceType;
+  status: SurfaceStatus;
   notes?: string;
 }
 
