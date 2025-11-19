@@ -35,9 +35,9 @@ export class BookNowComponent implements OnInit {
   availableDentists: DentistDto[] = [];
 
   constructor(
-    private route: ActivatedRoute, 
-    private dialog: MatDialog, 
-    private http: HttpClient, 
+    private route: ActivatedRoute,
+    private dialog: MatDialog,
+    private http: HttpClient,
     private authService: AuthService,
     private router: Router) { }
 
@@ -54,23 +54,27 @@ export class BookNowComponent implements OnInit {
   loadAvailableDentists() {
     if (!this.selectedOfficeId) return;
 
-    this.http.get<DentistDto[]>(environment.apiBase + `/dentists/dental-office/${this.selectedOfficeId}`).subscribe(
-      (dentists) => {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+
+    this.http.get<DentistDto[]>(`${environment.apiBase}/dentists/dental-office/${this.selectedOfficeId}`, { headers }).subscribe(
+      dentists => {
         this.availableDentists = dentists;
         if (dentists.length === 1) {
           this.selectedDentistId = dentists[0].id;
         }
-      },
-      (error) => {
-        console.error('Error fetching dentists:', error);
-      }
-    );
+      });
   }
 
   getDentalOfficeName() {
     if (!this.selectedOfficeId) return;
 
-    this.http.get<DentalOffice>(environment.apiBase + `/dental-offices/${this.selectedOfficeId}`)
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+
+    this.http.get<DentalOffice>(`${environment.apiBase}/dental-offices/${this.selectedOfficeId}`, { headers })
       .subscribe(result => {
         this.dentalOfficeName = result.name;
       }
@@ -80,15 +84,15 @@ export class BookNowComponent implements OnInit {
   loadAvailableTimes() {
     if (!this.selectedDentistId || !this.selectedDate) return;
 
-    this.http.get<string[]>(`${environment.apiBase}/work-schedule/dentist/${this.selectedDentistId}/${this.selectedDate}`)
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+
+    this.http.get<string[]>(`${environment.apiBase}/work-schedule/dentist/${this.selectedDentistId}/${this.selectedDate}`, { headers })
       .subscribe(
         (times) => {
           this.availableTimes = times;
-        },
-        (error) => {
-          console.error('Error fetching available times:', error);
-        }
-      );
+        });
   }
 
 
@@ -116,12 +120,7 @@ export class BookNowComponent implements OnInit {
       .subscribe(
         response => {
           this.openConfirmationDialog(response);
-        },
-        error => {
-          console.error('Error booking appointment:', error);
-          alert('Failed to book appointment.');
-        }
-      );
+        });
   }
 
   onDentistChange() {
@@ -135,7 +134,7 @@ export class BookNowComponent implements OnInit {
   onDateChange() {
     this.selectedStartTime = null;
     this.availableTimes = [];
-  
+
     if (this.selectedDate) {
       this.loadAvailableTimes();
       this.validateForm();

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { catchError, debounceTime, distinctUntilChanged, map, Observable, of, switchMap, tap } from 'rxjs';
@@ -71,15 +71,17 @@ export class SearchBarComponent implements OnInit {
   }
 
   fetchCities() {
-    this.http.get<City[]>(environment.apiBase + '/cities').subscribe(
-      data => this.cities = data,
-      error => console.error('Error fetching cities:', error)
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+
+    this.http.get<City[]>(`${environment.apiBase}/cities`, { headers }).subscribe(
+      data => this.cities = data
     );
   }
 
   searchDentalOffices(query: string = ''): Observable<DentalOffice[]> {
     this.isLoading = true;
-  
+
     const params: any = {};
     if (query.trim()) {
       params.query = query;
@@ -90,8 +92,12 @@ export class SearchBarComponent implements OnInit {
     if (this.selectedMunicipalityId) {
       params.municipalityId = this.selectedMunicipalityId;
     }
-  
-    return this.http.get<{ content: DentalOffice[] }>(environment.apiBase + '/dental-offices/search', { params })
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+
+    return this.http.get<{ content: DentalOffice[] }>(environment.apiBase + '/dental-offices/search', { headers, params })
       .pipe(
         map(response => {
           if (response.content.length === 0) {
@@ -101,7 +107,7 @@ export class SearchBarComponent implements OnInit {
           }
           return this.searchResults;
         }),
-  
+
         tap(() => this.isLoading = false),
         catchError(() => {
           this.isLoading = false;
@@ -122,7 +128,7 @@ export class SearchBarComponent implements OnInit {
   toggleAccordion() {
     this.showAccordion = !this.showAccordion;
   }
-  
+
   toggleMunicipality(city: City) {
     if (this.selectedCityId !== city.id) {
       this.selectedCityId = city.id;
@@ -134,13 +140,13 @@ export class SearchBarComponent implements OnInit {
       this.municipalities = [];
     }
   }
-  
+
   selectCity(city: City | null) {
     this.selectedCityId = city?.id || null;
     this.selectedCityName = city ? city.name : null;
     this.selectedMunicipalityId = null;
     this.selectedMunicipalityName = null;
-    
+
     if (this.selectedCityId) {
       this.fetchMunicipalities();
     } else {
@@ -149,7 +155,7 @@ export class SearchBarComponent implements OnInit {
     this.showAccordion = false;
     this.triggerSearch();
   }
-  
+
   selectMunicipality(municipality: MunicipalityDto | null) {
     this.selectedMunicipalityId = municipality?.id || null;
     this.selectedMunicipalityName = municipality ? municipality.name : null;
@@ -178,22 +184,28 @@ export class SearchBarComponent implements OnInit {
   }
 
   fetchMunicipalities() {
-    this.http.get<MunicipalityDto[]>(`${environment.apiBase}/municipalities/city/${this.selectedCityId}`)
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+
+    this.http.get<MunicipalityDto[]>(`${environment.apiBase}/municipalities/city/${this.selectedCityId}`, { headers })
       .subscribe(
-        data => this.municipalities = data,
-        error => console.error('Error fetching municipalities:', error)
-      );
+        data => this.municipalities = data);
   }
 
   openInfoDialog(office: DentalOffice) {
     this.selectedOffice = office;
     this.showInfoDialog = true;
-  
-    this.http.get<DentistDto[]>(`${environment.apiBase}/dentists/dental-office/${office.id}`).subscribe(dentists => {
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+
+    this.http.get<DentistDto[]>(`${environment.apiBase}/dentists/dental-office/${office.id}`, { headers }).subscribe(dentists => {
       this.selectedOfficeDentists = dentists;
     });
-  
-    this.http.get<DentistServiceDto[]>(`${environment.apiBase}/services/dental-office/${office.id}`).subscribe(services => {
+
+    this.http.get<DentistServiceDto[]>(`${environment.apiBase}/services/dental-office/${office.id}`, { headers }).subscribe(services => {
       this.selectedOfficeServices = services.map(s => s.service);
     });
   }

@@ -44,21 +44,25 @@ export class InfoComponent implements OnInit {
   }
 
   loadServices() {
-    this.http.get<DentistServiceDto[]>(`${environment.apiBase}/services/dental-office/${this.office.id}`)
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+
+    this.http.get<DentistServiceDto[]>(`${environment.apiBase}/services/dental-office/${this.office.id}`, { headers })
       .subscribe((data) => {
         this.services = data.map(service => ({
           id: service.service.id,
           name: service.service.name,
           price: service.price
         }));
-      }, error => {
-        console.error('Error fetching services with prices', error);
       });
   }
-  
+
 
   loadReviews() {
-    this.http.get<any[]>(`${environment.apiBase}/reviews/dental-office/${this.office.id}`)
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+
+    this.http.get<any[]>(`${environment.apiBase}/reviews/dental-office/${this.office.id}`, { headers })
       .subscribe(reviews => {
         const currentUserId = this.currentUserId;
 
@@ -69,7 +73,7 @@ export class InfoComponent implements OnInit {
         this.userHasReviewed = !!userReview;
       });
   }
-  
+
   submitReview() {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('token')}`,

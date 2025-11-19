@@ -45,13 +45,7 @@ export class OdontogramService {
   updateGeneralNotes(id: number, notes: string): Observable<OdontogramDto> {
     return this.http.patch<OdontogramDto>(
       `${this.apiUrl}/${id}/notes`,
-      notes,
-      {
-        headers: new HttpHeaders({
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        })
-      }
+      notes, { headers: this.getHeaders() }
     );
   }
 
