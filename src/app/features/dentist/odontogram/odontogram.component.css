@@ -209,48 +209,65 @@
 }
 
 .tooth {
-  width: 50px;
-  height: 60px;
-  border: 3px solid #333;
-  border-radius: 8px 8px 4px 4px;
+  width: 60px;
+  height: 90px;
+  border: none;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s;
   position: relative;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  overflow: hidden;
+  background: #fafafa;
+  padding: 5px;
 }
 
 .tooth:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-  border-color: #3b82f6;
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  background: #f0f0f0;
+}
+
+.tooth-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 1;
+  pointer-events: none;
+  transition: filter 0.3s;
 }
 
 .tooth.selected {
-  border-color: #3b82f6;
-  border-width: 4px;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 0 3px #3b82f6;
+  background: #e3f2fd;
 }
 
 .tooth-number {
-  font-weight: bold;
-  font-size: 14px;
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  font-weight: 700;
+  font-size: 9px;
   color: #333;
-  text-shadow: 0 0 2px rgba(255,255,255,0.8);
-  z-index: 2;
-  position: relative;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2px 5px;
+  border-radius: 3px;
+  border: 1px solid #ddd;
   transition: opacity 0.3s;
 }
 
 .tooth-surfaces {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 20%;
+  left: 20%;
+  right: 20%;
+  bottom: 50%;
   opacity: 0;
   transition: opacity 0.3s;
   pointer-events: none;
@@ -261,7 +278,8 @@
     "distal distal distal";
   grid-template-rows: 1fr 1fr 1fr;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 2px;
+  gap: 1px;
+  z-index: 3;
 }
 
 .tooth:hover .tooth-surfaces {
@@ -1244,6 +1262,25 @@
   .btn-history {
     width: 100%;
     justify-content: center;
+  }
+
+  .action-buttons {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .btn-notes,
+  .btn-history {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .notes-modal {
+    max-width: 95%;
+  }
+
+  .notes-timeline {
+    padding-left: 20px;
   }
 }
 

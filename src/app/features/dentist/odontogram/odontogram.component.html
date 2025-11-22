@@ -81,8 +81,15 @@
               *ngFor="let toothNum of upperTeeth"
               class="tooth"
               [class.selected]="selectedTooth?.toothNumber === toothNum"
-              [style.background-color]="getToothColor(toothNum)"
               (click)="selectTooth(toothNum)">
+
+              <img
+                [src]="getToothImage(toothNum)"
+                [alt]="'Tooth ' + toothNum"
+                class="tooth-image"
+                [style.filter]="getToothFilter(toothNum)"
+              />
+
               <span class="tooth-number">{{ toothNum }}</span>
               <div class="tooth-surfaces">
                 <div
@@ -131,8 +138,15 @@
               *ngFor="let toothNum of lowerTeeth"
               class="tooth"
               [class.selected]="selectedTooth?.toothNumber === toothNum"
-              [style.background-color]="getToothColor(toothNum)"
               (click)="selectTooth(toothNum)">
+
+              <img
+                [src]="getToothImage(toothNum)"
+                [alt]="'Tooth ' + toothNum"
+                class="tooth-image"
+                [style.filter]="getToothFilter(toothNum)"
+              />
+
               <span class="tooth-number">{{ toothNum }}</span>
               <div class="tooth-surfaces">
                 <div

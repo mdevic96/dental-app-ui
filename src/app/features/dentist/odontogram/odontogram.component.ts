@@ -323,13 +323,21 @@ export class OdontogramComponent implements OnInit {
       return;
     }
 
+    const currentToothNumber = this.treatmentForm.toothNumber;
+
     this.odontogramService.addTreatmentPlan(this.currentOdontogram.id, this.treatmentForm)
       .subscribe({
         next: () => {
+          this.showTreatmentDialog = false;
+
           // Reload odontogram to get updated tooth records with treatments
           this.loadPatientOdontogram();
-          this.showTreatmentDialog = false;
-          alert('Treatment plan added successfully!');
+
+          setTimeout(() => {
+            this.selectTooth(currentToothNumber);
+          }, 100);
+
+          console.log('Treatment plan added successfully!');
         },
         error: () => console.error('Error adding treatment')
       });
@@ -463,6 +471,48 @@ export class OdontogramComponent implements OnInit {
 
   getSurfaceStatusLabel(status: SurfaceStatus): string {
     return this.translate.instant(`ODONTOGRAM.SURFACE_STATUS.${status}`);
+  }
+
+  getToothImage(toothNumber: string): string {
+    const quadrant = toothNumber[0];
+    const position = parseInt(toothNumber[1]);
+    const isUpper = quadrant === '1' || quadrant === '2';
+
+    let toothType: string;
+
+    if (position === 1 || position === 2) {
+      toothType = 'incisor';
+    } else if (position === 3) {
+      toothType = 'canine';
+    } else if (position === 4 || position === 5) {
+      toothType = 'premolar';
+    } else {
+      toothType = 'molar';
+    }
+
+    const jawType = isUpper ? 'upper' : 'lower';
+    return `/teeth/${jawType}-${toothType}.png`;
+  }
+
+  getToothFilter(toothNumber: string): string {
+    const tooth = this.getToothRecord(toothNumber);
+    if (!tooth) return 'none';
+
+    const filterMap: Record<ToothStatus, string> = {
+      'HEALTHY': 'none',
+      'CARIOUS': 'brightness(0.7) sepia(1) hue-rotate(-20deg) saturate(4)',
+      'FILLED': 'brightness(0.85) sepia(0.4) hue-rotate(180deg) saturate(1.5)',
+      'MISSING': 'grayscale(1) opacity(0.3) blur(1px)',
+      'CROWN': 'brightness(1.15) sepia(0.6) hue-rotate(30deg) saturate(1.3)',
+      'BRIDGE': 'brightness(0.9) sepia(0.5) hue-rotate(250deg) saturate(1.2)',
+      'IMPLANT': 'grayscale(0.6) brightness(0.85) contrast(1.1)',
+      'ROOT_CANAL': 'brightness(1.1) sepia(0.3) hue-rotate(80deg)',
+      'FRACTURED': 'brightness(0.8) contrast(1.3) saturate(0.8)',
+      'MOBILE': 'brightness(1.05) sepia(0.4) hue-rotate(50deg)',
+      'IMPACTED': 'brightness(0.85) sepia(0.5) hue-rotate(300deg) saturate(1.2)'
+    };
+
+    return filterMap[tooth.status] || 'none';
   }
 
   getTranslatedDescription(contribution: ContributionDto): string {
