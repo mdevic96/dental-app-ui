@@ -148,7 +148,7 @@ export class OdontogramComponent implements OnInit {
           this.createNewOdontogram();
         } else {
           this.isLoading = false;
-          alert('Error loading odontogram');
+          console.error('Error loading odontogram');
         }
       }
     });
@@ -191,7 +191,7 @@ export class OdontogramComponent implements OnInit {
       this.currentOdontogram = odontogram;
       this.generalNotes = '';
       this.isLoading = false;
-      alert('New odontogram created successfully!');
+      console.log('New odontogram created successfully!');
     });
   }
 
@@ -243,10 +243,13 @@ export class OdontogramComponent implements OnInit {
         if (index !== -1) {
           this.currentOdontogram!.toothRecords[index] = updated;
         }
+
         this.selectedTooth = updated;
-        alert('Tooth updated successfully!');
+
+        this.loadContributionHistory(this.currentOdontogram!.id);
+        console.log('Tooth updated successfully!');
       },
-      error: () => alert('Error updating tooth')
+      error: () => console.log('Error updating tooth')
     });
   }
 
@@ -280,7 +283,7 @@ export class OdontogramComponent implements OnInit {
 
   addTreatment(): void {
     if (!this.currentOdontogram || !this.treatmentForm.treatmentType) {
-      alert('Please fill in treatment type');
+      console.error('Please fill in treatment type');
       return;
     }
 
@@ -292,7 +295,7 @@ export class OdontogramComponent implements OnInit {
           this.showTreatmentDialog = false;
           alert('Treatment plan added successfully!');
         },
-        error: () => alert('Error adding treatment')
+        error: () => console.error('Error adding treatment')
       });
   }
 
@@ -305,7 +308,7 @@ export class OdontogramComponent implements OnInit {
           this.loadPatientOdontogram();
           alert('Treatment status updated!');
         },
-        error: () => alert('Error updating treatment status')
+        error: () => console.error('Error updating treatment status')
       });
   }
 
@@ -404,9 +407,9 @@ export class OdontogramComponent implements OnInit {
           // Reload odontogram to get updated data
           this.loadPatientOdontogram();
           this.showSurfaceDialog = false;
-          alert('Surface updated successfully!');
+          console.log('Surface updated successfully!');
         },
-        error: () => alert('Error updating surface')
+        error: () => console.error('Error updating surface')
       });
   }
 

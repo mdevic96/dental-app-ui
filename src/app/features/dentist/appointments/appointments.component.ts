@@ -50,7 +50,7 @@ export class AppointmentsComponent implements OnInit {
     this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
     this.pastAppointments = this.sortAppointmentsByStatus(this.pastAppointments);
   }
-  
+
   sortAppointmentsByStatus(appointments: AppointmentDto[]): AppointmentDto[] {
     return [...appointments].sort((a, b) => {
       const statusA = a.status.toUpperCase();
@@ -66,7 +66,7 @@ export class AppointmentsComponent implements OnInit {
 
     this.http.post(`${environment.apiBase}/appointments/${id}/${status}`, { }, { headers })
       .subscribe(() => {
-        alert(`Appointment marked as ${status.toLowerCase()}!`);
+        console.log(`Appointment marked as ${status.toLowerCase()}!`);
         this.loadAppointments();
       });
   }
