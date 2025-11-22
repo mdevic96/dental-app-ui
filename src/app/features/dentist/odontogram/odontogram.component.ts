@@ -52,6 +52,10 @@ export class OdontogramComponent implements OnInit {
     notes: ''
   };
 
+  // General notes dialog
+  showGeneralNotesDialog = false;
+  notesHistory: any[] = [];
+
   // Tooth surface management
   selectedSurface: ToothSurfaceDto | null = null;
   surfaceStatuses: SurfaceStatus[] = ['HEALTHY', 'CARIOUS', 'FILLED', 'FRACTURED', 'WEAR', 'EROSION', 'STAINED', 'CALCULUS'];
@@ -138,7 +142,6 @@ export class OdontogramComponent implements OnInit {
     this.odontogramService.getLatestOdontogram(this.selectedPatientId).subscribe({
       next: (odontogram) => {
         this.currentOdontogram = odontogram;
-        this.generalNotes = odontogram.generalNotes || '';
         this.loadContributionHistory(odontogram.id);
         this.isLoading = false;
       },
@@ -167,6 +170,27 @@ export class OdontogramComponent implements OnInit {
 
   toggleContributionHistory(): void {
     this.showContributionHistory = !this.showContributionHistory;
+  }
+
+  toggleGeneralNotes(): void {
+    this.showGeneralNotesDialog = !this.showGeneralNotesDialog;
+
+    // Load notes history when opening
+    if (this.showGeneralNotesDialog && this.currentOdontogram) {
+      this.loadNotesHistory(this.currentOdontogram.id);
+    }
+  }
+
+  loadNotesHistory(odontogramId: number): void {
+    this.notesHistory = this.contributions
+      .filter(c => c.odontogramId === odontogramId && c.actionType === 'UPDATED_NOTES')
+      .map(c => ({
+        timestamp: c.contributionDate,
+        dentistName: c.dentistName,
+        officeName: c.officeName,
+        officeId: c.officeId,
+        notes: c.metadata['notes'] || c.metadata['generalNotes'] || 'No notes content'
+      }));
   }
 
   getOfficeBadgeColor(officeId: number): string {
@@ -260,9 +284,21 @@ export class OdontogramComponent implements OnInit {
       .subscribe({
         next: (updated) => {
           this.currentOdontogram = updated;
-          alert('Notes saved successfully!');
+
+          // First reload contributions, THEN reload notes history
+          this.odontogramService.getContributionHistory(updated.id).subscribe({
+            next: (contributions) => {
+              this.contributions = contributions;
+              this.loadNotesHistory(updated.id);
+              this.generalNotes = '';
+              console.log('Notes saved successfully!');
+            },
+            error: (err) => {
+              console.error('Error loading contribution history', err);
+            }
+          });
         },
-        error: () => alert('Error saving notes')
+        error: () => console.log('Error saving notes')
       });
   }
 
@@ -301,12 +337,20 @@ export class OdontogramComponent implements OnInit {
 
   updateTreatmentStatus(treatment: TreatmentPlanDto, newStatus: string): void {
     const completedDate = newStatus === 'COMPLETED' ? new Date().toISOString().split('T')[0] : undefined;
+    const currentToothNumber = this.selectedTooth?.toothNumber;
 
     this.odontogramService.updateTreatmentStatus(treatment.id, newStatus, completedDate)
       .subscribe({
         next: () => {
           this.loadPatientOdontogram();
-          alert('Treatment status updated!');
+
+          if (currentToothNumber) {
+            setTimeout(() => {
+              this.selectTooth(currentToothNumber);
+            }, 100);
+          }
+
+          console.log('Treatment status updated!');
         },
         error: () => console.error('Error updating treatment status')
       });

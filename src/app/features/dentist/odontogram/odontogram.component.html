@@ -37,7 +37,12 @@
         <p><strong>{{ 'ODONTOGRAM.CREATED' | translate }}</strong> {{ currentOdontogram.createdAt | date:'medium' }}</p>
         <p><strong>{{ 'ODONTOGRAM.LAST_UPDATED' | translate }}</strong> {{ currentOdontogram.updatedAt | date:'medium' }}</p>
       </div>
-      <div class="contribution-toggle">
+      <div class="action-buttons">
+        <button class="btn-notes" (click)="toggleGeneralNotes()">
+          📝 {{ 'ODONTOGRAM.GENERAL_NOTES' | translate }}
+        </button>
+
+        <!-- History Button -->
         <button class="btn-history" (click)="toggleContributionHistory()">
           📖 {{ 'ODONTOGRAM.VIEW_HISTORY' | translate }}
           <span class="history-badge" *ngIf="contributions.length > 0">{{ contributions.length }}</span>
@@ -214,7 +219,7 @@
             <p *ngIf="treatment.plannedDate">{{ 'ODONTOGRAM.PLANNED' | translate }} {{ treatment.plannedDate | date:'mediumDate' }}</p>
             <p *ngIf="treatment.estimatedCost">{{ 'ODONTOGRAM.COST' | translate }} {{ treatment.estimatedCost | currency:'RSD' }}</p>
             <p *ngIf="treatment.notes">{{ 'ODONTOGRAM.NOTES' | translate }} {{ treatment.notes }}</p>
-            <p>{{ 'ODONTOGRAM.STATUS' | translate }} <span [class]="'status-' + treatment.status.toLowerCase()">{{ treatment.status }}</span></p>
+            <p>{{ 'ODONTOGRAM.STATUS' | translate }} <span [class]="'status-' + treatment.status.toLowerCase()">{{ "ODONTOGRAM." + treatment.status | translate}}</span></p>
             <div class="treatment-actions" *ngIf="treatment.status === 'PLANNED'">
               <button class="btn-small" (click)="updateTreatmentStatus(treatment, 'IN_PROGRESS')">{{ 'ODONTOGRAM.START' | translate }}</button>
               <button class="btn-small" (click)="updateTreatmentStatus(treatment, 'COMPLETED')">{{ 'ODONTOGRAM.COMPLETE' | translate }}</button>
@@ -227,12 +232,6 @@
           <button class="btn-secondary" (click)="openTreatmentDialog()">{{ 'ODONTOGRAM.ADD_TREATMENT_PLAN' | translate }}</button>
         </div>
       </div>
-    </div>
-    <!-- General Notes -->
-    <div class="general-notes-section">
-      <h3>{{ 'ODONTOGRAM.GENERAL_NOTES' | translate }}</h3>
-      <textarea [(ngModel)]="generalNotes" rows="4" [placeholder]="'ODONTOGRAM.GENERAL_NOTES' | translate"></textarea>
-      <button class="btn-primary" (click)="saveGeneralNotes()">{{ 'ODONTOGRAM.SAVE_NOTES' | translate }}</button>
     </div>
   </div>
   <!-- No Patient Selected -->
@@ -302,6 +301,7 @@
   </div>
 </div>
 
+<!-- Contribution History Modal -->
 <div *ngIf="showContributionHistory" class="modal-overlay" (click)="toggleContributionHistory()">
   <div class="modal-content history-modal" (click)="$event.stopPropagation()">
     <div class="modal-header">
@@ -331,6 +331,58 @@
           <p class="contribution-description">{{ getTranslatedDescription(contribution) }}</p>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- General Notes Modal -->
+<div *ngIf="showGeneralNotesDialog" class="modal-overlay" (click)="toggleGeneralNotes()">
+  <div class="modal-content notes-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>📝 {{ 'ODONTOGRAM.GENERAL_NOTES' | translate }}</h3>
+      <button class="close-button" (click)="toggleGeneralNotes()" title="Close">✕</button>
+    </div>
+
+    <p class="notes-subtitle">{{ 'ODONTOGRAM.GENERAL_NOTES_SUBTITLE' | translate }}</p>
+
+    <!-- Current Notes Editor -->
+    <div class="notes-editor">
+      <label>{{ 'ODONTOGRAM.CURRENT_NOTES' | translate }}</label>
+      <textarea
+        [(ngModel)]="generalNotes"
+        rows="6"
+        [placeholder]="'ODONTOGRAM.NOTES_PLACEHOLDER' | translate"
+        class="notes-textarea">
+      </textarea>
+      <button class="btn-primary" (click)="saveGeneralNotes()">
+        💾 {{ 'ODONTOGRAM.SAVE_NOTES' | translate }}
+      </button>
+    </div>
+
+    <!-- Notes History -->
+    <div class="notes-history-section" *ngIf="notesHistory.length > 0">
+      <h4>📚 {{ 'ODONTOGRAM.NOTES_HISTORY' | translate }}</h4>
+
+      <div class="notes-timeline">
+        <div *ngFor="let note of notesHistory" class="note-history-item">
+          <div class="note-header">
+            <span class="office-badge" [style.background-color]="getOfficeBadgeColor(note.officeId)">
+              {{ note.officeName }}
+            </span>
+            <span class="note-date">{{ note.timestamp | date:'medium' }}</span>
+          </div>
+          <div class="note-author">
+            <strong>{{ note.dentistName }}</strong>
+          </div>
+          <div class="note-content">
+            {{ note.notes }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="notesHistory.length === 0" class="no-history">
+      <p>{{ 'ODONTOGRAM.NO_NOTES_HISTORY' | translate }}</p>
     </div>
   </div>
 </div>
