@@ -87,20 +87,31 @@
 }
 
 /* Odontogram Info */
-.odontogram-info {
+.odontogram-info-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
   background: #f8f9fa;
-  padding: 15px;
+  padding: 15px 20px;
   border-radius: 8px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.odontogram-info {
   display: flex;
   gap: 30px;
   flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
 }
 
 .odontogram-info p {
   margin: 0;
   font-size: 14px;
   color: #555;
+  white-space: nowrap;
 }
 
 .odontogram-info strong {
@@ -704,6 +715,268 @@
   background: #555;
 }
 
+/* Contribution History Toggle */
+.contribution-toggle {
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.btn-history {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  white-space: nowrap;
+}
+
+.btn-history:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.btn-history:active {
+  transform: translateY(0);
+}
+
+.history-badge {
+  background: rgba(255, 255, 255, 0.3);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 18px;
+  text-align: center;
+}
+
+.history-subtitle {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+/* Office Badges */
+.office-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.office-badge.small {
+  padding: 3px 10px;
+  font-size: 11px;
+}
+
+.office-badge.tiny {
+  padding: 2px 8px;
+  font-size: 10px;
+}
+
+/* Creator Info */
+.creator-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 13px;
+}
+
+.info-label {
+  color: #666;
+  font-weight: 600;
+}
+
+.dentist-name {
+  color: #555;
+}
+
+/* Treatment Header with Badge */
+.treatment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.treatment-header p {
+  margin: 0;
+}
+
+.history-modal {
+  max-width: 700px;
+  max-height: 80vh;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+  line-height: 1;
+}
+
+.close-button:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.no-contributions {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+  font-style: italic;
+}
+
+/* Timeline in Modal */
+.history-modal .timeline {
+  position: relative;
+  padding-left: 40px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.history-modal .timeline::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+  border-radius: 2px;
+}
+
+.history-modal .timeline-item {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.history-modal .timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.history-modal .timeline-content {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+  transition: all 0.3s;
+}
+
+.history-modal .timeline-content:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.history-modal .contribution-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.history-modal .contribution-date {
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+}
+
+.history-modal .contribution-body {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.history-modal .contribution-body strong {
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+.history-modal .action-type {
+  font-size: 11px;
+  padding: 3px 10px;
+  background: #e0e0e0;
+  border-radius: 12px;
+  color: #555;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.history-modal .contribution-description {
+  margin: 0;
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* Custom scrollbar for timeline */
+.history-modal .timeline::-webkit-scrollbar {
+  width: 8px;
+}
+
+.history-modal .timeline::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.history-modal .timeline::-webkit-scrollbar-thumb {
+  background: #667eea;
+  border-radius: 4px;
+}
+
+.history-modal .timeline::-webkit-scrollbar-thumb:hover {
+  background: #764ba2;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .odontogram-page {
@@ -752,6 +1025,20 @@
   .modal-content {
     padding: 20px;
     width: 95%;
+  }
+
+  .odontogram-info-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .contribution-toggle {
+    width: 100%;
+  }
+
+  .btn-history {
+    width: 100%;
+    justify-content: center;
   }
 }
 

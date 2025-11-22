@@ -8,7 +8,7 @@ import {
   UpdateToothRequest,
   CreateTreatmentPlanRequest,
   TreatmentPlanDto,
-  ToothRecordDto, UpdateToothSurfaceRequest, ToothSurfaceDto
+  ToothRecordDto, UpdateToothSurfaceRequest, ToothSurfaceDto, ContributionDto
 } from '../../../core/odontogram.model';
 
 @Injectable({
@@ -40,6 +40,13 @@ export class OdontogramService {
 
   getOdontogramById(id: number): Observable<OdontogramDto> {
     return this.http.get<OdontogramDto>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
+  }
+
+  getContributionHistory(odontogramId: number): Observable<ContributionDto[]> {
+    return this.http.get<ContributionDto[]>(
+      `${this.apiUrl}/${odontogramId}/contributions`,
+      { headers: this.getHeaders() }
+    );
   }
 
   updateGeneralNotes(id: number, notes: string): Observable<OdontogramDto> {

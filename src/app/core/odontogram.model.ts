@@ -18,6 +18,10 @@ export interface ToothRecordDto {
   notes?: string;
   treatmentPlans: TreatmentPlanDto[];
   surfaces: ToothSurfaceDto[];
+  createdByDentistId?: number;
+  createdByDentistName?: string;
+  createdByOfficeId?: number;
+  createdByOfficeName?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -32,6 +36,10 @@ export interface TreatmentPlanDto {
   completedDate?: string;
   estimatedCost?: number;
   notes?: string;
+  createdByDentistId?: number;
+  createdByDentistName?: string;
+  createdByOfficeId?: number;
+  createdByOfficeName?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -41,8 +49,24 @@ export interface ToothSurfaceDto {
   surfaceType: SurfaceType;
   status: SurfaceStatus;
   notes?: string;
+  createdByDentistId?: number;
+  createdByDentistName?: string;
+  createdByOfficeId?: number;
+  createdByOfficeName?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ContributionDto {
+  id: number;
+  odontogramId: number;
+  dentistId: number;
+  dentistName: string;
+  officeId: number;
+  officeName: string;
+  actionType: string;
+  metadata: { [key: string]: string };
+  contributionDate: Date;
 }
 
 export type SurfaceType = 'OCCLUSAL' | 'MESIAL' | 'DISTAL' | 'BUCCAL' | 'LINGUAL';

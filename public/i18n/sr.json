@@ -304,6 +304,29 @@
       "UPPER_LEFT": "Gornji levi",
       "LOWER_LEFT": "Donji levi",
       "LOWER_RIGHT": "Donji desni"
+    },
+    "ACTION_TYPES": {
+      "CREATED": "Kreiran",
+      "UPDATED_TOOTH": "Ažuriran zub",
+      "ADDED_TREATMENT": "Dodat tretman",
+      "UPDATED_SURFACE": "Ažurirana površina",
+      "UPDATED_NOTES": "Ažurirane beleške",
+      "UPDATED_TREATMENT": "Ažuriran tretman"
+    },
+    "VIEW_HISTORY": "Pregled istorije",
+    "RECORD_HISTORY": "Istorija zapisa",
+    "CONTRIBUTION_HISTORY_SUBTITLE": "Pratite sve izmene napravljene na stomatološkim zapisima pacijenta u svim ordinacijama",
+    "NO_HISTORY": "Još nema dostupne istorije.",
+    "CREATED_AT": "Kreirano u:",
+    "BY": "od",
+    "CLOSE": "Zatvori",
+    "CONTRIBUTION_DESCRIPTIONS": {
+      "CREATED": "Kreiran novi odontogram",
+      "UPDATED_NOTES": "Ažurirane opšte beleške",
+      "UPDATED_SURFACE": "Ažurirana {{surfaceType}} površina zuba #{{toothNumber}} na {{status}}",
+      "UPDATED_TOOTH": "Ažuriran zub #{{toothNumber}} na status {{status}}",
+      "ADDED_TREATMENT": "Dodat plan lečenja: {{treatmentType}} za zub #{{toothNumber}}",
+      "UPDATED_TREATMENT": "Ažuriran status plana lečenja na {{status}}"
     }
   }
 }

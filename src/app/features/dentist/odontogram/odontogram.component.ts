@@ -9,7 +9,7 @@ import {
   ToothStatus,
   CreateTreatmentPlanRequest,
   TreatmentPlanDto,
-  ToothSurfaceDto, SurfaceStatus, SurfaceType, UpdateToothSurfaceRequest
+  ToothSurfaceDto, SurfaceStatus, SurfaceType, UpdateToothSurfaceRequest, ContributionDto
 } from '../../../core/odontogram.model';
 import { UserDto } from '../../../core/user.model';
 import { DentistServiceDto } from '../../../core/dentist-service.model';
@@ -56,6 +56,11 @@ export class OdontogramComponent implements OnInit {
   selectedSurface: ToothSurfaceDto | null = null;
   surfaceStatuses: SurfaceStatus[] = ['HEALTHY', 'CARIOUS', 'FILLED', 'FRACTURED', 'WEAR', 'EROSION', 'STAINED', 'CALCULUS'];
   showSurfaceDialog = false;
+
+  // Contributions
+  contributions: ContributionDto[] = [];
+  showContributionHistory = false;
+  currentOfficeId: number | null = null;
 
   availableServices: DentistServiceDto[] = [];
 
@@ -134,6 +139,7 @@ export class OdontogramComponent implements OnInit {
       next: (odontogram) => {
         this.currentOdontogram = odontogram;
         this.generalNotes = odontogram.generalNotes || '';
+        this.loadContributionHistory(odontogram.id);
         this.isLoading = false;
       },
       error: (err) => {
@@ -146,6 +152,33 @@ export class OdontogramComponent implements OnInit {
         }
       }
     });
+  }
+
+  loadContributionHistory(odontogramId: number): void {
+    this.odontogramService.getContributionHistory(odontogramId).subscribe({
+      next: (contributions) => {
+        this.contributions = contributions;
+      },
+      error: (err) => {
+        console.error('Error loading contribution history', err);
+      }
+    });
+  }
+
+  toggleContributionHistory(): void {
+    this.showContributionHistory = !this.showContributionHistory;
+  }
+
+  getOfficeBadgeColor(officeId: number): string {
+    const colors = [
+      '#3b82f6', '#10b981', '#f59e0b', '#ef4444',
+      '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16'
+    ];
+    return colors[officeId % colors.length];
+  }
+
+  isCurrentOffice(officeId?: number): boolean {
+    return officeId === this.currentOfficeId;
   }
 
   createNewOdontogram(): void {
@@ -383,5 +416,45 @@ export class OdontogramComponent implements OnInit {
 
   getSurfaceStatusLabel(status: SurfaceStatus): string {
     return this.translate.instant(`ODONTOGRAM.SURFACE_STATUS.${status}`);
+  }
+
+  getTranslatedDescription(contribution: ContributionDto): string {
+    const actionType = contribution.actionType;
+    const meta = contribution.metadata;
+
+    switch (actionType) {
+      case 'CREATED':
+        return this.translate.instant('ODONTOGRAM.CONTRIBUTION_DESCRIPTIONS.CREATED');
+
+      case 'UPDATED_NOTES':
+        return this.translate.instant('ODONTOGRAM.CONTRIBUTION_DESCRIPTIONS.UPDATED_NOTES');
+
+      case 'UPDATED_SURFACE':
+        return this.translate.instant('ODONTOGRAM.CONTRIBUTION_DESCRIPTIONS.UPDATED_SURFACE', {
+          surfaceType: this.translate.instant(`ODONTOGRAM.SURFACE_TYPES.${meta['surfaceType']}`),
+          toothNumber: meta['toothNumber'],
+          status: this.translate.instant(`ODONTOGRAM.SURFACE_STATUS.${meta['status']}`)
+        });
+
+      case 'UPDATED_TOOTH':
+        return this.translate.instant('ODONTOGRAM.CONTRIBUTION_DESCRIPTIONS.UPDATED_TOOTH', {
+          toothNumber: meta['toothNumber'],
+          status: this.translate.instant(`ODONTOGRAM.TOOTH_STATUS.${meta['status']}`)
+        });
+
+      case 'ADDED_TREATMENT':
+        return this.translate.instant('ODONTOGRAM.CONTRIBUTION_DESCRIPTIONS.ADDED_TREATMENT', {
+          treatmentType: meta['treatmentType'],
+          toothNumber: meta['toothNumber']
+        });
+
+      case 'UPDATED_TREATMENT':
+        return this.translate.instant('ODONTOGRAM.CONTRIBUTION_DESCRIPTIONS.UPDATED_TREATMENT', {
+          status: meta['status']
+        });
+
+      default:
+        return actionType;
+    }
   }
 }

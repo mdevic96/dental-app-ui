@@ -304,6 +304,22 @@
       "UPPER_LEFT": "Upper Left",
       "LOWER_LEFT": "Lower Left",
       "LOWER_RIGHT": "Lower Right"
+    },
+    "VIEW_HISTORY": "View History",
+    "RECORD_HISTORY": "Record History",
+    "CONTRIBUTION_HISTORY_SUBTITLE": "Track all changes made to this patient's dental records across all offices",
+    "NO_HISTORY": "No history available yet.",
+    "CREATED_AT": "Created at:",
+    "BY": "by",
+    "CLOSE": "Close",
+
+    "CONTRIBUTION_DESCRIPTIONS": {
+      "CREATED": "Created new odontogram",
+      "UPDATED_NOTES": "Updated general notes",
+      "UPDATED_SURFACE": "Updated {{surfaceType}} surface of tooth #{{toothNumber}} to {{status}}",
+      "UPDATED_TOOTH": "Updated tooth #{{toothNumber}} to status {{status}}",
+      "ADDED_TREATMENT": "Added treatment plan: {{treatmentType}} for tooth #{{toothNumber}}",
+      "UPDATED_TREATMENT": "Updated treatment plan status to {{status}}"
     }
   }
 }

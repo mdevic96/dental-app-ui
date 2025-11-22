@@ -304,6 +304,22 @@
       "UPPER_LEFT": "Верхний левый",
       "LOWER_LEFT": "Нижний левый",
       "LOWER_RIGHT": "Нижний правый"
+    },
+    "CONTRIBUTION_HISTORY_SUBTITLE": "Отслеживать все изменения, внесённые в стоматологическую карту этого пациента во всех отделениях",
+    "CREATED_AT": "Создано в:",
+    "BY": "Автор",
+    "VIEW_HISTORY": "Просмотреть историю",
+    "RECORD_HISTORY": "История записей",
+    "NO_HISTORY": "История пока недоступна",
+    "CLOSE": "Закрыть",
+
+    "CONTRIBUTION_DESCRIPTIONS": {
+      "CREATED": "Создана новая одонтограмма",
+      "UPDATED_NOTES": "Общие заметки обновлены",
+      "UPDATED_SURFACE": "Обновлена ​​поверхность {{surfaceType}} зуба №{{toothNumber}} до {{status}}",
+      "UPDATED_TOOTH": "Обновлен статус зуба №{{toothNumber}} до {{status}}",
+      "ADDED_TREATMENT": "Добавлен план лечения: {{treatmentType}} для зуба №{{toothNumber}}",
+      "UPDATED_TREATMENT": "Статус плана лечения обновлен до {{status}}"
     }
   }
 }

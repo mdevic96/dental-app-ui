@@ -1,6 +1,5 @@
 <div class="odontogram-page">
   <h2 class="page-title">{{ 'ODONTOGRAM.TITLE' | translate }}</h2>
-
   <!-- Patient Search -->
   <div class="patient-search-section">
     <label>{{ 'ODONTOGRAM.SELECT_PATIENT' | translate }}</label>
@@ -13,7 +12,6 @@
         [placeholder]="'ODONTOGRAM.SEARCH_PATIENT' | translate"
         class="patient-search-input"
       />
-
       <div class="patient-dropdown" *ngIf="showPatientDropdown && filteredPatients.length > 0">
         <div
           *ngFor="let patient of filteredPatients"
@@ -25,23 +23,27 @@
       </div>
     </div>
   </div>
-
   <!-- Loading State -->
   <div *ngIf="isLoading" class="loading">
     <p>{{ 'ODONTOGRAM.LOADING' | translate }}</p>
   </div>
-
   <!-- Main Content (only show when patient selected) -->
   <div *ngIf="currentOdontogram && !isLoading" class="odontogram-content">
-
     <!-- Odontogram Info -->
-    <div class="odontogram-info">
-      <p><strong>{{ 'ODONTOGRAM.PATIENT' | translate }}</strong> {{ currentOdontogram.patientName }}</p>
-      <p><strong>{{ 'ODONTOGRAM.DENTIST' | translate }}</strong> {{ currentOdontogram.dentistName }}</p>
-      <p><strong>{{ 'ODONTOGRAM.CREATED' | translate }}</strong> {{ currentOdontogram.createdAt | date:'medium' }}</p>
-      <p><strong>{{ 'ODONTOGRAM.LAST_UPDATED' | translate }}</strong> {{ currentOdontogram.updatedAt | date:'medium' }}</p>
+    <div class="odontogram-info-wrapper">
+      <div class="odontogram-info">
+        <p><strong>{{ 'ODONTOGRAM.PATIENT' | translate }}</strong> {{ currentOdontogram.patientName }}</p>
+        <p><strong>{{ 'ODONTOGRAM.DENTIST' | translate }}</strong> {{ currentOdontogram.dentistName }}</p>
+        <p><strong>{{ 'ODONTOGRAM.CREATED' | translate }}</strong> {{ currentOdontogram.createdAt | date:'medium' }}</p>
+        <p><strong>{{ 'ODONTOGRAM.LAST_UPDATED' | translate }}</strong> {{ currentOdontogram.updatedAt | date:'medium' }}</p>
+      </div>
+      <div class="contribution-toggle">
+        <button class="btn-history" (click)="toggleContributionHistory()">
+          📖 {{ 'ODONTOGRAM.VIEW_HISTORY' | translate }}
+          <span class="history-badge" *ngIf="contributions.length > 0">{{ contributions.length }}</span>
+        </button>
+      </div>
     </div>
-
     <!-- Color Legend -->
     <div class="legend">
       <h3>{{ 'ODONTOGRAM.STATUS_LEGEND' | translate }}</h3>
@@ -62,12 +64,10 @@
         {{ 'ODONTOGRAM.HOVER_INSTRUCTION' | translate }}
       </p>
     </div>
-
     <div class="main-layout">
       <!-- Tooth Chart -->
       <div class="tooth-chart-section">
         <h3>{{ 'ODONTOGRAM.DENTAL_CHART' | translate }}</h3>
-
         <!-- Upper Jaw -->
         <div class="jaw upper-jaw">
           <div class="jaw-label">{{ 'ODONTOGRAM.UPPER_JAW' | translate }}</div>
@@ -79,7 +79,6 @@
               [style.background-color]="getToothColor(toothNum)"
               (click)="selectTooth(toothNum)">
               <span class="tooth-number">{{ toothNum }}</span>
-
               <div class="tooth-surfaces">
                 <div
                   class="surface surface-mesial"
@@ -120,7 +119,6 @@
             </div>
           </div>
         </div>
-
         <!-- Lower Jaw -->
         <div class="jaw lower-jaw">
           <div class="teeth-row">
@@ -131,7 +129,6 @@
               [style.background-color]="getToothColor(toothNum)"
               (click)="selectTooth(toothNum)">
               <span class="tooth-number">{{ toothNum }}</span>
-
               <div class="tooth-surfaces">
                 <div
                   class="surface surface-mesial"
@@ -174,12 +171,17 @@
           <div class="jaw-label">{{ 'ODONTOGRAM.LOWER_JAW' | translate }}</div>
         </div>
       </div>
-
       <!-- Tooth Detail Panel -->
       <div class="tooth-detail-panel" *ngIf="selectedTooth">
         <h3>{{ 'ODONTOGRAM.TOOTH_NUMBER' | translate }}{{ selectedTooth.toothNumber }}</h3>
         <p class="tooth-name">{{ getToothName(selectedTooth.toothNumber) }}</p>
-
+        <div class="creator-info" *ngIf="selectedTooth.createdByOfficeName">
+          <span class="info-label">{{ 'ODONTOGRAM.CREATED_AT' | translate }}</span>
+          <span class="office-badge small" [style.background-color]="getOfficeBadgeColor(selectedTooth.createdByOfficeId!)">
+            {{ selectedTooth.createdByOfficeName }}
+          </span>
+          <span class="dentist-name">{{ 'ODONTOGRAM.BY' | translate }} {{ selectedTooth.createdByDentistName }}</span>
+        </div>
         <div class="detail-form">
           <label>{{ 'ODONTOGRAM.STATUS' | translate }}</label>
           <select [(ngModel)]="selectedTooth.status">
@@ -187,29 +189,32 @@
               {{ getStatusLabel(status) }}
             </option>
           </select>
-
           <label>{{ 'ODONTOGRAM.NOTES' | translate }}</label>
           <textarea [(ngModel)]="selectedTooth.notes" rows="4" [placeholder]="'ODONTOGRAM.NOTES' | translate"></textarea>
-
           <button class="btn-primary" (click)="updateToothStatus()">{{ 'ODONTOGRAM.SAVE_CHANGES' | translate }}</button>
         </div>
-
         <!-- Treatment Plans -->
         <div class="treatments-section">
           <h4>{{ 'ODONTOGRAM.TREATMENT_PLANS' | translate }}</h4>
-
           <div *ngIf="selectedTooth.treatmentPlans.length === 0" class="no-treatments">
             <p>{{ 'ODONTOGRAM.NO_TREATMENTS' | translate }}</p>
           </div>
-
           <div *ngFor="let treatment of selectedTooth.treatmentPlans" class="treatment-item">
-            <p><strong>{{ treatment.treatmentType }}</strong></p>
+            <div class="treatment-header">
+              <p><strong>{{ treatment.treatmentType }}</strong></p>
+              <span
+                *ngIf="treatment.createdByOfficeName"
+                class="office-badge tiny"
+                [style.background-color]="getOfficeBadgeColor(treatment.createdByOfficeId!)"
+                [title]="('ODONTOGRAM.CREATED_AT' | translate) + ' ' + treatment.createdByOfficeName + ' ' + ('ODONTOGRAM.BY' | translate) + ' ' + treatment.createdByDentistName">
+                  {{ treatment.createdByOfficeName }}
+              </span>
+            </div>
             <p *ngIf="treatment.serviceName">{{ 'ODONTOGRAM.SERVICE' | translate }} {{ treatment.serviceName }}</p>
             <p *ngIf="treatment.plannedDate">{{ 'ODONTOGRAM.PLANNED' | translate }} {{ treatment.plannedDate | date:'mediumDate' }}</p>
             <p *ngIf="treatment.estimatedCost">{{ 'ODONTOGRAM.COST' | translate }} {{ treatment.estimatedCost | currency:'RSD' }}</p>
             <p *ngIf="treatment.notes">{{ 'ODONTOGRAM.NOTES' | translate }} {{ treatment.notes }}</p>
             <p>{{ 'ODONTOGRAM.STATUS' | translate }} <span [class]="'status-' + treatment.status.toLowerCase()">{{ treatment.status }}</span></p>
-
             <div class="treatment-actions" *ngIf="treatment.status === 'PLANNED'">
               <button class="btn-small" (click)="updateTreatmentStatus(treatment, 'IN_PROGRESS')">{{ 'ODONTOGRAM.START' | translate }}</button>
               <button class="btn-small" (click)="updateTreatmentStatus(treatment, 'COMPLETED')">{{ 'ODONTOGRAM.COMPLETE' | translate }}</button>
@@ -219,12 +224,10 @@
               <button class="btn-small" (click)="updateTreatmentStatus(treatment, 'COMPLETED')">{{ 'ODONTOGRAM.COMPLETE' | translate }}</button>
             </div>
           </div>
-
           <button class="btn-secondary" (click)="openTreatmentDialog()">{{ 'ODONTOGRAM.ADD_TREATMENT_PLAN' | translate }}</button>
         </div>
       </div>
     </div>
-
     <!-- General Notes -->
     <div class="general-notes-section">
       <h3>{{ 'ODONTOGRAM.GENERAL_NOTES' | translate }}</h3>
@@ -232,22 +235,18 @@
       <button class="btn-primary" (click)="saveGeneralNotes()">{{ 'ODONTOGRAM.SAVE_NOTES' | translate }}</button>
     </div>
   </div>
-
   <!-- No Patient Selected -->
   <div *ngIf="!currentOdontogram && !isLoading && selectedPatientId" class="no-data">
     <p>{{ 'ODONTOGRAM.NO_ODONTOGRAM' | translate }}</p>
   </div>
 </div>
-
 <!-- Treatment Dialog Modal -->
 <div *ngIf="showTreatmentDialog" class="modal-overlay" (click)="closeTreatmentDialog()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <h3>{{ 'ODONTOGRAM.ADD_TREATMENT_TITLE' | translate }}{{ treatmentForm.toothNumber }}</h3>
-
     <form (ngSubmit)="addTreatment()">
       <label>{{ 'ODONTOGRAM.TREATMENT_TYPE' | translate }}</label>
       <input type="text" [(ngModel)]="treatmentForm.treatmentType" name="treatmentType" required [placeholder]="'ODONTOGRAM.TREATMENT_TYPE_PLACEHOLDER' | translate">
-
       <label>{{ 'ODONTOGRAM.SELECT_SERVICE' | translate }}</label>
       <select [(ngModel)]="treatmentForm.serviceId" name="serviceId">
         <option [value]="undefined">{{ 'ODONTOGRAM.SELECT_SERVICE_OPTION' | translate }}</option>
@@ -255,16 +254,12 @@
           {{ "SERVICE_ID." + service.service.id | translate }}
         </option>
       </select>
-
       <label>{{ 'ODONTOGRAM.PLANNED_DATE' | translate }}</label>
       <input type="date" [(ngModel)]="treatmentForm.plannedDate" name="plannedDate">
-
       <label>{{ 'ODONTOGRAM.ESTIMATED_COST' | translate }}</label>
       <input type="number" [(ngModel)]="treatmentForm.estimatedCost" name="estimatedCost" placeholder="0.00">
-
       <label>{{ 'ODONTOGRAM.TREATMENT_NOTES' | translate }}</label>
       <textarea [(ngModel)]="treatmentForm.notes" name="notes" rows="3" [placeholder]="'ODONTOGRAM.TREATMENT_NOTES_PLACEHOLDER' | translate"></textarea>
-
       <div class="modal-actions">
         <button type="submit" class="btn-primary">{{ 'ODONTOGRAM.ADD_TREATMENT' | translate }}</button>
         <button type="button" class="btn-secondary" (click)="closeTreatmentDialog()">{{ 'ODONTOGRAM.CANCEL_ACTION' | translate }}</button>
@@ -272,13 +267,11 @@
     </form>
   </div>
 </div>
-
 <!-- Surface Edit Dialog -->
 <div *ngIf="showSurfaceDialog" class="modal-overlay" (click)="closeSurfaceDialog()">
   <div class="modal-content surface-modal" (click)="$event.stopPropagation()">
     <h3>{{ 'ODONTOGRAM.EDIT_SURFACE' | translate }} {{ getSurfaceLabel(selectedSurface?.surfaceType || 'OCCLUSAL') }}</h3>
     <p class="surface-info">{{ 'ODONTOGRAM.TOOTH_NUMBER' | translate }}{{ selectedTooth?.toothNumber }} - {{ getToothName(selectedTooth?.toothNumber || '') }}</p>
-
     <div class="surface-form" *ngIf="selectedSurface">
       <label>{{ 'ODONTOGRAM.SURFACE_STATUSS' | translate }}</label>
       <select [(ngModel)]="selectedSurface.status" class="surface-status-select">
@@ -286,14 +279,12 @@
           {{ getSurfaceStatusLabel(status) }}
         </option>
       </select>
-
       <label>{{ 'ODONTOGRAM.SURFACE_NOTES' | translate }}</label>
       <textarea
         [(ngModel)]="selectedSurface.notes"
         rows="3"
         [placeholder]="'ODONTOGRAM.SURFACE_NOTES_PLACEHOLDER' | translate">
       </textarea>
-
       <!-- Surface Status Preview -->
       <div class="surface-preview">
         <div
@@ -303,10 +294,42 @@
         </div>
         <span>{{ 'ODONTOGRAM.PREVIEW' | translate }} {{ getSurfaceStatusLabel(selectedSurface.status) }}</span>
       </div>
-
       <div class="modal-actions">
         <button type="button" class="btn-primary" (click)="updateSurfaceStatus()">{{ 'ODONTOGRAM.SAVE_SURFACE' | translate }}</button>
         <button type="button" class="btn-secondary" (click)="closeSurfaceDialog()">{{ 'ODONTOGRAM.CANCEL_ACTION' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showContributionHistory" class="modal-overlay" (click)="toggleContributionHistory()">
+  <div class="modal-content history-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>🕐 {{ 'ODONTOGRAM.RECORD_HISTORY' | translate }}</h3>
+      <button class="close-button" (click)="toggleContributionHistory()" title="Close">✕</button>
+    </div>
+
+    <p class="history-subtitle">{{ 'ODONTOGRAM.CONTRIBUTION_HISTORY_SUBTITLE' | translate }}</p>
+
+    <div *ngIf="contributions.length === 0" class="no-contributions">
+      <p>{{ 'ODONTOGRAM.NO_HISTORY' | translate }}</p>
+    </div>
+
+    <div *ngIf="contributions.length > 0" class="timeline">
+      <div *ngFor="let contribution of contributions" class="timeline-item">
+        <div class="timeline-content">
+          <div class="contribution-header">
+            <span class="office-badge" [style.background-color]="getOfficeBadgeColor(contribution.officeId)">
+              {{ contribution.officeName }}
+            </span>
+            <span class="contribution-date">{{ contribution.contributionDate | date:'medium' }}</span>
+          </div>
+          <div class="contribution-body">
+            <strong>{{ contribution.dentistName }}</strong>
+            <span class="action-type">{{ 'ODONTOGRAM.ACTION_TYPES.' + contribution.actionType | translate }}</span>
+          </div>
+          <p class="contribution-description">{{ getTranslatedDescription(contribution) }}</p>
+        </div>
       </div>
     </div>
   </div>

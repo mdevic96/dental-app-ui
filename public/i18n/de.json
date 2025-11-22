@@ -304,6 +304,21 @@
       "UPPER_LEFT": "Oberer linker",
       "LOWER_LEFT": "Unterer linker",
       "LOWER_RIGHT": "Unterer rechter"
+    },
+    "CONTRIBUTION_HISTORY_SUBTITLE": "Alle Änderungen an den Patientendaten dieses Patienten in allen Praxen nachverfolgen.",
+    "CREATED_AT": "Erstellt am",
+    "BY": "Von",
+    "VIEW_HISTORY": "Verlauf anzeigen",
+    "RECORD_HISTORY": "Verlauf aufzeichnen",
+    "NO_HISTORY": "Noch kein Verlauf verfügbar.",
+    "CLOSE": "Schließen",
+    "CONTRIBUTION_DESCRIPTIONS": {
+      "CREATED": "Neues Odontogramm erstellt",
+      "UPDATED_NOTES": "Allgemeine Notizen aktualisiert",
+      "UPDATED_SURFACE": "Oberfläche von Zahn Nr. {{Zahnnummer}} auf {{status}} aktualisiert",
+      "UPDATED_TOOTH": "Zahn Nr. {{Zahnnummer}} auf {{status}} aktualisiert",
+      "ADDED_TREATMENT": "Behandlungsplan hinzugefügt: {{treatmentType}} für Zahn Nr. {{Zahnnummer}}",
+      "UPDATED_TREATMENT": "Status des Behandlungsplans auf {{status}} aktualisiert"
     }
   }
 }
