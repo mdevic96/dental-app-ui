@@ -32,16 +32,20 @@
     <!-- Odontogram Info -->
     <div class="odontogram-info-wrapper">
       <div class="odontogram-info">
-        <p><strong>{{ 'ODONTOGRAM.PATIENT' | translate }}</strong> {{ currentOdontogram.patientName }}</p>
-        <p><strong>{{ 'ODONTOGRAM.DENTIST' | translate }}</strong> {{ currentOdontogram.dentistName }}</p>
+        <p>
+          <strong>{{ 'ODONTOGRAM.PATIENT' | translate }}</strong> {{ currentOdontogram.patientName }}
+          <button
+            class="btn-profile-icon"
+            [class.has-warning]="patientProfile?.warningSign"
+            (click)="openPatientProfile()"
+            [title]="'PATIENT.VIEW_PROFILE' | translate">
+            👤
+          </button>
+        </p>
         <p><strong>{{ 'ODONTOGRAM.CREATED' | translate }}</strong> {{ currentOdontogram.createdAt | date:'medium' }}</p>
         <p><strong>{{ 'ODONTOGRAM.LAST_UPDATED' | translate }}</strong> {{ currentOdontogram.updatedAt | date:'medium' }}</p>
       </div>
       <div class="action-buttons">
-        <button class="btn-notes" (click)="toggleGeneralNotes()">
-          📝 {{ 'ODONTOGRAM.GENERAL_NOTES' | translate }}
-        </button>
-
         <!-- History Button -->
         <button class="btn-history" (click)="toggleContributionHistory()">
           📖 {{ 'ODONTOGRAM.VIEW_HISTORY' | translate }}
@@ -349,54 +353,157 @@
   </div>
 </div>
 
-<!-- General Notes Modal -->
-<div *ngIf="showGeneralNotesDialog" class="modal-overlay" (click)="toggleGeneralNotes()">
-  <div class="modal-content notes-modal" (click)="$event.stopPropagation()">
+<!-- Patient Profile Modal -->
+<div *ngIf="showPatientProfileDialog" class="modal-overlay" (click)="closePatientProfile()">
+  <div class="modal-content profile-modal" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h3>📝 {{ 'ODONTOGRAM.GENERAL_NOTES' | translate }}</h3>
-      <button class="close-button" (click)="toggleGeneralNotes()" title="Close">✕</button>
+      <h3>👤 {{ 'PATIENT.PROFILE_TITLE' | translate }}</h3>
+      <button class="close-button" (click)="closePatientProfile()" title="Close">✕</button>
     </div>
 
-    <p class="notes-subtitle">{{ 'ODONTOGRAM.GENERAL_NOTES_SUBTITLE' | translate }}</p>
-
-    <!-- Current Notes Editor -->
-    <div class="notes-editor">
-      <label>{{ 'ODONTOGRAM.CURRENT_NOTES' | translate }}</label>
-      <textarea
-        [(ngModel)]="generalNotes"
-        rows="6"
-        [placeholder]="'ODONTOGRAM.NOTES_PLACEHOLDER' | translate"
-        class="notes-textarea">
-      </textarea>
-      <button class="btn-primary" (click)="saveGeneralNotes()">
-        💾 {{ 'ODONTOGRAM.SAVE_NOTES' | translate }}
-      </button>
+    <!-- Loading State -->
+    <div *ngIf="!patientProfile" class="profile-loading">
+      <p>{{ 'PATIENT.LOADING_PROFILE' | translate }}</p>
     </div>
 
-    <!-- Notes History -->
-    <div class="notes-history-section" *ngIf="notesHistory.length > 0">
-      <h4>📚 {{ 'ODONTOGRAM.NOTES_HISTORY' | translate }}</h4>
+    <!-- Profile Content -->
+    <div *ngIf="patientProfile" class="profile-content">
+      <div *ngIf="patientProfile.warningSign" class="warning-banner">
+        ⚠️ <strong>{{ 'PATIENT.WARNING' | translate }}:</strong> {{ patientProfile.warningDescription }}
+      </div>
 
-      <div class="notes-timeline">
-        <div *ngFor="let note of notesHistory" class="note-history-item">
-          <div class="note-header">
-            <span class="office-badge" [style.background-color]="getOfficeBadgeColor(note.officeId)">
-              {{ note.officeName }}
-            </span>
-            <span class="note-date">{{ note.timestamp | date:'medium' }}</span>
-          </div>
-          <div class="note-author">
-            <strong>{{ note.dentistName }}</strong>
-          </div>
-          <div class="note-content">
-            {{ note.notes }}
+      <div class="profile-sections-container">
+        <!-- Left Column: Personal Information -->
+        <div class="profile-section personal-section">
+          <h4>📋 {{ 'PATIENT.PERSONAL_INFO' | translate }}</h4>
+
+          <div class="form-grid-single">
+            <div class="form-field">
+              <label>{{ 'PATIENT.FIRST_NAME' | translate }} <span class="required">*</span></label>
+              <input
+                type="text"
+                [(ngModel)]="patientProfile.firstName"
+                class="profile-input"
+                required
+                [placeholder]="'PATIENT.FIRST_NAME_PLACEHOLDER' | translate"
+              />
+            </div>
+
+            <div class="form-field">
+              <label>{{ 'PATIENT.LAST_NAME' | translate }} <span class="required">*</span></label>
+              <input
+                type="text"
+                [(ngModel)]="patientProfile.lastName"
+                class="profile-input"
+                required
+                [placeholder]="'PATIENT.LAST_NAME_PLACEHOLDER' | translate"
+              />
+            </div>
+
+            <div class="form-field">
+              <label>{{ 'PATIENT.EMAIL' | translate }}</label>
+              <input
+                type="email"
+                [(ngModel)]="patientProfile.email"
+                class="profile-input"
+                [placeholder]="'PATIENT.EMAIL_PLACEHOLDER' | translate"
+              />
+            </div>
+
+            <div class="form-field">
+              <label>{{ 'PATIENT.PHONE' | translate }} <span class="required">*</span></label>
+              <input
+                type="tel"
+                [(ngModel)]="patientProfile.phoneNumber"
+                class="profile-input"
+                required
+                [placeholder]="'PATIENT.PHONE_PLACEHOLDER' | translate"
+              />
+            </div>
+
+            <div class="form-field">
+              <label>{{ 'PATIENT.BIRTH_DATE' | translate }} <span class="required">*</span></label>
+              <input
+                type="date"
+                [(ngModel)]="patientProfile.birthDate"
+                class="profile-input"
+                required
+              />
+              <small class="age-display" *ngIf="patientProfile.birthDate">
+                {{ 'PATIENT.AGE' | translate }}: {{ calculateAge(patientProfile.birthDate) }} {{ 'PATIENT.YEARS' | translate }}
+              </small>
+            </div>
+
+            <div class="form-field">
+              <label>{{ 'PATIENT.ADDRESS' | translate }}</label>
+              <input
+                type="text"
+                [(ngModel)]="patientProfile.address"
+                class="profile-input"
+                [placeholder]="'PATIENT.ADDRESS_PLACEHOLDER' | translate"
+              />
+            </div>
+
+            <div class="form-field">
+              <label>{{ 'PATIENT.OCCUPATION' | translate }}</label>
+              <input
+                type="text"
+                [(ngModel)]="patientProfile.occupation"
+                class="profile-input"
+                [placeholder]="'PATIENT.OCCUPATION_PLACEHOLDER' | translate"
+              />
+            </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <div *ngIf="notesHistory.length === 0" class="no-history">
-      <p>{{ 'ODONTOGRAM.NO_NOTES_HISTORY' | translate }}</p>
+        <!-- Right Column: Clinical Information -->
+        <div class="profile-section clinical-section">
+          <h4>🏥 {{ 'PATIENT.CLINICAL_INFO' | translate }}</h4>
+
+          <div class="form-grid-single">
+            <div class="form-field">
+              <label>{{ 'PATIENT.GENERAL_NOTES' | translate }}</label>
+              <textarea
+                [(ngModel)]="patientProfile.generalNotes"
+                rows="10"
+                class="profile-textarea"
+                [placeholder]="'PATIENT.NOTES_PLACEHOLDER' | translate">
+              </textarea>
+              <small class="field-hint">{{ 'PATIENT.NOTES_HINT' | translate }}</small>
+            </div>
+
+            <div class="warning-section">
+              <div class="form-field checkbox-field">
+                <label class="checkbox-label">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="patientProfile.warningSign"
+                  />
+                  <span>⚠️ {{ 'PATIENT.WARNING_SIGN' | translate }}</span>
+                </label>
+              </div>
+
+              <div class="form-field" *ngIf="patientProfile.warningSign">
+                <label>{{ 'PATIENT.WARNING_DESCRIPTION' | translate }} <span class="required">*</span></label>
+                <input
+                  type="text"
+                  [(ngModel)]="patientProfile.warningDescription"
+                  class="profile-input warning-input"
+                  [placeholder]="'PATIENT.WARNING_PLACEHOLDER' | translate"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="profile-actions">
+        <button class="btn-save-profile" (click)="savePatientProfile()">
+          💾 {{ 'PATIENT.SAVE_PROFILE' | translate }}
+        </button>
+      </div>
     </div>
   </div>
 </div>

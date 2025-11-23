@@ -9,13 +9,15 @@ import {
   ToothStatus,
   CreateTreatmentPlanRequest,
   TreatmentPlanDto,
-  ToothSurfaceDto, SurfaceStatus, SurfaceType, UpdateToothSurfaceRequest, ContributionDto
+  ToothSurfaceDto, SurfaceStatus, SurfaceType, UpdateToothSurfaceRequest, ContributionDto, PatientProfileDto,
+  UpdatePatientProfileRequest
 } from '../../../core/odontogram.model';
 import { UserDto } from '../../../core/user.model';
 import { DentistServiceDto } from '../../../core/dentist-service.model';
 import { TranslateModule } from '@ngx-translate/core';
 import { environment } from '../../../../environments/environment';
 import { TranslateService } from '@ngx-translate/core';
+import {PatientProfileService} from './patient-profile.service';
 
 @Component({
   selector: 'app-odontogram',
@@ -52,10 +54,6 @@ export class OdontogramComponent implements OnInit {
     notes: ''
   };
 
-  // General notes dialog
-  showGeneralNotesDialog = false;
-  notesHistory: any[] = [];
-
   // Tooth surface management
   selectedSurface: ToothSurfaceDto | null = null;
   surfaceStatuses: SurfaceStatus[] = ['HEALTHY', 'CARIOUS', 'FILLED', 'FRACTURED', 'WEAR', 'EROSION', 'STAINED', 'CALCULUS'];
@@ -64,12 +62,12 @@ export class OdontogramComponent implements OnInit {
   // Contributions
   contributions: ContributionDto[] = [];
   showContributionHistory = false;
-  currentOfficeId: number | null = null;
 
   availableServices: DentistServiceDto[] = [];
 
-  // General notes
-  generalNotes: string = '';
+  // Patient profile
+  showPatientProfileDialog = false;
+  patientProfile: PatientProfileDto | null = null;
 
   // Loading state
   isLoading: boolean = false;
@@ -77,7 +75,8 @@ export class OdontogramComponent implements OnInit {
   constructor(
     private odontogramService: OdontogramService,
     private http: HttpClient,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private patientProfileService: PatientProfileService
   ) {}
 
   ngOnInit(): void {
@@ -132,6 +131,8 @@ export class OdontogramComponent implements OnInit {
     this.showPatientDropdown = false;
     this.filteredPatients = [];
     this.selectedTooth = null;
+    this.patientProfile = null;
+
     this.loadPatientOdontogram();
   }
 
@@ -143,11 +144,12 @@ export class OdontogramComponent implements OnInit {
       next: (odontogram) => {
         this.currentOdontogram = odontogram;
         this.loadContributionHistory(odontogram.id);
+        this.loadPatientProfile();
+
         this.isLoading = false;
       },
       error: (err) => {
         if (err.status === 404) {
-          // No odontogram exists, create new one
           this.createNewOdontogram();
         } else {
           this.isLoading = false;
@@ -172,37 +174,12 @@ export class OdontogramComponent implements OnInit {
     this.showContributionHistory = !this.showContributionHistory;
   }
 
-  toggleGeneralNotes(): void {
-    this.showGeneralNotesDialog = !this.showGeneralNotesDialog;
-
-    // Load notes history when opening
-    if (this.showGeneralNotesDialog && this.currentOdontogram) {
-      this.loadNotesHistory(this.currentOdontogram.id);
-    }
-  }
-
-  loadNotesHistory(odontogramId: number): void {
-    this.notesHistory = this.contributions
-      .filter(c => c.odontogramId === odontogramId && c.actionType === 'UPDATED_NOTES')
-      .map(c => ({
-        timestamp: c.contributionDate,
-        dentistName: c.dentistName,
-        officeName: c.officeName,
-        officeId: c.officeId,
-        notes: c.metadata['notes'] || c.metadata['generalNotes'] || 'No notes content'
-      }));
-  }
-
   getOfficeBadgeColor(officeId: number): string {
     const colors = [
       '#3b82f6', '#10b981', '#f59e0b', '#ef4444',
       '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16'
     ];
     return colors[officeId % colors.length];
-  }
-
-  isCurrentOffice(officeId?: number): boolean {
-    return officeId === this.currentOfficeId;
   }
 
   createNewOdontogram(): void {
@@ -213,7 +190,6 @@ export class OdontogramComponent implements OnInit {
       dentitionType: 'ADULT'
     }).subscribe(odontogram => {
       this.currentOdontogram = odontogram;
-      this.generalNotes = '';
       this.isLoading = false;
       console.log('New odontogram created successfully!');
     });
@@ -221,27 +197,6 @@ export class OdontogramComponent implements OnInit {
 
   getToothRecord(toothNumber: string): ToothRecordDto | undefined {
     return this.currentOdontogram?.toothRecords.find(t => t.toothNumber === toothNumber);
-  }
-
-  getToothColor(toothNumber: string): string {
-    const tooth = this.getToothRecord(toothNumber);
-    if (!tooth) return '#ffffff';
-
-    const colorMap: Record<ToothStatus, string> = {
-      'HEALTHY': '#ffffff',
-      'CARIOUS': '#ff4444',
-      'FILLED': '#4169e1',
-      'MISSING': '#cccccc',
-      'CROWN': '#ffd700',
-      'BRIDGE': '#9370db',
-      'IMPLANT': '#808080',
-      'ROOT_CANAL': '#90ee90',
-      'FRACTURED': '#ff8c00',
-      'MOBILE': '#ffff00',
-      'IMPACTED': '#ff69b4'
-    };
-
-    return colorMap[tooth.status] || '#ffffff';
   }
 
   selectTooth(toothNumber: string): void {
@@ -277,29 +232,86 @@ export class OdontogramComponent implements OnInit {
     });
   }
 
-  saveGeneralNotes(): void {
-    if (!this.currentOdontogram) return;
+  openPatientProfile(): void {
+    if (!this.selectedPatientId) return;
 
-    this.odontogramService.updateGeneralNotes(this.currentOdontogram.id, this.generalNotes)
-      .subscribe({
-        next: (updated) => {
-          this.currentOdontogram = updated;
+    this.showPatientProfileDialog = true;
+    this.loadPatientProfile();
+  }
 
-          // First reload contributions, THEN reload notes history
-          this.odontogramService.getContributionHistory(updated.id).subscribe({
-            next: (contributions) => {
-              this.contributions = contributions;
-              this.loadNotesHistory(updated.id);
-              this.generalNotes = '';
-              console.log('Notes saved successfully!');
-            },
-            error: (err) => {
-              console.error('Error loading contribution history', err);
-            }
-          });
-        },
-        error: () => console.log('Error saving notes')
-      });
+  closePatientProfile(): void {
+    this.showPatientProfileDialog = false;
+  }
+
+  loadPatientProfile(): void {
+    if (!this.selectedPatientId) return;
+
+    this.patientProfileService.getProfile(this.selectedPatientId).subscribe({
+      next: (profile) => {
+        this.patientProfile = profile;
+        console.log('Profile loaded:', profile);
+      },
+      error: (err) => {
+        console.error('Error loading patient profile:', err);
+      }
+    });
+  }
+
+  savePatientProfile(): void {
+    if (!this.patientProfile || !this.selectedPatientId) return;
+
+    // Validate required fields
+    if (!this.patientProfile.firstName?.trim() ||
+      !this.patientProfile.lastName?.trim() ||
+      !this.patientProfile.phoneNumber?.trim() ||
+      !this.patientProfile.birthDate) {
+      console.error('Please fill in all required fields');
+      return;
+    }
+
+    // Validate warning description if warning sign is checked
+    if (this.patientProfile.warningSign && !this.patientProfile.warningDescription?.trim()) {
+      console.error('Please provide a warning description');
+      return;
+    }
+
+    const updateRequest: UpdatePatientProfileRequest = {
+      firstName: this.patientProfile.firstName,
+      lastName: this.patientProfile.lastName,
+      email: this.patientProfile.email,
+      phoneNumber: this.patientProfile.phoneNumber,
+      address: this.patientProfile.address,
+      occupation: this.patientProfile.occupation,
+      birthDate: this.patientProfile.birthDate,
+      generalNotes: this.patientProfile.generalNotes,
+      warningSign: this.patientProfile.warningSign,
+      warningDescription: this.patientProfile.warningDescription
+    };
+
+    this.patientProfileService.updateProfile(this.selectedPatientId, updateRequest).subscribe({
+      next: (updated) => {
+        this.patientProfile = updated;
+        console.log('Profile updated successfully!');
+      },
+      error: (err) => {
+        console.error('Error updating profile:', err);
+      }
+    });
+  }
+
+  calculateAge(birthDate: string): number {
+    if (!birthDate) return 0;
+
+    const birth = new Date(birthDate);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+
+    return age;
   }
 
   openTreatmentDialog(): void {

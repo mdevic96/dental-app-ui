@@ -69,6 +69,53 @@ export interface ContributionDto {
   contributionDate: Date;
 }
 
+export interface PatientProfileDto {
+  id: number;
+  userId: number;
+
+  // From User entity
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+
+  // From PatientProfile entity
+  address?: string;
+  occupation?: string;
+  birthDate: string; // ISO date string
+  generalNotes?: string;
+  warningSign: boolean;
+  warningDescription?: string;
+
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreatePatientProfileRequest {
+  birthDate: string;
+  address?: string;
+  occupation?: string;
+  generalNotes?: string;
+  warningSign?: boolean;
+  warningDescription?: string;
+}
+
+export interface UpdatePatientProfileRequest {
+  // User fields
+  firstName: string;
+  lastName: string;
+  email?: string;
+  phoneNumber: string;
+
+  // PatientProfile fields
+  address?: string;
+  occupation?: string;
+  birthDate: string;
+  generalNotes?: string;
+  warningSign?: boolean;
+  warningDescription?: string;
+}
+
 export type SurfaceType = 'OCCLUSAL' | 'MESIAL' | 'DISTAL' | 'BUCCAL' | 'LINGUAL';
 
 export type SurfaceStatus =
