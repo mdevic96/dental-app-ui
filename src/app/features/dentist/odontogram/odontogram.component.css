@@ -679,12 +679,14 @@
 .detail-form select,
 .detail-form textarea {
   width: 100%;
+  max-width: 100%;
   padding: 10px;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
   font-size: 14px;
   font-family: inherit;
   transition: border-color 0.3s;
+  box-sizing: border-box;
 }
 
 .detail-form select:focus,
@@ -807,6 +809,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
+  margin-top: 10px;
 }
 
 .btn-primary {
