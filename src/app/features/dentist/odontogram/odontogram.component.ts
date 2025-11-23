@@ -69,6 +69,11 @@ export class OdontogramComponent implements OnInit {
   showPatientProfileDialog = false;
   patientProfile: PatientProfileDto | null = null;
 
+  // Available Service selection
+  showServiceDropdown: boolean = false;
+  serviceSearchTerm: string = '';
+  filteredServices: DentistServiceDto[] = [];
+
   // Loading state
   isLoading: boolean = false;
 
@@ -111,8 +116,32 @@ export class OdontogramComponent implements OnInit {
         this.http.get<DentistServiceDto[]>(`${environment.apiBase}/services/dental-office/${office.id}`, { headers })
           .subscribe(services => {
             this.availableServices = services;
+            this.filteredServices = services;
           });
       });
+  }
+
+  onServiceSearchInput(): void {
+    this.showServiceDropdown = true;
+    const term = this.serviceSearchTerm.toLowerCase();
+
+    this.filteredServices = this.availableServices.filter(s => {
+      const serviceName = this.translate.instant(`SERVICE_ID.${s.service.id}`).toLowerCase();
+      return serviceName.includes(term);
+    });
+  }
+
+  selectService(service: DentistServiceDto): void {
+    this.treatmentForm.serviceId = service.service.id;
+    this.serviceSearchTerm = this.translate.instant(`SERVICE_ID.${service.service.id}`);
+    this.showServiceDropdown = false;
+  }
+
+  clearServiceSelection(): void {
+    this.treatmentForm.serviceId = undefined;
+    this.serviceSearchTerm = '';
+    this.filteredServices = this.availableServices;
+    this.showServiceDropdown = false;
   }
 
   onPatientSearchInput(): void {
@@ -322,11 +351,20 @@ export class OdontogramComponent implements OnInit {
       treatmentType: '',
       notes: ''
     };
+
+    this.serviceSearchTerm = '';
+    this.filteredServices = this.availableServices;
+    this.showServiceDropdown = false;
+
     this.showTreatmentDialog = true;
   }
 
   closeTreatmentDialog(): void {
     this.showTreatmentDialog = false;
+
+    this.serviceSearchTerm = '';
+    this.filteredServices = this.availableServices;
+    this.showServiceDropdown = false;
   }
 
   addTreatment(): void {

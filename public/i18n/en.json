@@ -90,7 +90,11 @@
     "NOTES": "Notes",
     "SAVE": "Save",
     "CANCEL": "Cancel",
-    "EDIT_APPOINTMENT": "Edit appointment"
+    "EDIT_APPOINTMENT": "Edit appointment",
+    "SEARCH_PATIENT": "Search patients...",
+    "SEARCH_SERVICE": "Search services...",
+    "NO_PATIENTS_FOUND": "No patients found",
+    "NO_SERVICES_FOUND": "No services found"
   },
   "ERROR": {
     "ERROR": "Error",
@@ -320,6 +324,8 @@
     "NOTES_PLACEHOLDER": "Enter general notes about the patient's dental condition, observations, or treatment plan...",
     "NOTES_HISTORY": "Notes History",
     "NO_NOTES_HISTORY": "No previous notes recorded",
+    "SEARCH_SERVICE_PLACEHOLDER": "Search services...",
+    "NO_SERVICES_FOUND": "No services found",
 
     "CONTRIBUTION_DESCRIPTIONS": {
       "CREATED": "Created new odontogram",

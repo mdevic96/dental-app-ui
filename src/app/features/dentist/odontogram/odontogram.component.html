@@ -265,12 +265,48 @@
       <label>{{ 'ODONTOGRAM.TREATMENT_TYPE' | translate }}</label>
       <input type="text" [(ngModel)]="treatmentForm.treatmentType" name="treatmentType" required [placeholder]="'ODONTOGRAM.TREATMENT_TYPE_PLACEHOLDER' | translate">
       <label>{{ 'ODONTOGRAM.SELECT_SERVICE' | translate }}</label>
-      <select [(ngModel)]="treatmentForm.serviceId" name="serviceId">
-        <option [value]="undefined">{{ 'ODONTOGRAM.SELECT_SERVICE_OPTION' | translate }}</option>
-        <option *ngFor="let service of availableServices" [value]="service.service.id">
-          {{ "SERVICE_ID." + service.service.id | translate }}
-        </option>
-      </select>
+      <div class="service-search-wrapper">
+        <input
+          type="text"
+          [(ngModel)]="serviceSearchTerm"
+          (input)="onServiceSearchInput()"
+          (focus)="showServiceDropdown = true"
+          [placeholder]="'ODONTOGRAM.SEARCH_SERVICE_PLACEHOLDER' | translate"
+          class="service-search-input"
+          name="serviceSearch"
+        />
+
+        <!-- Clear button -->
+        <button
+          type="button"
+          *ngIf="serviceSearchTerm"
+          class="clear-service-btn"
+          (click)="clearServiceSelection()"
+          title="Clear">
+          ✕
+        </button>
+
+        <!-- Service Dropdown -->
+        <div
+          class="service-dropdown"
+          *ngIf="showServiceDropdown && filteredServices.length > 0"
+          (click)="$event.stopPropagation()">
+          <div
+            *ngFor="let service of filteredServices"
+            class="service-item"
+            (click)="selectService(service)">
+            <span class="service-name">{{ "SERVICE_ID." + service.service.id | translate }}</span>
+            <span class="service-price" *ngIf="service.price">{{ service.price | currency:'RSD' }}</span>
+          </div>
+        </div>
+
+        <!-- No results message -->
+        <div
+          class="service-dropdown no-results"
+          *ngIf="showServiceDropdown && filteredServices.length === 0">
+          <p>{{ 'ODONTOGRAM.NO_SERVICES_FOUND' | translate }}</p>
+        </div>
+      </div>
       <label>{{ 'ODONTOGRAM.PLANNED_DATE' | translate }}</label>
       <input type="date" [(ngModel)]="treatmentForm.plannedDate" name="plannedDate">
       <label>{{ 'ODONTOGRAM.ESTIMATED_COST' | translate }}</label>

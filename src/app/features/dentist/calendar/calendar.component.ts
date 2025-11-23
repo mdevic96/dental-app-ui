@@ -1,25 +1,25 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FullCalendarModule } from '@fullcalendar/angular';
+import {Component, OnInit, signal} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FullCalendarModule} from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
-import { CalendarOptions, DateSelectArg, EventInput } from '@fullcalendar/core/index.js';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { DentistServiceDto } from '../../../core/dentist-service.model';
-import { UserDto } from '../../../core/user.model';
-import { DentalOffice } from '../../../core/dental-office.model';
-import { AuthService } from '../../auth/auth.service';
-import { AppointmentDto } from '../../../core/appointment.model';
+import interactionPlugin from '@fullcalendar/interaction';
+import {CalendarOptions, DateSelectArg, EventInput} from '@fullcalendar/core/index.js';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {DentistServiceDto} from '../../../core/dentist-service.model';
+import {UserDto} from '../../../core/user.model';
+import {DentalOffice} from '../../../core/dental-office.model';
+import {AuthService} from '../../auth/auth.service';
+import {AppointmentDto} from '../../../core/appointment.model';
 import srLocale from '@fullcalendar/core/locales/sr';
 import enLocale from '@fullcalendar/core/locales/en-gb';
 import ruLocale from '@fullcalendar/core/locales/ru';
 import deLocale from '@fullcalendar/core/locales/de';
-import { TranslateModule } from '@ngx-translate/core';
-import { MatDialog } from '@angular/material/dialog';
-import { ErrorDialogComponent } from '../../../shared/error-dialog/error-dialog.component';
-import { environment } from '../../../../environments/environment';
+import {TranslateModule} from '@ngx-translate/core';
+import {MatDialog} from '@angular/material/dialog';
+import {ErrorDialogComponent} from '../../../shared/error-dialog/error-dialog.component';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-calendar',
@@ -28,7 +28,8 @@ import { environment } from '../../../../environments/environment';
     CommonModule,
     FullCalendarModule,
     ReactiveFormsModule,
-    TranslateModule
+    TranslateModule,
+    FormsModule
   ],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
@@ -59,6 +60,15 @@ export class CalendarComponent implements OnInit {
   filteredPatients: UserDto[] = [];
   filteredServices: DentistServiceDto[] = [];
 
+  // Service dropdown
+  showServiceDropdown: boolean = false;
+  serviceSearchTerm: string = '';
+
+  // Patient dropdown
+  showPatientDropdown: boolean = false;
+  patientSearchTerm: string = '';
+
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -69,6 +79,23 @@ export class CalendarComponent implements OnInit {
       patientId: ['', Validators.required],
       serviceId: ['', Validators.required],
       notes: ['']
+    });
+  }
+
+  ngOnInit(): void {
+    this.fetchDentalOfficeId();
+
+    this.editForm = this.fb.group({
+      notes: [''],
+      status: ['', Validators.required]
+    });
+
+    // Listen for custom language change event
+    window.addEventListener('languageChanged', (event: any) => {
+      const lang = event.detail || 'sr';
+      const options = this.calendarOptions();
+      options.locale = lang;
+      this.calendarOptions.set({...options});
     });
   }
 
@@ -93,7 +120,7 @@ export class CalendarComponent implements OnInit {
 
     this.http.get<{ content: AppointmentDto[] }>(
       `${environment.apiBase}/appointments/dentist/${dentistId}/date-range`,
-      { headers, params }
+      {headers, params}
     ).subscribe(response => {
       this.appointments = response.content.map(app => ({
         title: `${app.patient.firstName} ${app.patient.lastName} - ${app.service.name}`,
@@ -136,12 +163,12 @@ export class CalendarComponent implements OnInit {
       'Content-Type': 'application/json'
     });
 
-    this.http.get<DentalOffice>(`${environment.apiBase}/dentists/me/office`, { headers })
-    .subscribe(office => {
-      this.officeId = office.id;
-      this.fetchPatients();
-      this.fetchServices();
-    });
+    this.http.get<DentalOffice>(`${environment.apiBase}/dentists/me/office`, {headers})
+      .subscribe(office => {
+        this.officeId = office.id;
+        this.fetchPatients();
+        this.fetchServices();
+      });
   }
 
   fetchServices() {
@@ -150,7 +177,7 @@ export class CalendarComponent implements OnInit {
       'Content-Type': 'application/json'
     });
 
-    this.http.get<DentistServiceDto[]>(`${environment.apiBase}/services/dental-office/${this.officeId}`, { headers }).subscribe(data => {
+    this.http.get<DentistServiceDto[]>(`${environment.apiBase}/services/dental-office/${this.officeId}`, {headers}).subscribe(data => {
       this.availableServices = data;
       this.filteredServices = data;
     });
@@ -162,35 +189,9 @@ export class CalendarComponent implements OnInit {
       'Content-Type': 'application/json'
     });
 
-    this.http.get<UserDto[]>(`${environment.apiBase}/patients/dental-office/${this.officeId}`, { headers }).subscribe(data => {
+    this.http.get<UserDto[]>(`${environment.apiBase}/patients/dental-office/${this.officeId}`, {headers}).subscribe(data => {
       this.availablePatients = data;
       this.filteredPatients = data;
-    });
-  }
-
-  ngOnInit(): void {
-    this.fetchDentalOfficeId();
-
-    this.editForm = this.fb.group({
-      notes: [''],
-      status: ['', Validators.required]
-    });
-
-    // Add listeners for filtering
-    this.appointmentForm.get('patientId')?.valueChanges.subscribe(value => {
-      this.filterPatients(value);
-    });
-
-    this.appointmentForm.get('serviceId')?.valueChanges.subscribe(value => {
-      this.filterServices(value);
-    });
-
-    // Listen for custom language change event
-    window.addEventListener('languageChanged', (event: any) => {
-      const lang = event.detail || 'sr';
-      const options = this.calendarOptions();
-      options.locale = lang;
-      this.calendarOptions.set({ ...options });
     });
   }
 
@@ -270,7 +271,7 @@ export class CalendarComponent implements OnInit {
       'Content-Type': 'application/json'
     });
 
-    this.http.post<AppointmentDto>(`${environment.apiBase}/appointments`, payload, { headers }).subscribe({
+    this.http.post<AppointmentDto>(`${environment.apiBase}/appointments`, payload, {headers}).subscribe({
       next: (newAppointment) => {
         this.showCreateModal = false;
         this.appointmentForm.reset();
@@ -311,7 +312,7 @@ export class CalendarComponent implements OnInit {
         console.error(err);
         const errorMessage = err.error?.message;
         this.dialog.open(ErrorDialogComponent, {
-          data: { message: errorMessage }
+          data: {message: errorMessage}
         });
       }
     });
@@ -324,11 +325,11 @@ export class CalendarComponent implements OnInit {
       Authorization: `Bearer ${localStorage.getItem('token')}`
     });
 
-    const { notes, status } = this.editForm.value;
+    const {notes, status} = this.editForm.value;
 
     this.http.patch<AppointmentDto>(
       `${environment.apiBase}/appointments/${this.selectedAppointment.id}`,
-      { notes, status }, { headers }
+      {notes, status}, {headers}
     ).subscribe(() => {
       this.showEditModal = false;
       if (this.calendarStart && this.calendarEnd) {
@@ -343,7 +344,7 @@ export class CalendarComponent implements OnInit {
       Authorization: `Bearer ${localStorage.getItem('token')}`
     });
 
-    this.http.get<AppointmentDto>(`${environment.apiBase}/appointments/${serviceId}`, { headers }).subscribe(appointment => {
+    this.http.get<AppointmentDto>(`${environment.apiBase}/appointments/${serviceId}`, {headers}).subscribe(appointment => {
       this.selectedAppointment = appointment;
       this.showEditModal = true;
 
@@ -357,15 +358,75 @@ export class CalendarComponent implements OnInit {
   handleDateSelect(selectInfo: DateSelectArg) {
     this.selectedStart = selectInfo.startStr;
     this.selectedEnd = selectInfo.endStr;
+
+    this.patientSearchTerm = '';
+    this.serviceSearchTerm = '';
+    this.filteredPatients = this.availablePatients;
+    this.filteredServices = this.availableServices;
+    this.showPatientDropdown = false;
+    this.showServiceDropdown = false;
+
     this.showCreateModal = true;
   }
 
   onCancelClick() {
     this.showCreateModal = false
-
     this.appointmentForm.reset();
     this.selectedStart = null;
     this.selectedEnd = null;
+
+    this.patientSearchTerm = '';
+    this.serviceSearchTerm = '';
+    this.filteredPatients = this.availablePatients;
+    this.filteredServices = this.availableServices;
+    this.showPatientDropdown = false;
+    this.showServiceDropdown = false;
+  }
+
+  onServiceSearchInput(): void {
+    this.showServiceDropdown = true;
+    const term = this.serviceSearchTerm.toLowerCase();
+
+    this.filteredServices = this.availableServices.filter(s => {
+      const serviceName = s.service.name.toLowerCase();
+      return serviceName.includes(term);
+    });
+  }
+
+  selectService(service: DentistServiceDto): void {
+    this.appointmentForm.get('serviceId')?.setValue(service.service.id);
+    this.serviceSearchTerm = service.service.name;
+    this.showServiceDropdown = false;
+  }
+
+  clearServiceSelection(): void {
+    this.appointmentForm.get('serviceId')?.setValue('');
+    this.serviceSearchTerm = '';
+    this.filteredServices = this.availableServices;
+    this.showServiceDropdown = false;
+  }
+
+  onPatientSearchInput(): void {
+    this.showPatientDropdown = true;
+    const term = this.patientSearchTerm.toLowerCase();
+
+    this.filteredPatients = this.availablePatients.filter(p =>
+      `${p.firstName} ${p.lastName}`.toLowerCase().includes(term) ||
+      p.email.toLowerCase().includes(term)
+    );
+  }
+
+  selectPatient(patient: UserDto): void {
+    this.appointmentForm.get('patientId')?.setValue(patient.id);
+    this.patientSearchTerm = `${patient.firstName} ${patient.lastName}`;
+    this.showPatientDropdown = false;
+  }
+
+  clearPatientSelection(): void {
+    this.appointmentForm.get('patientId')?.setValue('');
+    this.patientSearchTerm = '';
+    this.filteredPatients = this.availablePatients;
+    this.showPatientDropdown = false;
   }
 
   renderEventContent(arg: any) {
@@ -414,27 +475,6 @@ export class CalendarComponent implements OnInit {
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   }
 
-  filterPatients(searchTerm: string) {
-    const lower = searchTerm?.toLowerCase?.() || '';
-    this.filteredPatients = this.availablePatients.filter(p =>
-      (`${p.firstName} ${p.lastName}`).toLowerCase().includes(lower)
-    );
-  }
-
-  filterServices(query: string) {
-    const seen = new Set<number>();
-    this.filteredServices = this.availableServices
-      .filter(s => {
-        const name = s.service.name.toLowerCase();
-        return name.includes(query.toLowerCase()) && !seen.has(s.service.id);
-      })
-      .filter(s => {
-        const isNew = !seen.has(s.service.id);
-        seen.add(s.service.id);
-        return isNew;
-      });
-  }
-
   getPatientNameById(id: any): string {
     const match = this.availablePatients.find(p => p.id == id);
     return match ? `${match.firstName} ${match.lastName}` : '';
@@ -443,19 +483,5 @@ export class CalendarComponent implements OnInit {
   getServiceNameById(id: any): string {
     const match = this.availableServices.find(s => s.service.id == id);
     return match ? match.service.name : '';
-  }
-
-  onPatientInput(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const value = input.value;
-    this.appointmentForm.get('patientId')?.setValue(value);
-    this.filterPatients(value);
-  }
-
-  onServiceInput(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const value = input.value;
-    this.appointmentForm.get('serviceId')?.setValue(value);
-    this.filterServices(value);
   }
 }

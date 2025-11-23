@@ -90,7 +90,11 @@
     "NOTES": "Beleška",
     "SAVE": "Sačuvaj",
     "CANCEL": "Otkaži",
-    "EDIT_APPOINTMENT": "Izmena termina"
+    "EDIT_APPOINTMENT": "Izmena termina",
+    "SEARCH_PATIENT": "Pretraži pacijenta...",
+    "SEARCH_SERVICE": "Pretraži uslugu...",
+    "NO_PATIENTS_FOUND": "Nema pronađenih pacijenata",
+    "NO_SERVICES_FOUND": "Nema pronađenih usluga"
   },
   "ERROR": {
     "ERROR": "Greška",
@@ -328,6 +332,8 @@
     "NOTES_PLACEHOLDER": "Unesite opšte beleške o stomatološkom stanju pacijenta, zapažanjima ili planu lečenja...",
     "NOTES_HISTORY": "Istorija beleški",
     "NO_NOTES_HISTORY": "Nema prethodnih zabeleženih beleški",
+    "SEARCH_SERVICE_PLACEHOLDER": "Pretraži uslugu...",
+    "NO_SERVICES_FOUND": "Nema pronađenih usluga.",
 
     "CONTRIBUTION_DESCRIPTIONS": {
       "CREATED": "Kreiran novi odontogram",

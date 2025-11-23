@@ -700,6 +700,154 @@
   min-height: 80px;
 }
 
+.service-search-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.service-search-input {
+  width: 100%;
+  padding: 12px 40px 12px 12px; /* Extra padding on right for clear button */
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.3s;
+  box-sizing: border-box;
+}
+
+.service-search-input:focus {
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Clear Button */
+.clear-service-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  line-height: 1;
+  z-index: 10;
+}
+
+.clear-service-btn:hover {
+  background: #dc2626;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Service Dropdown */
+.service-dropdown {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid #10b981;
+  border-radius: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.25);
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.service-item {
+  padding: 12px 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.service-item:hover {
+  background: linear-gradient(90deg, #e8f5e9 0%, #f1f8f4 100%);
+  border-left: 4px solid #10b981;
+  padding-left: 11px; /* Compensate for border */
+}
+
+.service-item:last-child {
+  border-bottom: none;
+}
+
+.service-name {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 14px;
+  flex: 1;
+}
+
+.service-price {
+  font-size: 13px;
+  color: #10b981;
+  font-weight: 700;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 4px 10px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+/* No Results */
+.service-dropdown.no-results {
+  padding: 20px;
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  border-color: #e0e0e0;
+}
+
+.service-dropdown.no-results p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Custom Scrollbar for Service Dropdown */
+.service-dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.service-dropdown::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.service-dropdown::-webkit-scrollbar-thumb {
+  background: #10b981;
+  border-radius: 4px;
+}
+
+.service-dropdown::-webkit-scrollbar-thumb:hover {
+  background: #059669;
+}
+
 /* Treatments Section */
 .treatments-section {
   border-top: 2px solid #e0e0e0;
@@ -1387,6 +1535,20 @@
 
   .profile-textarea {
     min-height: 150px;
+  }
+
+  .service-dropdown {
+    max-height: 200px;
+  }
+
+  .service-item {
+    padding: 10px 12px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .service-price {
+    font-size: 12px;
   }
 }
 

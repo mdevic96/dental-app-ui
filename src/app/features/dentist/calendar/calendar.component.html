@@ -12,34 +12,101 @@
     <full-calendar [options]='calendarOptions()'>
     </full-calendar>
   </div>
-  <div *ngIf="showCreateModal" class="modal-overlay">
-    <div class="modal-content">
+  <div *ngIf="showCreateModal" class="modal-overlay" (click)="onCancelClick()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
       <h3>📅 {{"CALENDAR.NEW_APPOINTMENT" | translate }}</h3>
       <p><strong>{{"CALENDAR.START" | translate }}:</strong> {{ selectedStart }}</p>
       <p><strong>{{"CALENDAR.END" | translate }}:</strong> {{ selectedEnd }}</p>
-  
+
       <form [formGroup]="appointmentForm" (ngSubmit)="createAppointment()">
+
+        <!-- ✅ NEW: Modern Patient Dropdown -->
         <label>{{"CALENDAR.PATIENT" | translate }}</label>
-        <input type="text" [value]="getPatientNameById(appointmentForm.get('patientId')?.value)"
-          (input)="onPatientInput($event)" list="patient-list" />
-        <datalist id="patient-list">
-          <option *ngFor="let patient of filteredPatients" [value]="patient.id">
-            {{ patient.firstName }} {{ patient.lastName }}
-          </option>
-        </datalist>
-        
+        <div class="patient-search-wrapper">
+          <input
+            type="text"
+            [(ngModel)]="patientSearchTerm"
+            [ngModelOptions]="{standalone: true}"
+            (input)="onPatientSearchInput()"
+            (focus)="showPatientDropdown = true"
+            placeholder="{{'CALENDAR.SEARCH_PATIENT' | translate}}"
+            class="search-input"
+          />
+
+          <button
+            type="button"
+            *ngIf="patientSearchTerm"
+            class="clear-btn"
+            (click)="clearPatientSelection()"
+            title="Clear">
+            ✕
+          </button>
+
+          <div
+            class="dropdown-list patient-dropdown"
+            *ngIf="showPatientDropdown && filteredPatients.length > 0"
+            (click)="$event.stopPropagation()">
+            <div
+              *ngFor="let patient of filteredPatients"
+              class="dropdown-item"
+              (click)="selectPatient(patient)">
+              <span class="item-name">{{ patient.firstName }} {{ patient.lastName }}</span>
+              <span class="item-detail">{{ patient.email }}</span>
+            </div>
+          </div>
+
+          <div
+            class="dropdown-list no-results"
+            *ngIf="showPatientDropdown && filteredPatients.length === 0">
+            <p>{{'CALENDAR.NO_PATIENTS_FOUND' | translate}}</p>
+          </div>
+        </div>
+
+        <!-- ✅ NEW: Modern Service Dropdown -->
         <label>{{"CALENDAR.SERVICE" | translate }}</label>
-        <input type="text" [value]="getServiceNameById(appointmentForm.get('serviceId')?.value)"
-          (input)="onServiceInput($event)" list="service-list" />
-        <datalist id="service-list">
-          <option *ngFor="let service of filteredServices" [value]="service.service.id">
-            {{ "SERVICE_ID." + service.service.id | translate}}
-          </option>
-        </datalist>
+        <div class="service-search-wrapper">
+          <input
+            type="text"
+            [(ngModel)]="serviceSearchTerm"
+            [ngModelOptions]="{standalone: true}"
+            (input)="onServiceSearchInput()"
+            (focus)="showServiceDropdown = true"
+            placeholder="{{'CALENDAR.SEARCH_SERVICE' | translate}}"
+            class="search-input"
+          />
+
+          <button
+            type="button"
+            *ngIf="serviceSearchTerm"
+            class="clear-btn"
+            (click)="clearServiceSelection()"
+            title="Clear">
+            ✕
+          </button>
+
+          <div
+            class="dropdown-list service-dropdown"
+            *ngIf="showServiceDropdown && filteredServices.length > 0"
+            (click)="$event.stopPropagation()">
+            <div
+              *ngFor="let service of filteredServices"
+              class="dropdown-item"
+              (click)="selectService(service)">
+              <span class="item-name">{{ "SERVICE_ID." + service.service.id | translate }}</span>
+              <span class="item-price" *ngIf="service.price">{{ service.price | currency:'RSD' }}</span>
+            </div>
+          </div>
+
+          <div
+            class="dropdown-list no-results"
+            *ngIf="showServiceDropdown && filteredServices.length === 0">
+            <p>{{'CALENDAR.NO_SERVICES_FOUND' | translate}}</p>
+          </div>
+        </div>
 
         <label>{{"CALENDAR.NOTES" | translate }}</label>
         <textarea formControlName="notes"></textarea>
-      
+
         <div class="modal-actions">
           <button type="submit" [disabled]="appointmentForm.invalid">✅ {{"CALENDAR.SAVE" | translate }}</button>
           <button type="button" (click)="onCancelClick()">❌ {{"CALENDAR.CANCEL" | translate }}</button>
@@ -61,10 +128,10 @@
           <option value="COMPLETED">{{"STATUS.COMPLETED" | translate }}</option>
           <option value="CANCELLED">{{"STATUS.CANCELLED" | translate }}</option>
         </select>
-  
+
         <label>{{"CALENDAR.NOTES" | translate }}</label>
         <textarea formControlName="notes"></textarea>
-  
+
         <div class="modal-actions">
           <button type="submit">💾 {{"CALENDAR.SAVE" | translate }}</button>
           <button type="button" (click)="showEditModal = false">❌ {{"CALENDAR.CANCEL" | translate }}</button>
@@ -72,6 +139,6 @@
       </form>
     </div>
   </div>
-  
-  
+
+
 </div>
