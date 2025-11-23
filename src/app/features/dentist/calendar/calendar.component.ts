@@ -25,7 +25,7 @@ import { environment } from '../../../../environments/environment';
   selector: 'app-calendar',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     FullCalendarModule,
     ReactiveFormsModule,
     TranslateModule
@@ -60,7 +60,7 @@ export class CalendarComponent implements OnInit {
   filteredServices: DentistServiceDto[] = [];
 
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private http: HttpClient,
     private authService: AuthService,
     private dialog: MatDialog
@@ -73,19 +73,24 @@ export class CalendarComponent implements OnInit {
   }
 
   fetchAppointments(start: string, end: string) {
-    const dentistId = this.authService.getUser().id;
+    const dentistId = this.authService.getDentistId();
+    if (!dentistId) {
+      console.error('Dentist ID not found.');
+      return;
+    }
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('token')}`,
       'Content-Type': 'application/json'
     });
-  
+
     const params = {
       startDate: start,
       endDate: end,
       page: 0,
       size: 100
     };
-  
+
     this.http.get<{ content: AppointmentDto[] }>(
       `${environment.apiBase}/appointments/dentist/${dentistId}/date-range`,
       { headers, params }
@@ -117,7 +122,7 @@ export class CalendarComponent implements OnInit {
           name: app.service.name,
           color: this.getServiceColor(app.service.id)
         }));
-  
+
       // Re-assign events dynamically
       const options = this.calendarOptions();
       options.events = this.appointments;
@@ -150,7 +155,7 @@ export class CalendarComponent implements OnInit {
       this.filteredServices = data;
     });
   }
-  
+
   fetchPatients() {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -162,7 +167,7 @@ export class CalendarComponent implements OnInit {
       this.filteredPatients = data;
     });
   }
-  
+
   ngOnInit(): void {
     this.fetchDentalOfficeId();
 
@@ -207,9 +212,9 @@ export class CalendarComponent implements OnInit {
       this.currentView = arg.view.type;
     },
     eventContent: this.renderEventContent.bind(this),
-    eventDidMount: this.renderEventTooltip.bind(this),  
+    eventDidMount: this.renderEventTooltip.bind(this),
     slotDuration: '00:15:00',
-    slotLabelInterval: '00:15:00', 
+    slotLabelInterval: '00:15:00',
     slotLabelFormat: {
       hour: '2-digit',
       minute: '2-digit',
@@ -219,7 +224,7 @@ export class CalendarComponent implements OnInit {
       hour: '2-digit',
       minute: '2-digit',
       hour12: false
-    }, 
+    },
     slotMinTime: "08:00:00",
     slotMaxTime: "20:00:00",
     weekends: false,
@@ -238,13 +243,18 @@ export class CalendarComponent implements OnInit {
 
   createAppointment() {
     if (this.appointmentForm.invalid || !this.selectedStart || !this.selectedEnd) return;
-  
+
     const formValues = this.appointmentForm.value;
     const appointmentDate = this.selectedStart.split('T')[0];
     const startTime = this.selectedStart.split('T')[1].substring(0, 5);
     const endTime = this.selectedEnd.split('T')[1].substring(0, 5);
-    const dentistId = this.authService.getUser().id;
-  
+    const dentistId = this.authService.getDentistId();
+
+    if (!dentistId) {
+      console.error('Dentist ID not found.');
+      return;
+    }
+
     const payload = {
       patientId: formValues.patientId,
       serviceId: formValues.serviceId,
@@ -254,12 +264,12 @@ export class CalendarComponent implements OnInit {
       endTime: endTime,
       notes: formValues.notes
     };
-  
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('token')}`,
       'Content-Type': 'application/json'
     });
-  
+
     this.http.post<AppointmentDto>(`${environment.apiBase}/appointments`, payload, { headers }).subscribe({
       next: (newAppointment) => {
         this.showCreateModal = false;
@@ -282,7 +292,7 @@ export class CalendarComponent implements OnInit {
         };
 
         this.appointments.push(event);
-    
+
         const existsInLegend = this.legendItems.some(item => item.name === newAppointment.service.name);
         if (!existsInLegend) {
           this.legendItems.push({
@@ -309,13 +319,13 @@ export class CalendarComponent implements OnInit {
 
   updateAppointment() {
     if (!this.selectedAppointment) return;
-  
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('token')}`
     });
-  
+
     const { notes, status } = this.editForm.value;
-  
+
     this.http.patch<AppointmentDto>(
       `${environment.apiBase}/appointments/${this.selectedAppointment.id}`,
       { notes, status }, { headers }
@@ -326,7 +336,7 @@ export class CalendarComponent implements OnInit {
       }
     });
   }
-  
+
   handleEventClick(clickInfo: any) {
     const serviceId = clickInfo.event.extendedProps['id'];
     const headers = new HttpHeaders({
@@ -342,7 +352,7 @@ export class CalendarComponent implements OnInit {
         status: appointment.status
       });
     });
-  }  
+  }
 
   handleDateSelect(selectInfo: DateSelectArg) {
     this.selectedStart = selectInfo.startStr;
@@ -395,12 +405,12 @@ export class CalendarComponent implements OnInit {
 
     el.setAttribute('title', tooltipText.trim());
   }
-  
+
   getServiceColor(serviceId: number): string {
     const hue = (serviceId * 137) % 360;
     const saturation = 60 + (serviceId % 20);
     const lightness = 65;
-  
+
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   }
 
@@ -423,13 +433,13 @@ export class CalendarComponent implements OnInit {
         seen.add(s.service.id);
         return isNew;
       });
-  }  
+  }
 
   getPatientNameById(id: any): string {
     const match = this.availablePatients.find(p => p.id == id);
     return match ? `${match.firstName} ${match.lastName}` : '';
   }
-  
+
   getServiceNameById(id: any): string {
     const match = this.availableServices.find(s => s.service.id == id);
     return match ? match.service.name : '';
@@ -441,7 +451,7 @@ export class CalendarComponent implements OnInit {
     this.appointmentForm.get('patientId')?.setValue(value);
     this.filterPatients(value);
   }
-  
+
   onServiceInput(event: Event) {
     const input = event.target as HTMLInputElement;
     const value = input.value;

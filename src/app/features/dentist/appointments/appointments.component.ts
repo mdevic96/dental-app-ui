@@ -31,11 +31,16 @@ export class AppointmentsComponent implements OnInit {
   }
 
   loadAppointments(): void {
+    const dentistId = this.authService.getDentistId();
+    if (!dentistId) {
+      console.error('Dentist ID not found.');
+      return;
+    }
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('token')}`
     });
 
-    const dentistId = this.authService.getUser().id;
     this.http.get<AppointmentDto[]>(`${environment.apiBase}/appointments/dentist/${dentistId}/upcoming`, { headers })
       .subscribe(appointments => this.upcomingAppointments = appointments.filter(a => a.status === 'SCHEDULED'));
 
@@ -70,5 +75,4 @@ export class AppointmentsComponent implements OnInit {
         this.loadAppointments();
       });
   }
-
 }

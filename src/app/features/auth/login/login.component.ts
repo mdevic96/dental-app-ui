@@ -28,8 +28,8 @@ import { MatDialog } from '@angular/material/dialog';
 export class LoginComponent {
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder, 
-    private authService: AuthService, 
+  constructor(private fb: FormBuilder,
+    private authService: AuthService,
     private router: Router,
     private dialog: MatDialog) {
 
@@ -45,12 +45,19 @@ export class LoginComponent {
           next: (response) => {
             localStorage.setItem('token', response.accessToken);
             localStorage.setItem('user', JSON.stringify(response.user));
-    
+
             const userRoles = response.user?.roles?.map((role: any) => role.name) || [];
-    
+
             if (userRoles[0] === 'ROLE_DENTIST') {
-              console.log('Redirecting to dentist dashboard...');
-              this.router.navigate(['/dentist']);
+              this.authService.loadDentistInfo(response.user.id).subscribe({
+                next: () => {
+                  console.log('Redirecting to dentist dashboard...');
+                  this.router.navigate(['/dentist']);
+                },
+                error: (err) => {
+                  console.error('Failed to load dentist info', err);
+                }
+              });
             } else if (userRoles[0] === 'ROLE_PATIENT' || userRoles[0] === 'ROLE_ADMIN') {
               console.log('Redirecting to home...');
               this.router.navigate(['/home']);
@@ -69,6 +76,6 @@ export class LoginComponent {
         });
       }
     }
-    
+
 
 }
