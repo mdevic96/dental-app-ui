@@ -219,7 +219,7 @@
     "112": "Bfixed orthodontic appliance - without bracket"
   },
   "ODONTOGRAM": {
-    "TITLE": "🦷 Odontogram - Dental Chart",
+    "TITLE": "Odontogram - Dental Chart",
     "SELECT_PATIENT": "Select Patient:",
     "SEARCH_PATIENT": "Search patient by name or email...",
     "LOADING": "Loading odontogram...",
@@ -227,7 +227,21 @@
     "DENTIST": "Dentist:",
     "CREATED": "Created:",
     "LAST_UPDATED": "Last Updated:",
-    "STATUS_LEGEND": "Status Legend:",
+    "STATUS_SUMMARY": "Status Summary",
+
+    "STATUS_DESCRIPTIONS": {
+      "HEALTHY": "Tooth is in good condition with no treatment needed",
+      "CARIOUS": "Tooth has decay (cavity) that requires treatment",
+      "FILLED": "Tooth has been restored with filling material",
+      "MISSING": "Tooth is absent or has been extracted",
+      "CROWN": "Tooth is covered with a dental crown",
+      "BRIDGE": "Tooth is part of a dental bridge",
+      "IMPLANT": "Tooth has been replaced with a dental implant",
+      "ROOT_CANAL": "Tooth has undergone root canal treatment",
+      "FRACTURED": "Tooth has a crack or fracture",
+      "MOBILE": "Tooth has excessive movement (loose)",
+      "IMPACTED": "Tooth has not fully erupted"
+    },
     "TOOTH_STATUS": {
       "HEALTHY": "Healthy",
       "CARIOUS": "Cavity",
@@ -241,7 +255,7 @@
       "MOBILE": "Mobile",
       "IMPACTED": "Impacted"
     },
-    "HOVER_INSTRUCTION": "💡 Hover over a tooth to see surfaces (M=Mesial, D=Distal, B=Buccal, L=Lingual, O=Occlusal). Click a surface to edit.",
+    "HOVER_INSTRUCTION": "Hover over teeth to see and edit surfaces: M=Mesial, D=Distal, B=Buccal, L=Lingual/Labial, P=Palatal, O=Occlusal, I=Incisal",
     "DENTAL_CHART": "Dental Chart",
     "UPPER_JAW": "Upper Jaw",
     "LOWER_JAW": "Lower Jaw",
@@ -252,15 +266,15 @@
     "TREATMENT_PLANS": "Treatment Plans",
     "NO_TREATMENTS": "No treatment plans for this tooth",
     "SERVICE": "Service:",
-    "PLANNED": "Planned:",
+    "PLANNED": "Planned",
     "COST": "Cost:",
-    "START": "▶️ Start",
-    "COMPLETE": "✅ Complete",
-    "CANCEL": "❌ Cancel",
+    "START": "Start",
+    "COMPLETE": "Complete",
+    "CANCEL": "Cancel",
     "IN_PROGRESS": "In Progress",
     "COMPLETED": "Completed",
     "CANCELLED": "Cancelled",
-    "ADD_TREATMENT_PLAN": "➕ Add Treatment Plan",
+    "ADD_TREATMENT_PLAN": "Add Treatment Plan",
     "GENERAL_NOTES": "General Notes",
     "SAVE_NOTES": "Save Notes",
     "NO_ODONTOGRAM": "No odontogram found. A new one will be created.",
@@ -273,20 +287,23 @@
     "ESTIMATED_COST": "Estimated Cost (RSD):",
     "TREATMENT_NOTES": "Notes:",
     "TREATMENT_NOTES_PLACEHOLDER": "Additional treatment notes...",
-    "ADD_TREATMENT": "✅ Add Treatment",
-    "CANCEL_ACTION": "❌ Cancel",
+    "ADD_TREATMENT": "Add Treatment",
+    "CANCEL_ACTION": "Cancel",
     "EDIT_SURFACE": "Edit Surface:",
     "SURFACE_STATUSS": "Surface Status:",
     "SURFACE_NOTES": "Notes:",
     "SURFACE_NOTES_PLACEHOLDER": "Notes about this surface...",
     "PREVIEW": "Preview:",
-    "SAVE_SURFACE": "💾 Save Surface",
+    "SAVE_SURFACE": "Save Surface",
     "SURFACE_TYPES": {
-      "OCCLUSAL": "Occlusal/Incisal",
+      "OCCLUSAL": "Occlusal",
+      "INCISAL": "Incisal",
       "MESIAL": "Mesial",
       "DISTAL": "Distal",
       "BUCCAL": "Buccal",
-      "LINGUAL": "Lingual"
+      "LINGUAL": "Lingual",
+      "PALATAL": "Palatal",
+      "LABIAL": "Labial"
     },
     "SURFACE_STATUS": {
       "HEALTHY": "Healthy",
@@ -326,6 +343,7 @@
     "NO_NOTES_HISTORY": "No previous notes recorded",
     "SEARCH_SERVICE_PLACEHOLDER": "Search services...",
     "NO_SERVICES_FOUND": "No services found",
+    "DETAILS": "Details",
 
     "CONTRIBUTION_DESCRIPTIONS": {
       "CREATED": "Created new odontogram",

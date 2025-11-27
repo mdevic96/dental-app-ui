@@ -116,7 +116,7 @@ export interface UpdatePatientProfileRequest {
   warningDescription?: string;
 }
 
-export type SurfaceType = 'OCCLUSAL' | 'MESIAL' | 'DISTAL' | 'BUCCAL' | 'LINGUAL';
+export type SurfaceType = 'OCCLUSAL' | 'MESIAL' | 'DISTAL' | 'BUCCAL' | 'LINGUAL' | 'LABIAL' | 'PALATAL' | 'INCISAL';
 
 export type SurfaceStatus =
   | 'HEALTHY'

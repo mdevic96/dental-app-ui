@@ -1,22 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { OdontogramService } from './odontogram.service';
+import {Component, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {OdontogramService} from './odontogram.service';
 import {
+  ContributionDto,
+  CreateTreatmentPlanRequest,
   OdontogramDto,
+  PatientProfileDto,
+  SurfaceStatus,
+  SurfaceType,
   ToothRecordDto,
   ToothStatus,
-  CreateTreatmentPlanRequest,
+  ToothSurfaceDto,
   TreatmentPlanDto,
-  ToothSurfaceDto, SurfaceStatus, SurfaceType, UpdateToothSurfaceRequest, ContributionDto, PatientProfileDto,
-  UpdatePatientProfileRequest
+  UpdatePatientProfileRequest,
+  UpdateToothSurfaceRequest
 } from '../../../core/odontogram.model';
-import { UserDto } from '../../../core/user.model';
-import { DentistServiceDto } from '../../../core/dentist-service.model';
-import { TranslateModule } from '@ngx-translate/core';
-import { environment } from '../../../../environments/environment';
-import { TranslateService } from '@ngx-translate/core';
+import {UserDto} from '../../../core/user.model';
+import {DentistServiceDto} from '../../../core/dentist-service.model';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {environment} from '../../../../environments/environment';
 import {PatientProfileService} from './patient-profile.service';
 
 @Component({
@@ -74,6 +78,8 @@ export class OdontogramComponent implements OnInit {
   serviceSearchTerm: string = '';
   filteredServices: DentistServiceDto[] = [];
 
+  showLegendModal: boolean = false;
+
   // Loading state
   isLoading: boolean = false;
 
@@ -82,7 +88,8 @@ export class OdontogramComponent implements OnInit {
     private http: HttpClient,
     private translate: TranslateService,
     private patientProfileService: PatientProfileService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.loadPatients();
@@ -95,10 +102,10 @@ export class OdontogramComponent implements OnInit {
     });
 
     // Get dentist's dental office first
-    this.http.get<any>(`${environment.apiBase}/dentists/me/office`, { headers })
+    this.http.get<any>(`${environment.apiBase}/dentists/me/office`, {headers})
       .subscribe(office => {
         // Then get patients for this office
-        this.http.get<UserDto[]>(`${environment.apiBase}/patients/dental-office/${office.id}`, { headers })
+        this.http.get<UserDto[]>(`${environment.apiBase}/patients/dental-office/${office.id}`, {headers})
           .subscribe(patients => {
             this.patients = patients;
             this.filteredPatients = patients;
@@ -111,9 +118,9 @@ export class OdontogramComponent implements OnInit {
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
 
-    this.http.get<any>(`${environment.apiBase}/dentists/me/office`, { headers })
+    this.http.get<any>(`${environment.apiBase}/dentists/me/office`, {headers})
       .subscribe(office => {
-        this.http.get<DentistServiceDto[]>(`${environment.apiBase}/services/dental-office/${office.id}`, { headers })
+        this.http.get<DentistServiceDto[]>(`${environment.apiBase}/services/dental-office/${office.id}`, {headers})
           .subscribe(services => {
             this.availableServices = services;
             this.filteredServices = services;
@@ -203,6 +210,44 @@ export class OdontogramComponent implements OnInit {
     this.showContributionHistory = !this.showContributionHistory;
   }
 
+  getActiveStatuses(): ToothStatus[] {
+    if (!this.currentOdontogram) return [];
+
+    const statusSet = new Set<ToothStatus>();
+    this.currentOdontogram.toothRecords.forEach(tooth => {
+      if (tooth.status !== 'HEALTHY') { // Exclude healthy to reduce clutter
+        statusSet.add(tooth.status);
+      }
+    });
+
+    return Array.from(statusSet).sort();
+  }
+
+  getStatusCount(status: ToothStatus): number {
+    if (!this.currentOdontogram) return 0;
+
+    return this.currentOdontogram.toothRecords.filter(
+      tooth => tooth.status === status
+    ).length;
+  }
+
+  getStatusColor(status: ToothStatus): string {
+    const colorMap: Record<ToothStatus, string> = {
+      'HEALTHY': '#ffffff',
+      'CARIOUS': '#ff4444',
+      'FILLED': '#4169e1',
+      'MISSING': '#cccccc',
+      'CROWN': '#ffd700',
+      'BRIDGE': '#9370db',
+      'IMPLANT': '#808080',
+      'ROOT_CANAL': '#90ee90',
+      'FRACTURED': '#ff8c00',
+      'MOBILE': '#ffff00',
+      'IMPACTED': '#ff69b4'
+    };
+    return colorMap[status];
+  }
+
   getOfficeBadgeColor(officeId: number): string {
     const colors = [
       '#3b82f6', '#10b981', '#f59e0b', '#ef4444',
@@ -231,7 +276,15 @@ export class OdontogramComponent implements OnInit {
   selectTooth(toothNumber: string): void {
     const tooth = this.getToothRecord(toothNumber);
     if (tooth) {
-      this.selectedTooth = { ...tooth }; // Clone to avoid direct mutation
+      this.selectedTooth = {...tooth};
+
+      // Auto-scroll to details section
+      setTimeout(() => {
+        const detailsSection = document.querySelector('.tooth-details-section');
+        if (detailsSection) {
+          detailsSection.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+        }
+      }, 100);
     }
   }
 
@@ -478,12 +531,12 @@ export class OdontogramComponent implements OnInit {
     if (!tooth) return;
 
     // Select the tooth first
-    this.selectedTooth = { ...tooth };
+    this.selectedTooth = {...tooth};
 
     // Find the surface
     const surface = tooth.surfaces?.find(s => s.surfaceType === surfaceType);
     if (surface) {
-      this.selectedSurface = { ...surface };
+      this.selectedSurface = {...surface};
       this.showSurfaceDialog = true;
     }
   }
@@ -515,8 +568,165 @@ export class OdontogramComponent implements OnInit {
       });
   }
 
-  getSurfaceLabel(surfaceType: SurfaceType): string {
+  getSurfaceLabel(toothNumber: string, position: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT' | 'CENTER'): string {
+    const tooth = parseInt(toothNumber);
+
+    // Upper Right Quadrant (18-14) - Molars & Premolars
+    if (tooth >= 14 && tooth <= 18) {
+      const labels = {UP: 'B', RIGHT: 'M', DOWN: 'P', LEFT: 'D', CENTER: 'O'};
+      return labels[position];
+    }
+
+    // Upper Right Front (13-11) - Canines & Incisors
+    if (tooth >= 11 && tooth <= 13) {
+      const labels = {UP: 'L', RIGHT: 'M', DOWN: 'P', LEFT: 'D', CENTER: 'I'};
+      return labels[position];
+    }
+
+    // Upper Left Front (21-23) - Canines & Incisors
+    if (tooth >= 21 && tooth <= 23) {
+      const labels = {UP: 'L', RIGHT: 'D', DOWN: 'P', LEFT: 'M', CENTER: 'I'};
+      return labels[position];
+    }
+
+    // Upper Left Quadrant (24-28) - Premolars & Molars
+    if (tooth >= 24 && tooth <= 28) {
+      const labels = {UP: 'B', RIGHT: 'D', DOWN: 'P', LEFT: 'M', CENTER: 'O'};
+      return labels[position];
+    }
+
+    // Lower Right Quadrant (48-44) - Molars & Premolars
+    if (tooth >= 44 && tooth <= 48) {
+      const labels = {UP: 'L', RIGHT: 'M', DOWN: 'B', LEFT: 'D', CENTER: 'O'};
+      return labels[position];
+    }
+
+    // Lower Right Front (43-41) - Canines & Incisors
+    if (tooth >= 41 && tooth <= 43) {
+      const labels = {UP: 'L', RIGHT: 'M', DOWN: 'L', LEFT: 'D', CENTER: 'I'};
+      return labels[position];
+    }
+
+    // Lower Left Front (31-33) - Canines & Incisors
+    if (tooth >= 31 && tooth <= 33) {
+      const labels = {UP: 'L', RIGHT: 'D', DOWN: 'L', LEFT: 'M', CENTER: 'I'};
+      return labels[position];
+    }
+
+    // Lower Left Quadrant (34-38) - Premolars & Molars
+    if (tooth >= 34 && tooth <= 38) {
+      const labels = {UP: 'L', RIGHT: 'D', DOWN: 'B', LEFT: 'M', CENTER: 'O'};
+      return labels[position];
+    }
+
+    // Default fallback
+    return 'X';
+  }
+
+  getSurfaceTypeLabel(surfaceType: SurfaceType): string {
     return this.translate.instant(`ODONTOGRAM.SURFACE_TYPES.${surfaceType}`);
+  }
+
+  getSurfaceType(toothNumber: string, position: 'UP' | 'RIGHT' | 'DOWN' | 'LEFT' | 'CENTER'): SurfaceType {
+    const tooth = parseInt(toothNumber);
+
+    // Upper Right Quadrant (18-14) - Molars & Premolars
+    if (tooth >= 14 && tooth <= 18) {
+      const mapping = {
+        UP: 'BUCCAL',
+        RIGHT: 'MESIAL',
+        DOWN: 'PALATAL',
+        LEFT: 'DISTAL',
+        CENTER: 'OCCLUSAL'
+      };
+      return mapping[position] as SurfaceType;
+    }
+
+    // Upper Right Front (13-11) - Canines & Incisors
+    if (tooth >= 11 && tooth <= 13) {
+      const mapping = {
+        UP: 'LABIAL',
+        RIGHT: 'MESIAL',
+        DOWN: 'PALATAL',
+        LEFT: 'DISTAL',
+        CENTER: 'INCISAL'
+      };
+      return mapping[position] as SurfaceType;
+    }
+
+    // Upper Left Front (21-23) - Canines & Incisors
+    if (tooth >= 21 && tooth <= 23) {
+      const mapping = {
+        UP: 'LABIAL',
+        RIGHT: 'DISTAL',
+        DOWN: 'PALATAL',
+        LEFT: 'MESIAL',
+        CENTER: 'INCISAL'
+      };
+      return mapping[position] as SurfaceType;
+    }
+
+    // Upper Left Quadrant (24-28) - Premolars & Molars
+    if (tooth >= 24 && tooth <= 28) {
+      const mapping = {
+        UP: 'BUCCAL',
+        RIGHT: 'DISTAL',
+        DOWN: 'PALATAL',
+        LEFT: 'MESIAL',
+        CENTER: 'OCCLUSAL'
+      };
+      return mapping[position] as SurfaceType;
+    }
+
+    // Lower Right Quadrant (48-44) - Molars & Premolars
+    if (tooth >= 44 && tooth <= 48) {
+      const mapping = {
+        UP: 'LINGUAL',
+        RIGHT: 'MESIAL',
+        DOWN: 'BUCCAL',
+        LEFT: 'DISTAL',
+        CENTER: 'OCCLUSAL'
+      };
+      return mapping[position] as SurfaceType;
+    }
+
+    // Lower Right Front (43-41) - Canines & Incisors
+    if (tooth >= 41 && tooth <= 43) {
+      const mapping = {
+        UP: 'LINGUAL',
+        RIGHT: 'MESIAL',
+        DOWN: 'LABIAL',
+        LEFT: 'DISTAL',
+        CENTER: 'INCISAL'
+      };
+      return mapping[position] as SurfaceType;
+    }
+
+    // Lower Left Front (31-33) - Canines & Incisors
+    if (tooth >= 31 && tooth <= 33) {
+      const mapping = {
+        UP: 'LINGUAL',
+        RIGHT: 'DISTAL',
+        DOWN: 'LABIAL',
+        LEFT: 'MESIAL',
+        CENTER: 'INCISAL'
+      };
+      return mapping[position] as SurfaceType;
+    }
+
+    // Lower Left Quadrant (34-38) - Premolars & Molars
+    if (tooth >= 34 && tooth <= 38) {
+      const mapping = {
+        UP: 'LINGUAL',
+        RIGHT: 'DISTAL',
+        DOWN: 'BUCCAL',
+        LEFT: 'MESIAL',
+        CENTER: 'OCCLUSAL'
+      };
+      return mapping[position] as SurfaceType;
+    }
+
+    return 'OCCLUSAL';
   }
 
   getSurfaceStatusLabel(status: SurfaceStatus): string {

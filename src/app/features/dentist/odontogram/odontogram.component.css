@@ -119,47 +119,171 @@
   font-weight: 600;
 }
 
-/* Color Legend */
-.legend {
-  background: white;
-  padding: 15px;
+/* Active Statuses Summary */
+.active-statuses-summary {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   margin-bottom: 20px;
+  border: 2px solid #dee2e6;
 }
 
-.legend h3 {
-  margin: 0 0 12px 0;
-  font-size: 16px;
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.summary-header h4 {
+  margin: 0;
   color: #2c3e50;
+  font-size: 16px;
 }
 
-.legend-items {
+/* Status Chips */
+.status-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
-.legend-item {
-  display: flex;
+.status-chip {
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: #555;
+  gap: 6px;
+  padding: 8px 14px;
+  background: white;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #2c3e50;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  transition: all 0.2s;
 }
 
-.color-box {
-  width: 24px;
-  height: 24px;
+.status-chip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+}
+
+.chip-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+.chip-label {
+  font-weight: 600;
+}
+
+.chip-count {
+  color: #666;
+  font-size: 12px;
+  background: #f0f0f0;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.hover-hint {
+  margin: 12px 0 0 0;
+  font-size: 12px;
+  color: #666;
+  font-style: italic;
+}
+
+/* Legend Modal */
+.legend-modal-content {
+  max-width: 800px;
+  max-height: 85vh;
+}
+
+.legend-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.legend-item-detailed {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  transition: all 0.2s;
+  border-left: 4px solid transparent;
+}
+
+.legend-item-detailed:hover {
+  background: #e9ecef;
+  transform: translateX(5px);
+  border-left-color: #3b82f6;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.legend-icon {
+  flex-shrink: 0;
+}
+
+.color-box-large {
+  display: block;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  border: 3px solid rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.legend-text {
+  flex: 1;
+}
+
+.legend-text strong {
+  display: block;
+  color: #2c3e50;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.legend-description {
+  margin: 0;
+  font-size: 13px;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* Custom scrollbar for legend */
+.legend-grid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.legend-grid::-webkit-scrollbar-track {
+  background: #f1f1f1;
   border-radius: 4px;
-  border: 1px solid #ddd;
+}
+
+.legend-grid::-webkit-scrollbar-thumb {
+  background: #667eea;
+  border-radius: 4px;
+}
+
+.legend-grid::-webkit-scrollbar-thumb:hover {
+  background: #764ba2;
 }
 
 /* Main Layout */
 .main-layout {
-  display: grid;
-  grid-template-columns: 1fr 400px;
-  gap: 20px;
+  display: block;
   margin-bottom: 20px;
 }
 
@@ -639,65 +763,292 @@
   margin: 2px;
 }
 
-/* Tooth Detail Panel */
-.tooth-detail-panel {
+.tooth-details-section {
   background: white;
-  padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  position: sticky;
-  top: 20px;
-  max-height: calc(100vh - 40px);
-  overflow-y: auto;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  margin-top: 24px;
+  animation: slideInUp 0.3s ease;
+  border-top: 4px solid #3b82f6;
 }
 
-.tooth-detail-panel h3 {
-  margin: 0 0 8px 0;
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Details Header */
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.details-title h3 {
+  margin: 0;
   color: #2c3e50;
-  font-size: 22px;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.tooth-name {
+.tooth-name-details {
+  margin: 4px 0 0 0;
   color: #666;
   font-size: 14px;
-  margin: 0 0 20px 0;
   font-style: italic;
 }
 
-.detail-form {
+.btn-close-details {
+  background: #f0f0f0;
+  border: none;
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.btn-close-details:hover {
+  background: #fee2e2;
+  color: #ef4444;
+  transform: scale(1.05);
+}
+
+/* Details Grid - Two Columns */
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 24px;
+}
+
+.details-column h4 {
+  margin: 0 0 16px 0;
+  color: #2c3e50;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+/* Form Groups */
+.form-group {
   margin-bottom: 20px;
 }
 
-.detail-form label {
+.form-group label {
   display: block;
   font-weight: 600;
-  margin: 15px 0 5px 0;
+  margin-bottom: 8px;
   color: #2c3e50;
   font-size: 14px;
 }
 
-.detail-form select,
-.detail-form textarea {
+.details-select,
+.details-textarea {
   width: 100%;
-  max-width: 100%;
-  padding: 10px;
+  padding: 12px;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
   font-size: 14px;
   font-family: inherit;
-  transition: border-color 0.3s;
+  transition: all 0.3s;
   box-sizing: border-box;
 }
 
-.detail-form select:focus,
-.detail-form textarea:focus {
+.details-select:focus,
+.details-textarea:focus {
   outline: none;
   border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.detail-form textarea {
+.details-textarea {
   resize: vertical;
-  min-height: 80px;
+  min-height: 100px;
+  line-height: 1.6;
+}
+
+.btn-full {
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* No Treatments Inline */
+.no-treatments-inline {
+  text-align: center;
+  padding: 32px 16px;
+  color: #999;
+  font-style: italic;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.no-treatments-inline p {
+  margin: 0;
+}
+
+/* Treatments List */
+.treatments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 16px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.treatments-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.treatments-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.treatments-list::-webkit-scrollbar-thumb {
+  background: #3b82f6;
+  border-radius: 3px;
+}
+
+/* Treatment Cards */
+.treatment-card {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 16px;
+  border-left: 4px solid #3b82f6;
+  transition: all 0.2s;
+}
+
+.treatment-card:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.treatment-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.treatment-card-header strong {
+  color: #2c3e50;
+  font-size: 15px;
+}
+
+.treatment-card-body {
+  margin-bottom: 12px;
+}
+
+.treatment-info {
+  margin: 6px 0;
+  font-size: 13px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-icon {
+  font-size: 14px;
+}
+
+.treatment-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.status-planned {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-badge.status-in_progress {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status-badge.status-completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-badge.status-cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.treatment-actions-inline {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* Button Variations */
+.btn-start {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-start:hover {
+  background: #2563eb;
+}
+
+.btn-complete {
+  background: #10b981;
+  color: white;
+}
+
+.btn-complete:hover {
+  background: #059669;
+}
+
+.btn-cancel {
+  background: #ef4444;
+  color: white;
+}
+
+.btn-cancel:hover {
+  background: #dc2626;
 }
 
 .service-search-wrapper {
@@ -846,103 +1197,6 @@
 
 .service-dropdown::-webkit-scrollbar-thumb:hover {
   background: #059669;
-}
-
-/* Treatments Section */
-.treatments-section {
-  border-top: 2px solid #e0e0e0;
-  padding-top: 20px;
-  margin-top: 20px;
-}
-
-.treatments-section h4 {
-  margin: 0 0 15px 0;
-  color: #2c3e50;
-  font-size: 18px;
-}
-
-.no-treatments {
-  text-align: center;
-  padding: 20px;
-  color: #999;
-  font-style: italic;
-}
-
-.treatment-item {
-  background: #f8f9fa;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 12px;
-  border-left: 4px solid #3b82f6;
-}
-
-.treatment-item p {
-  margin: 5px 0;
-  font-size: 14px;
-  color: #555;
-}
-
-.treatment-item strong {
-  color: #2c3e50;
-  font-size: 15px;
-}
-
-.treatment-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-  flex-wrap: wrap;
-}
-
-.status-planned {
-  color: #f59e0b;
-  font-weight: 600;
-}
-
-.status-in_progress {
-  color: #3b82f6;
-  font-weight: 600;
-}
-
-.status-completed {
-  color: #10b981;
-  font-weight: 600;
-}
-
-.status-cancelled {
-  color: #ef4444;
-  font-weight: 600;
-}
-
-/* General Notes Section */
-.general-notes-section {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.general-notes-section h3 {
-  margin: 0 0 15px 0;
-  color: #2c3e50;
-  font-size: 18px;
-}
-
-.general-notes-section textarea {
-  width: 100%;
-  padding: 12px;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 14px;
-  font-family: inherit;
-  resize: vertical;
-  min-height: 100px;
-  margin-bottom: 15px;
-}
-
-.general-notes-section textarea:focus {
-  outline: none;
-  border-color: #3b82f6;
 }
 
 /* Buttons */
@@ -1166,24 +1420,20 @@
 }
 
 /* Scrollbar Styling */
-.tooth-detail-panel::-webkit-scrollbar,
 .patient-dropdown::-webkit-scrollbar {
   width: 8px;
 }
 
-.tooth-detail-panel::-webkit-scrollbar-track,
 .patient-dropdown::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 4px;
 }
 
-.tooth-detail-panel::-webkit-scrollbar-thumb,
 .patient-dropdown::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 4px;
 }
 
-.tooth-detail-panel::-webkit-scrollbar-thumb:hover,
 .patient-dropdown::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
@@ -1447,6 +1697,85 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .tooth-details-section {
+    padding: 16px;
+  }
+
+  .details-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .btn-close-details {
+    align-self: flex-end;
+  }
+
+  .details-title h3 {
+    font-size: 20px;
+  }
+
+  .treatment-card-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .treatment-actions-inline {
+    width: 100%;
+  }
+
+  .btn-small {
+    flex: 1;
+  }
+
+  .floating-legend-btn {
+    bottom: 20px;
+    right: 20px;
+    width: 52px;
+    height: 52px;
+    font-size: 24px;
+  }
+
+  .status-chips {
+    gap: 8px;
+  }
+
+  .status-chip {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .chip-dot {
+    width: 12px;
+    height: 12px;
+  }
+
+  .summary-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .legend-modal-content {
+    max-width: 95%;
+  }
+
+  .legend-item-detailed {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .color-box-large {
+    width: 40px;
+    height: 40px;
+  }
+
+  .legend-text strong {
+    font-size: 14px;
+  }
+
+  .legend-description {
+    font-size: 12px;
+  }
+
   .odontogram-page {
     padding: 10px;
   }
@@ -1470,11 +1799,6 @@
 
   .teeth-row {
     gap: 5px;
-  }
-
-  .tooth-detail-panel {
-    position: static;
-    max-height: none;
   }
 
   .legend-items {
